@@ -19,20 +19,21 @@
 
 package org.apache.james.transport.mailets;
 
-import org.apache.commons.collections.iterators.IteratorChain;
-import org.apache.james.mailbox.MailboxManager;
-import org.apache.james.user.api.UsersRepository;
-import org.apache.mailet.base.GenericMailet;
-import org.apache.mailet.Mail;
-import org.apache.mailet.MailetConfig;
-import org.apache.mailet.MailetContext;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import org.apache.commons.collections.iterators.IteratorChain;
+import org.apache.james.filesystem.api.FileSystem;
+import org.apache.james.mailbox.MailboxManager;
+import org.apache.james.user.api.UsersRepository;
+import org.apache.mailet.Mail;
+import org.apache.mailet.MailetConfig;
+import org.apache.mailet.MailetContext;
+import org.apache.mailet.base.GenericMailet;
 
 /**
  * Receives a Mail from JamesSpoolManager and takes care of delivery of the
@@ -57,6 +58,8 @@ public class LocalDelivery extends GenericMailet {
     private UsersRepository usersRepository;
 
     private MailboxManager mailboxManager;
+    
+    private FileSystem fileSystem;
 
     @Resource(name = "usersrepository")
     public void setUsersRepository(UsersRepository usersRepository) {
@@ -66,6 +69,11 @@ public class LocalDelivery extends GenericMailet {
     @Resource(name = "mailboxmanager")
     public void setMailboxManager(MailboxManager mailboxManager) {
         this.mailboxManager = mailboxManager;
+    }
+    
+    @Resource(name = "filesystem")
+    public void setFileSystem(FileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     /**
@@ -148,9 +156,10 @@ public class LocalDelivery extends GenericMailet {
         };
         sieveMailet.setUsersRepository(usersRepository);
         sieveMailet.setMailboxManager(mailboxManager);
+        sieveMailet.setFileSystem(fileSystem);
         sieveMailet.init(m);
-
-        sieveMailet.setQuiet(true);
+        // Override the default value of "quiet"
+        sieveMailet.setQuiet(getInitParameter("quiet", true));
     }
 
 }

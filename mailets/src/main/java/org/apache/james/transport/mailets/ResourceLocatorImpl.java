@@ -19,29 +19,34 @@
 
 package org.apache.james.transport.mailets;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.james.filesystem.api.FileSystem;
 import org.apache.jsieve.mailet.ResourceLocator;
 
 /**
  * To maintain backwards compatibility with existing installations, this uses
- * the old file based scheme. TODO: replace with <code>FileSystem</code> based
- * implementation.
+ * the old file based scheme.
+ * <p> The scripts are stored in the <code>sieve</code> sub directory of the application
+ * installation directory.
  */
 public class ResourceLocatorImpl implements ResourceLocator {
 
     private boolean virtualHosting;
+    
+    private FileSystem fileSystem = null;
 
-    public ResourceLocatorImpl(boolean virtualHosting) {
+    public ResourceLocatorImpl(boolean virtualHosting, FileSystem fileSystem) {
         this.virtualHosting = virtualHosting;
+            this.fileSystem = fileSystem;
     }
 
     public InputStream get(String uri) throws IOException {
-        // This is a toy implementation
-
-        // Use the complete emailaddress for finding the sieve file
+        // Use the complete email address for finding the sieve file
         uri = uri.substring(2);
 
         String username;
@@ -50,8 +55,16 @@ public class ResourceLocatorImpl implements ResourceLocator {
         } else {
             username = uri.substring(0, uri.indexOf("@"));
         }
-        String sieveFileName = "../apps/james/var/sieve/" + username + ".sieve";
-        return new FileInputStream(sieveFileName);
+
+        // RFC 5228 permits extensions: .siv .sieve
+        String sieveFilePrefix = FileSystem.FILE_PROTOCOL + "sieve/" + username + ".";
+        File sieveFile = null;
+        try {
+            sieveFile = fileSystem.getFile(sieveFilePrefix + "sieve");
+        } catch (FileNotFoundException ex) {
+            sieveFile = fileSystem.getFile(sieveFilePrefix + "siv");
+        }
+        return new FileInputStream(sieveFile);
     }
 
 }
