@@ -21,9 +21,10 @@ package org.apache.james.pop3server.netty;
 
 import org.apache.james.pop3server.core.CoreCmdHandlerLoader;
 import org.apache.james.pop3server.jmx.JMXHandlersLoader;
-import org.apache.james.protocols.api.handler.HandlersPackage;
-import org.apache.james.protocols.netty.BasicChannelUpstreamHandler;
+import org.apache.james.protocols.api.logger.ProtocolLoggerAdapter;
+import org.apache.james.protocols.lib.handler.HandlersPackage;
 import org.apache.james.protocols.lib.netty.AbstractProtocolAsyncServer;
+import org.apache.james.protocols.netty.BasicChannelUpstreamHandler;
 import org.apache.james.protocols.pop3.POP3Configuration;
 import org.apache.james.protocols.pop3.POP3Protocol;
 import org.jboss.netty.channel.ChannelUpstreamHandler;
@@ -53,7 +54,7 @@ public class POP3Server extends AbstractProtocolAsyncServer implements POP3Serve
     /**
      * A class to provide POP3 handler configuration to the handlers
      */
-    private class POP3HandlerConfigurationDataImpl implements POP3Configuration {
+    private class POP3HandlerConfigurationDataImpl extends POP3Configuration {
 
         /**
          * @see org.apache.james.pop3server.POP3HandlerConfiguration#getHelloName()
@@ -66,11 +67,9 @@ public class POP3Server extends AbstractProtocolAsyncServer implements POP3Serve
     @Override
     protected void preInit() throws Exception {
         super.preInit();
-        POP3Protocol protocol = new POP3Protocol(getProtocolHandlerChain(), theConfigData);
-        
-        coreHandler = new BasicChannelUpstreamHandler(protocol, getLogger(), getEncryption());
+        POP3Protocol protocol = new POP3Protocol(getProtocolHandlerChain(), theConfigData, new ProtocolLoggerAdapter(getLogger()));
+        coreHandler = new BasicChannelUpstreamHandler(protocol, getEncryption());
     }
-
 
     @Override
     protected String getDefaultJMXName() {
