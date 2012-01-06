@@ -37,7 +37,7 @@ public class WelcomeMessageHandler implements ConnectHandler<POP3Session> {
         StringBuilder responseBuffer = new StringBuilder();
         // Initially greet the connector
         // Format is: Sat, 24 Jan 1998 13:16:09 -0500
-        responseBuffer.append(session.getConfigurationData().getHelloName()).append(" POP3 server (").append(softwaretype).append(") ready ");
+        responseBuffer.append(session.getConfiguration().getHelloName()).append(" POP3 server (").append(softwaretype).append(") ready ");
         POP3Response response = new POP3Response(POP3Response.OK_RESPONSE, responseBuffer.toString());
         return response;
     }
