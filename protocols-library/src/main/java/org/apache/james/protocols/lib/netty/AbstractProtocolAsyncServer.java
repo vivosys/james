@@ -22,11 +22,11 @@ import javax.annotation.Resource;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.james.protocols.api.handler.HandlersPackage;
 import org.apache.james.protocols.api.handler.ProtocolHandler;
 import org.apache.james.protocols.api.handler.ProtocolHandlerChain;
-import org.apache.james.protocols.api.handler.ProtocolHandlerLoader;
 import org.apache.james.protocols.lib.ProtocolHandlerChainImpl;
+import org.apache.james.protocols.lib.handler.HandlersPackage;
+import org.apache.james.protocols.lib.handler.ProtocolHandlerLoader;
 
 /**
  * Abstract base class which use a {@link ProtocolHandlerLoader} for loading the {@link ProtocolHandler}
