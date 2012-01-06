@@ -32,7 +32,9 @@ import org.apache.james.imap.encode.ImapEncoder;
 import org.apache.james.imap.encode.ImapResponseComposer;
 import org.apache.james.imap.encode.base.ImapResponseComposerImpl;
 import org.apache.james.imap.main.ResponseEncoder;
-import org.apache.james.protocols.api.SessionLog;
+import org.apache.james.protocols.api.logger.ProtocolLoggerAdapter;
+import org.apache.james.protocols.api.logger.ProtocolSessionLogger;
+import org.apache.james.protocols.api.logger.Slf4jLoggerAdapter;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFutureListener;
@@ -84,7 +86,7 @@ public class ImapChannelUpstreamHandler extends SimpleChannelUpstreamHandler imp
     }
 
     private Logger getLogger(Channel channel) {
-        return new SessionLog("" + channel.getId(), logger);
+        return new Slf4jLoggerAdapter(new ProtocolSessionLogger("" + channel.getId(), new ProtocolLoggerAdapter(logger)));
     }
 
     @Override
