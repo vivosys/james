@@ -28,6 +28,7 @@ import junit.framework.TestCase;
 
 import org.apache.james.domainlist.api.mock.SimpleDomainList;
 import org.apache.james.protocols.smtp.BaseFakeSMTPSession;
+import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPConfiguration;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.hook.HookReturnCode;
@@ -36,7 +37,6 @@ import org.apache.james.rrt.api.RecipientRewriteTableException;
 import org.apache.james.smtpserver.fastfail.ValidRcptHandler;
 import org.apache.james.user.api.UsersRepository;
 import org.apache.james.user.lib.mock.MockUsersRepository;
-import org.apache.mailet.MailAddress;
 
 public class ValidRcptHandlerTest extends TestCase {
 
@@ -192,6 +192,18 @@ public class ValidRcptHandlerTest extends TestCase {
 
             public boolean isStartTLSSupported() {
                 return false;
+            }
+
+            @Override
+            public String getGreeting() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public String getSoftwareName() {
+                // TODO Auto-generated method stub
+                return null;
             }
         };
 

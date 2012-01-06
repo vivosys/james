@@ -28,15 +28,16 @@ import java.util.Map;
 
 import javax.mail.internet.ParseException;
 
+import junit.framework.TestCase;
+
 import org.apache.james.dnsservice.api.DNSService;
 import org.apache.james.dnsservice.api.mock.MockDNSService;
 import org.apache.james.protocols.smtp.BaseFakeSMTPSession;
+import org.apache.james.protocols.smtp.MailAddress;
+import org.apache.james.protocols.smtp.MailAddressException;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.hook.HookReturnCode;
 import org.apache.james.smtpserver.fastfail.ValidRcptMX;
-import org.apache.mailet.MailAddress;
-
-import junit.framework.TestCase;
 
 public class ValidRcptMXTest extends TestCase {
 
@@ -88,7 +89,7 @@ public class ValidRcptMXTest extends TestCase {
         return dns;
     }
 
-    public void testRejectLoopbackMX() throws ParseException {
+    public void testRejectLoopbackMX() throws ParseException, MailAddressException {
         Collection bNetworks = new ArrayList();
         bNetworks.add("127.0.0.1");
 

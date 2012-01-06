@@ -24,18 +24,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.apache.james.jspf.core.DNSRequest;
 import org.apache.james.jspf.core.DNSService;
 import org.apache.james.jspf.core.exceptions.TimeoutException;
 import org.apache.james.protocols.smtp.BaseFakeSMTPSession;
+import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.hook.HookReturnCode;
 import org.apache.james.smtpserver.fastfail.SPFHandler;
-import org.apache.mailet.base.test.FakeMail;
 import org.apache.mailet.Mail;
-import org.apache.mailet.MailAddress;
-
-import junit.framework.TestCase;
+import org.apache.mailet.base.test.FakeMail;
 
 public class SPFHandlerTest extends TestCase {
 
