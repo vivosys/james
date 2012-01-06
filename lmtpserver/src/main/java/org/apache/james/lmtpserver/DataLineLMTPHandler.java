@@ -29,6 +29,7 @@ import org.apache.james.protocols.api.Response;
 import org.apache.james.protocols.api.handler.WiringException;
 import org.apache.james.protocols.lmtp.LMTPMultiResponse;
 import org.apache.james.protocols.lmtp.hook.DeliverToRecipientHook;
+import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPResponse;
 import org.apache.james.protocols.smtp.SMTPRetCode;
 import org.apache.james.protocols.smtp.SMTPSession;
@@ -36,7 +37,6 @@ import org.apache.james.protocols.smtp.core.AbstractHookableCmdHandler;
 import org.apache.james.protocols.smtp.dsn.DSNStatus;
 import org.apache.james.smtpserver.DataLineJamesMessageHookHandler;
 import org.apache.mailet.Mail;
-import org.apache.mailet.MailAddress;
 
 /**
  * Handler which takes care of deliver the mail to the recipients INBOX
