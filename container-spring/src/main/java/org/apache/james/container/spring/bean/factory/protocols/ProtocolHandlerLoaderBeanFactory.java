@@ -23,7 +23,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.james.container.spring.bean.AbstractBeanFactory;
 import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
 import org.apache.james.protocols.api.handler.ProtocolHandler;
-import org.apache.james.protocols.api.handler.ProtocolHandlerLoader;
+import org.apache.james.protocols.lib.handler.ProtocolHandlerLoader;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
 import org.springframework.beans.BeansException;
 
 public class ProtocolHandlerLoaderBeanFactory extends AbstractBeanFactory implements ProtocolHandlerLoader{
@@ -37,12 +38,11 @@ public class ProtocolHandlerLoaderBeanFactory extends AbstractBeanFactory implem
             Class<ProtocolHandler> c = (Class<ProtocolHandler>) getBeanFactory().getBeanClassLoader().loadClass(name);
             ProtocolHandler handler =  (ProtocolHandler) getBeanFactory().createBean(c);
             if (handler instanceof LifecycleAwareProtocolHandler) {
-                ((LifecycleAwareProtocolHandler) handler).init(config);
+                ((InitializingLifecycleAwareProtocolHandler) handler).init(config);
             }
             return handler;
         } catch (ClassNotFoundException e) {
             throw new LoadingException("Unable to load handler", e);
-
         } catch (BeansException e) {
             throw new LoadingException("Unable to load handler", e);
         } catch (ConfigurationException e) {
