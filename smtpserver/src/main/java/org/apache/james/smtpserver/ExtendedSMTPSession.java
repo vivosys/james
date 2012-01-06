@@ -19,6 +19,7 @@
 package org.apache.james.smtpserver;
 
 import org.apache.james.protocols.api.ProtocolTransport;
+import org.apache.james.protocols.api.logger.ProtocolLoggerAdapter;
 import org.apache.james.protocols.smtp.SMTPConfiguration;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.smtpserver.netty.SMTPServer.SMTPHandlerConfigurationDataImpl;
@@ -29,17 +30,16 @@ import org.slf4j.Logger;
  */
 public class ExtendedSMTPSession extends org.apache.james.protocols.smtp.SMTPSessionImpl {
    
-    private SMTPConfiguration theConfigData;
+    private SMTPConfiguration smtpConfiguration;
 
-
-    public ExtendedSMTPSession(SMTPConfiguration theConfigData, Logger logger, ProtocolTransport transport) {
-        super(theConfigData, logger, transport);
-        this.theConfigData = theConfigData;
+    public ExtendedSMTPSession(SMTPConfiguration smtpConfiguration, Logger logger, ProtocolTransport transport) {
+        super(new ProtocolLoggerAdapter(logger), transport, smtpConfiguration);
+        this.smtpConfiguration = smtpConfiguration;
     }
 
 	public boolean verifyIdentity() {
-        if (theConfigData instanceof SMTPHandlerConfigurationDataImpl) {
-            return ((SMTPHandlerConfigurationDataImpl) theConfigData).verifyIdentity();
+        if (smtpConfiguration instanceof SMTPHandlerConfigurationDataImpl) {
+            return ((SMTPHandlerConfigurationDataImpl) smtpConfiguration).verifyIdentity();
         } else {
             return true;
         }

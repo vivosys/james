@@ -43,8 +43,8 @@ public class AddDefaultAttributesMessageHook implements JamesMessageHook {
         if (mail instanceof MailImpl) {
 
             final MailImpl mailImpl = (MailImpl) mail;
-            mailImpl.setRemoteHost(session.getRemoteHost());
-            mailImpl.setRemoteAddr(session.getRemoteIPAddress());
+            mailImpl.setRemoteHost(session.getRemoteAddress().getHostName());
+            mailImpl.setRemoteAddr(session.getRemoteAddress().getAddress().toString());
             if (session.getUser() != null) {
                 mail.setAttribute(SMTP_AUTH_USER_ATTRIBUTE_NAME, session.getUser());
             }

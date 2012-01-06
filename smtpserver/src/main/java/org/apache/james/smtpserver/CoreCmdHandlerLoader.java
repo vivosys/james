@@ -22,31 +22,29 @@ package org.apache.james.smtpserver;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.james.protocols.api.handler.HandlersPackage;
-
+import org.apache.james.protocols.api.handler.CommandDispatcher;
+import org.apache.james.protocols.lib.handler.HandlersPackage;
 import org.apache.james.protocols.smtp.core.ExpnCmdHandler;
 import org.apache.james.protocols.smtp.core.HeloCmdHandler;
 import org.apache.james.protocols.smtp.core.HelpCmdHandler;
-import org.apache.james.protocols.smtp.core.log.HookResultLogger;
-
 import org.apache.james.protocols.smtp.core.NoopCmdHandler;
 import org.apache.james.protocols.smtp.core.PostmasterAbuseRcptHook;
 import org.apache.james.protocols.smtp.core.QuitCmdHandler;
 import org.apache.james.protocols.smtp.core.ReceivedDataLineFilter;
 import org.apache.james.protocols.smtp.core.RsetCmdHandler;
-import org.apache.james.protocols.smtp.core.SMTPCommandDispatcherLineHandler;
 import org.apache.james.protocols.smtp.core.VrfyCmdHandler;
 import org.apache.james.protocols.smtp.core.esmtp.AuthCmdHandler;
 import org.apache.james.protocols.smtp.core.esmtp.EhloCmdHandler;
 import org.apache.james.protocols.smtp.core.esmtp.MailSizeEsmtpExtension;
 import org.apache.james.protocols.smtp.core.esmtp.StartTlsCmdHandler;
+import org.apache.james.protocols.smtp.core.log.HookResultLogger;
 
 /**
  * This class represent the base command handlers which are shipped with james.
  */
 public class CoreCmdHandlerLoader implements HandlersPackage {
 
-    private final String COMMANDDISPATCHER = SMTPCommandDispatcherLineHandler.class.getName();
+    private final String COMMANDDISPATCHER = CommandDispatcher.class.getName();
     private final String AUTHCMDHANDLER = AuthCmdHandler.class.getName();
     private final String DATACMDHANDLER = JamesDataCmdHandler.class.getName();
     private final String EHLOCMDHANDLER = EhloCmdHandler.class.getName();

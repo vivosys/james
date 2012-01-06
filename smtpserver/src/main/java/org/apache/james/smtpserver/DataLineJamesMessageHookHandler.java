@@ -23,11 +23,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 
 import org.apache.james.core.MailImpl;
 import org.apache.james.core.MimeMessageCopyOnWriteProxy;
@@ -38,6 +40,8 @@ import org.apache.james.protocols.api.Response;
 import org.apache.james.protocols.api.handler.ExtensibleHandler;
 import org.apache.james.protocols.api.handler.LineHandler;
 import org.apache.james.protocols.api.handler.WiringException;
+import org.apache.james.protocols.smtp.MailAddress;
+import org.apache.james.protocols.smtp.MailAddressException;
 import org.apache.james.protocols.smtp.MailEnvelope;
 import org.apache.james.protocols.smtp.SMTPResponse;
 import org.apache.james.protocols.smtp.SMTPRetCode;
@@ -49,8 +53,9 @@ import org.apache.james.protocols.smtp.hook.Hook;
 import org.apache.james.protocols.smtp.hook.HookResult;
 import org.apache.james.protocols.smtp.hook.HookResultHook;
 import org.apache.james.protocols.smtp.hook.MessageHook;
+import org.apache.james.smtpserver.model.MailetMailAddressAdapter;
+import org.apache.james.smtpserver.model.ProtocolMailAddressAdapter;
 import org.apache.mailet.Mail;
-import org.apache.mailet.MailAddress;
 
 /**
  * Handles the calling of JamesMessageHooks
@@ -67,7 +72,11 @@ public class DataLineJamesMessageHookHandler implements DataLineFilter, Extensib
      * @see
      * org.apache.james.protocols.smtp.core.DataLineFilter#onLine(SMTPSession, byte[], LineHandler)
      */
-    public Response onLine(SMTPSession session, byte[] line, LineHandler<SMTPSession> next) {
+    public Response onLine(SMTPSession session, ByteBuffer lineByteBuffer, LineHandler<SMTPSession> next) {
+        
+        byte[] line = new byte[lineByteBuffer.remaining()];
+        lineByteBuffer.get(line, 0, line.length);
+        
         MimeMessageInputStreamSource mmiss = (MimeMessageInputStreamSource) session.getState().get(SMTPConstants.DATA_MIMEMESSAGE_STREAMSOURCE);
 
         try {
@@ -80,7 +89,8 @@ public class DataLineJamesMessageHookHandler implements DataLineFilter, Extensib
                 out.close();
 
                 List recipientCollection = (List) session.getState().get(SMTPSession.RCPT_LIST);
-                MailImpl mail = new MailImpl(MailImpl.getId(), (MailAddress) session.getState().get(SMTPSession.SENDER), recipientCollection);
+                MailAddress mailAddress = (MailAddress) session.getState().get(SMTPSession.SENDER);
+                MailImpl mail = new MailImpl(MailImpl.getId(), new MailetMailAddressAdapter(mailAddress), recipientCollection);
 
                 // store mail in the session so we can be sure it get disposed
                 // later
@@ -118,11 +128,13 @@ public class DataLineJamesMessageHookHandler implements DataLineFilter, Extensib
             }
         } catch (IOException e) {
             LifecycleUtil.dispose(mmiss);
-
             SMTPResponse response = new SMTPResponse(SMTPRetCode.LOCAL_ERROR, DSNStatus.getStatus(DSNStatus.TRANSIENT, DSNStatus.UNDEFINED_STATUS) + " Error processing message: " + e.getMessage());
-
             session.getLogger().error("Unknown error occurred while processing DATA.", e);
-            
+            return response;
+        } catch (AddressException e) {
+            LifecycleUtil.dispose(mmiss);
+            SMTPResponse response = new SMTPResponse(SMTPRetCode.LOCAL_ERROR, DSNStatus.getStatus(DSNStatus.TRANSIENT, DSNStatus.UNDEFINED_STATUS) + " Error processing message: " + e.getMessage());
+            session.getLogger().error("Invalid email address while processing DATA.", e);
             return response;
         }
         return null;
@@ -270,15 +282,20 @@ public class DataLineJamesMessageHookHandler implements DataLineFilter, Extensib
          * @see org.apache.james.protocols.smtp.MailEnvelope#getSender()
          */
         public MailAddress getSender() {
-            return mail.getSender();
+            try {
+                return new ProtocolMailAddressAdapter( mail.getSender());
+            } catch (MailAddressException e) {
+                // should not occur here, cause it should have happened before
+                throw new RuntimeException(e);
+            }
         }
 
         /**
          * @see org.apache.james.protocols.smtp.MailEnvelope#getSize()
          */
-        public int getSize() {
+        public long getSize() {
             try {
-                return (int)mail.getMessageSize();
+                return (long) mail.getMessageSize();
             } catch (MessagingException e) {
                 return -1;
             }

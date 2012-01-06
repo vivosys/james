@@ -68,7 +68,7 @@ public class SendMailHandler implements JamesMessageHook {
                 recipientString = theRecipients.toString();
             }
             if (session.getLogger().isInfoEnabled()) {
-                StringBuilder infoBuffer = new StringBuilder(256).append("Successfully spooled mail ").append(mail.getName()).append(" from ").append(mail.getSender()).append(" on ").append(session.getRemoteIPAddress()).append(" for ").append(recipientString);
+                StringBuilder infoBuffer = new StringBuilder(256).append("Successfully spooled mail ").append(mail.getName()).append(" from ").append(mail.getSender()).append(" on ").append(session.getRemoteAddress().getAddress().toString()).append(" for ").append(recipientString);
                 session.getLogger().info(infoBuffer.toString());
             }
         } catch (MessagingException me) {
