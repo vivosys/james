@@ -27,7 +27,9 @@ import org.apache.james.imap.api.ImapSessionState;
 import org.apache.james.imap.api.process.ImapLineHandler;
 import org.apache.james.imap.api.process.ImapSession;
 import org.apache.james.imap.api.process.SelectedMailbox;
-import org.apache.james.protocols.api.SessionLog;
+import org.apache.james.protocols.api.logger.ProtocolLoggerAdapter;
+import org.apache.james.protocols.api.logger.ProtocolSessionLogger;
+import org.apache.james.protocols.api.logger.Slf4jLoggerAdapter;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.handler.codec.compression.ZlibDecoder;
 import org.jboss.netty.handler.codec.compression.ZlibEncoder;
@@ -43,14 +45,14 @@ public class NettyImapSession implements ImapSession, NettyConstants {
     private SSLContext sslContext;
     private String[] enabledCipherSuites;
     private boolean compress;
-    private SessionLog log;
+    private ProtocolSessionLogger log;
     private Channel channel;
     private int handlerCount;
     private boolean plainAuthDisallowed;
 
     public NettyImapSession(Channel channel, Logger log, SSLContext sslContext, String[] enabledCipherSuites, boolean compress, boolean plainAuthDisallowed) {
         this.channel = channel;
-        this.log = new SessionLog(channel.getId() + "", log);
+        this.log = new ProtocolSessionLogger(channel.getId() + "", new ProtocolLoggerAdapter(log));
         this.sslContext = sslContext;
         this.enabledCipherSuites = enabledCipherSuites;
         this.compress = compress;
@@ -228,7 +230,7 @@ public class NettyImapSession implements ImapSession, NettyConstants {
      * @see org.apache.james.imap.api.process.ImapSession#getLog()
      */
     public Logger getLog() {
-        return log;
+        return new Slf4jLoggerAdapter(log);
     }
 
     /**
