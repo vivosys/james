@@ -22,12 +22,12 @@ package org.apache.james.pop3server.core;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.james.protocols.api.handler.HandlersPackage;
+import org.apache.james.protocols.api.handler.CommandDispatcher;
+import org.apache.james.protocols.lib.handler.HandlersPackage;
 import org.apache.james.protocols.pop3.core.CapaCmdHandler;
 import org.apache.james.protocols.pop3.core.DeleCmdHandler;
 import org.apache.james.protocols.pop3.core.ListCmdHandler;
 import org.apache.james.protocols.pop3.core.NoopCmdHandler;
-import org.apache.james.protocols.pop3.core.POP3CommandDispatcherLineHandler;
 import org.apache.james.protocols.pop3.core.QuitCmdHandler;
 import org.apache.james.protocols.pop3.core.RetrCmdHandler;
 import org.apache.james.protocols.pop3.core.RsetCmdHandler;
@@ -56,7 +56,7 @@ public class CoreCmdHandlerLoader implements HandlersPackage {
     private final static String UNKOWNCMDHANDLER = UnknownCmdHandler.class.getName();
     private final static String STLSCMDHANDLER = StlsCmdHandler.class.getName();
 
-    private final static String COMMANDDISPATCHER = POP3CommandDispatcherLineHandler.class.getName();
+    private final static String COMMANDDISPATCHER = CommandDispatcher.class.getName();
 
     // logging stuff
     private final String COMMANDHANDLERRESULTLOGGER = POP3CommandHandlerResultLogger.class.getName();
