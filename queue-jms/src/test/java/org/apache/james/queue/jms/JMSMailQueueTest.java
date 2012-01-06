@@ -32,20 +32,22 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 
+import junit.framework.TestCase;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.broker.region.policy.PolicyEntry;
 import org.apache.activemq.broker.region.policy.PolicyMap;
 import org.apache.james.core.MailImpl;
-import org.apache.james.queue.api.ManageableMailQueue;
+import org.apache.james.protocols.smtp.MailAddress;
+import org.apache.james.protocols.smtp.MailAddressException;
 import org.apache.james.queue.api.MailQueue.MailQueueItem;
+import org.apache.james.queue.api.ManageableMailQueue;
 import org.apache.james.queue.api.ManageableMailQueue.MailQueueIterator;
+import org.apache.james.smtpserver.model.MailetMailAddressAdapter;
 import org.apache.mailet.Mail;
-import org.apache.mailet.MailAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import junit.framework.TestCase;
 
 public class JMSMailQueueTest extends TestCase {
     protected JMSMailQueue queue;
@@ -100,7 +102,7 @@ public class JMSMailQueueTest extends TestCase {
         }
     }
 
-    public void testFIFO() throws MessagingException, InterruptedException, IOException {
+    public void testFIFO() throws MessagingException, InterruptedException, IOException, MailAddressException {
         // should be empty
         assertEquals(0, queue.getSize());
 
@@ -139,7 +141,7 @@ public class JMSMailQueueTest extends TestCase {
         assertEquals(0, queue.getSize());
     }
 
-    public void testDelayedDeQueue() throws MessagingException, InterruptedException, IOException {
+    public void testDelayedDeQueue() throws MessagingException, InterruptedException, IOException, MailAddressException {
         // should be empty
         assertEquals(0, queue.getSize());
 
@@ -173,7 +175,7 @@ public class JMSMailQueueTest extends TestCase {
         assertEquals(0, queue.getSize());
     }
 
-    public void testFlush() throws MessagingException, InterruptedException, IOException {
+    public void testFlush() throws MessagingException, InterruptedException, IOException, MailAddressException {
         // should be empty
         assertEquals(0, queue.getSize());
 
@@ -214,7 +216,7 @@ public class JMSMailQueueTest extends TestCase {
         assertTrue(dequeueTime < 30 * 1000);
     }
 
-    public void testRemoveWithRecipient() throws MessagingException, InterruptedException {
+    public void testRemoveWithRecipient() throws MessagingException, InterruptedException, MailAddressException {
         assertEquals(0, queue.getSize());
 
         Mail mail = createMail();
@@ -239,14 +241,14 @@ public class JMSMailQueueTest extends TestCase {
 
     }
 
-    public void testRemoveWithSender() throws MessagingException, InterruptedException {
+    public void testRemoveWithSender() throws MessagingException, InterruptedException, MailAddressException {
         assertEquals(0, queue.getSize());
 
         MailImpl mail = createMail();
-        mail.setSender(new MailAddress("remove@me1"));
+        mail.setSender(new MailetMailAddressAdapter(new MailAddress("remove@me1")));
 
         MailImpl mail2 = createMail();
-        mail2.setSender(new MailAddress("remove@me2"));
+        mail2.setSender(new MailetMailAddressAdapter(new MailAddress("remove@me2")));
 
         queue.enQueue(mail);
         queue.enQueue(mail2);
@@ -264,7 +266,7 @@ public class JMSMailQueueTest extends TestCase {
 
     }
 
-    public void testRemoveWithName() throws MessagingException, InterruptedException {
+    public void testRemoveWithName() throws MessagingException, InterruptedException, MailAddressException {
         assertEquals(0, queue.getSize());
 
         MailImpl mail = createMail();
@@ -289,14 +291,14 @@ public class JMSMailQueueTest extends TestCase {
 
     }
 
-    protected MailImpl createMail() throws MessagingException {
+    protected MailImpl createMail() throws MessagingException, MailAddressException {
         MailImpl mail = new MailImpl();
         mail.setName("" + System.currentTimeMillis());
         mail.setAttribute("test1", System.currentTimeMillis());
         mail.setErrorMessage(UUID.randomUUID().toString());
         mail.setLastUpdated(new Date());
         mail.setRecipients(Arrays.asList(new MailAddress("test@test"), new MailAddress("test@test2")));
-        mail.setSender(new MailAddress("sender@senderdomain"));
+        mail.setSender(new MailetMailAddressAdapter(new MailAddress("sender@senderdomain")));
 
         MimeMessage message = new MimeMessage(Session.getInstance(new Properties()));
         message.setText("test");
@@ -339,7 +341,7 @@ public class JMSMailQueueTest extends TestCase {
 
     }
 
-    public void testPrioritySupport() throws InterruptedException, MessagingException, IOException {
+    public void testPrioritySupport() throws InterruptedException, MessagingException, IOException, MailAddressException {
         // should be empty
         assertEquals(0, queue.getSize());
 
@@ -373,7 +375,7 @@ public class JMSMailQueueTest extends TestCase {
         assertEquals(0, queue.getSize());
     }
 
-    public void testBrowse() throws MessagingException, InterruptedException, IOException {
+    public void testBrowse() throws MessagingException, InterruptedException, IOException, MailAddressException {
         // should be empty
         assertEquals(0, queue.getSize());
 
