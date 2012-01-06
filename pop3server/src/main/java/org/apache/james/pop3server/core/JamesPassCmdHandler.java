@@ -18,8 +18,6 @@
  ****************************************************************/
 package org.apache.james.pop3server.core;
 
-import javax.annotation.Resource;
-
 import org.apache.james.protocols.api.Request;
 import org.apache.james.protocols.api.Response;
 import org.apache.james.protocols.lib.POP3BeforeSMTPHelper;
@@ -35,16 +33,20 @@ import org.apache.james.protocols.pop3.mailbox.MailboxFactory;
  */
 public class JamesPassCmdHandler extends PassCmdHandler {
 
-    @Resource(name = "mailboxfactory")
-    public void setMailboxFactory(MailboxFactory factory) {
-        super.setMailboxFactory(factory);
+    // TODO Check that this constructor is correctly called and can replace the mailboxfactory injection
+    public JamesPassCmdHandler(MailboxFactory factory) {
+        super(factory);
     }
+//    @Resource(name = "mailboxfactory")
+//    public void setMailboxFactory(MailboxFactory factory) {
+//        super.setMailboxFactory(factory);
+//    }
 
     @Override
     public Response onCommand(POP3Session session, Request request) {
         Response response =  super.onCommand(session, request);
         if (POP3Response.OK_RESPONSE.equals(response.getRetCode())) {
-            POP3BeforeSMTPHelper.addIPAddress(session.getRemoteIPAddress());
+            POP3BeforeSMTPHelper.addIPAddress(session.getRemoteAddress().getAddress().toString());
         }
         return response;
     }
