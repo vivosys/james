@@ -21,7 +21,7 @@ package org.apache.james.pop3server.jmx;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.james.protocols.api.handler.HandlersPackage;
+import org.apache.james.protocols.lib.handler.HandlersPackage;
 
 public class JMXHandlersLoader implements HandlersPackage {
 
