@@ -28,6 +28,7 @@ import org.apache.james.mailbox.MailboxManager;
 import org.apache.james.mailbox.MailboxPath;
 import org.apache.james.mailbox.MailboxSession;
 import org.apache.james.mailbox.MessageManager;
+import org.apache.james.protocols.api.logger.Slf4jLoggerAdapter;
 import org.apache.james.protocols.pop3.POP3Session;
 import org.apache.james.protocols.pop3.mailbox.Mailbox;
 import org.apache.james.protocols.pop3.mailbox.MailboxFactory;
@@ -45,7 +46,7 @@ public class JamesMailboxFactory implements MailboxFactory {
     public Mailbox getMailbox(POP3Session session, String password) throws IOException {
         MailboxSession mSession = null;
         try {
-            mSession = manager.login(session.getUser(), password, session.getLogger());
+            mSession = manager.login(session.getUser(), password, new Slf4jLoggerAdapter(session.getLogger()));
             manager.startProcessingRequest(mSession);
             MailboxPath inbox = MailboxPath.inbox(mSession);
             
