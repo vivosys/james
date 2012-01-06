@@ -41,7 +41,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.james.dnsservice.api.DNSService;
 import org.apache.james.dnsservice.library.netmatcher.NetMatcher;
 import org.apache.james.filesystem.api.FileSystem;
-import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
+import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.core.fastfail.AbstractGreylistHandler;
 import org.apache.james.protocols.smtp.hook.HookResult;
@@ -49,14 +50,13 @@ import org.apache.james.protocols.smtp.hook.HookReturnCode;
 import org.apache.james.util.TimeConverter;
 import org.apache.james.util.sql.JDBCUtil;
 import org.apache.james.util.sql.SqlResources;
-import org.apache.mailet.MailAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * GreylistHandler which can be used to activate Greylisting
  */
-public class JDBCGreylistHandler extends AbstractGreylistHandler implements LifecycleAwareProtocolHandler {
+public class JDBCGreylistHandler extends AbstractGreylistHandler implements InitializingLifecycleAwareProtocolHandler {
 
     /** This log is the fall back shared by all instances */
     private static final Logger FALLBACK_LOG = LoggerFactory.getLogger(JDBCGreylistHandler.class);
@@ -392,10 +392,10 @@ public class JDBCGreylistHandler extends AbstractGreylistHandler implements Life
      *      org.apache.mailet.MailAddress, org.apache.mailet.MailAddress)
      */
     public HookResult doRcpt(SMTPSession session, MailAddress sender, MailAddress rcpt) {
-        if ((wNetworks == null) || (!wNetworks.matchInetNetwork(session.getRemoteIPAddress()))) {
+        if ((wNetworks == null) || (!wNetworks.matchInetNetwork(session.getRemoteAddress().getAddress().toString()))) {
             return super.doRcpt(session, sender, rcpt);
         } else {
-            session.getLogger().info("IpAddress " + session.getRemoteIPAddress() + " is whitelisted. Skip greylisting.");
+            session.getLogger().info("IpAddress " + session.getRemoteAddress().getAddress().toString() + " is whitelisted. Skip greylisting.");
         }
         return new HookResult(HookReturnCode.DECLINED);
     }

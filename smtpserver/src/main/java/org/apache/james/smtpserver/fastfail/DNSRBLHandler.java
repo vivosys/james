@@ -22,21 +22,12 @@ package org.apache.james.smtpserver.fastfail;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.james.dnsservice.api.DNSService;
-import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
-import org.apache.james.smtpserver.SMTPServerDNSServiceAdapter;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
 
-public class DNSRBLHandler extends org.apache.james.protocols.smtp.core.fastfail.DNSRBLHandler implements LifecycleAwareProtocolHandler {
-
-    @Resource(name = "dnsservice")
-    public void setDNSService(DNSService dns) {
-        super.setDNSService(new SMTPServerDNSServiceAdapter(dns));
-    }
+public class DNSRBLHandler extends org.apache.james.protocols.smtp.core.fastfail.DNSRBLHandler implements InitializingLifecycleAwareProtocolHandler {
 
     @SuppressWarnings("unchecked")
     @Override
@@ -82,7 +73,6 @@ public class DNSRBLHandler extends org.apache.james.protocols.smtp.core.fastfail
 
     @Override
     public void destroy() {
-        // TODO Auto-generated method stub
-        
+        // Do nothing
     }
 }

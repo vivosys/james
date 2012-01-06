@@ -32,14 +32,14 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.james.dnsservice.api.DNSService;
 import org.apache.james.dnsservice.api.TemporaryResolutionException;
 import org.apache.james.dnsservice.library.netmatcher.NetMatcher;
-import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
+import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPRetCode;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.dsn.DSNStatus;
 import org.apache.james.protocols.smtp.hook.HookResult;
 import org.apache.james.protocols.smtp.hook.HookReturnCode;
 import org.apache.james.protocols.smtp.hook.RcptHook;
-import org.apache.mailet.MailAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * This class can be used to reject email with bogus MX which is send from a
  * authorized user or an authorized network.
  */
-public class ValidRcptMX implements LifecycleAwareProtocolHandler, RcptHook {
+public class ValidRcptMX implements InitializingLifecycleAwareProtocolHandler, RcptHook {
 
     /** This log is the fall back shared by all instances */
     private static final Logger FALLBACK_LOG = LoggerFactory.getLogger(ValidRcptMX.class);
@@ -139,7 +139,7 @@ public class ValidRcptMX implements LifecycleAwareProtocolHandler, RcptHook {
 
                         // Check for invalid MX
                         if (bNetwork.matchInetNetwork(ip)) {
-                            return new HookResult(HookReturnCode.DENY, SMTPRetCode.AUTH_REQUIRED, DSNStatus.getStatus(DSNStatus.PERMANENT, DSNStatus.SECURITY_AUTH) + " Invalid MX " + session.getRemoteIPAddress() + " for domain " + domain + ". Reject email");
+                            return new HookResult(HookReturnCode.DENY, SMTPRetCode.AUTH_REQUIRED, DSNStatus.getStatus(DSNStatus.PERMANENT, DSNStatus.SECURITY_AUTH) + " Invalid MX " + session.getRemoteAddress().getAddress().toString() + " for domain " + domain + ". Reject email");
                         }
                     } catch (UnknownHostException e) {
                         // Ignore this

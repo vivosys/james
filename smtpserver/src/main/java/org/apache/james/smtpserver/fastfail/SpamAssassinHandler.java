@@ -26,7 +26,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.dsn.DSNStatus;
 import org.apache.james.protocols.smtp.hook.HookResult;
@@ -64,7 +64,7 @@ import org.apache.mailet.Mail;
  * 
  * </p>
  */
-public class SpamAssassinHandler implements JamesMessageHook, LifecycleAwareProtocolHandler {
+public class SpamAssassinHandler implements JamesMessageHook, InitializingLifecycleAwareProtocolHandler {
 
     /** The port spamd is listen on */
     private int spamdPort = 783;
@@ -134,7 +134,7 @@ public class SpamAssassinHandler implements JamesMessageHook, LifecycleAwareProt
                     // if the hits are bigger the rejectionHits reject the
                     // message
                     if (spamdRejectionHits <= hits) {
-                        StringBuffer buffer = new StringBuffer(256).append("Rejected message from ").append(session.getState().get(SMTPSession.SENDER).toString()).append(" from host ").append(session.getRemoteHost()).append(" (").append(session.getRemoteIPAddress())
+                        StringBuffer buffer = new StringBuffer(256).append("Rejected message from ").append(session.getState().get(SMTPSession.SENDER).toString()).append(" from host ").append(session.getRemoteAddress().getHostName()).append(" (").append(session.getRemoteAddress().getAddress().toString())
                                 .append(") This message reach the spam hits treshold. Required rejection hits: ").append(spamdRejectionHits).append(" hits: ").append(hits);
                         session.getLogger().info(buffer.toString());
 

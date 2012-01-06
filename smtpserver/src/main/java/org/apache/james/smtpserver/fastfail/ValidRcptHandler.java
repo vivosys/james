@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.smtpserver.fastfail;
 
 import java.util.Collection;
@@ -27,20 +26,20 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.james.domainlist.api.DomainList;
 import org.apache.james.domainlist.api.DomainListException;
-import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
+import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.core.fastfail.AbstractValidRcptHandler;
 import org.apache.james.rrt.api.RecipientRewriteTable;
-import org.apache.james.rrt.api.RecipientRewriteTableException;
 import org.apache.james.rrt.api.RecipientRewriteTable.ErrorMappingException;
+import org.apache.james.rrt.api.RecipientRewriteTableException;
 import org.apache.james.user.api.UsersRepository;
 import org.apache.james.user.api.UsersRepositoryException;
-import org.apache.mailet.MailAddress;
 
 /**
  * Handler which reject invalid recipients
  */
-public class ValidRcptHandler extends AbstractValidRcptHandler implements LifecycleAwareProtocolHandler {
+public class ValidRcptHandler extends AbstractValidRcptHandler implements InitializingLifecycleAwareProtocolHandler {
 
     private UsersRepository users;
 

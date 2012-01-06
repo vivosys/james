@@ -19,16 +19,41 @@
 
 package org.apache.james.smtpserver.fastfail;
 
+import java.util.Collection;
+
 import javax.annotation.Resource;
 
 import org.apache.james.dnsservice.api.DNSService;
-import org.apache.james.smtpserver.SMTPServerDNSServiceAdapter;
+import org.apache.james.protocols.smtp.SMTPSession;
 
 public class ValidSenderDomainHandler extends org.apache.james.protocols.smtp.core.fastfail.ValidSenderDomainHandler {
+    
+    private DNSService dnsService;
 
     @Resource(name = "dnsservice")
-    public void setDNSService(DNSService dns) {
-        super.setDNSService(new SMTPServerDNSServiceAdapter(dns));
+    public void setDNSService(DNSService dnsService) {
+        this.dnsService = dnsService;
+    }
+
+    @Override
+    protected boolean hasMXRecord(SMTPSession session, String domain) {
+        // null sender so return
+        if (domain == null) return false;
+
+        Collection<String> records = null;
+            
+        // try to resolv the provided domain in the senderaddress. If it can not resolved do not accept it.
+            try {
+                records = dnsService.findMXRecords(domain);
+            } catch (org.apache.james.dnsservice.api.TemporaryResolutionException e) {
+                // TODO: Should we reject temporary ?
+            }
+    
+        if (records == null || records.size() == 0) {
+            return true;
+        }
+
+        return false;
     }
 
 }

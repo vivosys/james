@@ -26,7 +26,8 @@ import org.apache.james.jspf.core.exceptions.SPFErrorConstants;
 import org.apache.james.jspf.executor.SPFResult;
 import org.apache.james.jspf.impl.DefaultSPF;
 import org.apache.james.jspf.impl.SPF;
-import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
+import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPRetCode;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.dsn.DSNStatus;
@@ -36,11 +37,10 @@ import org.apache.james.protocols.smtp.hook.MailHook;
 import org.apache.james.protocols.smtp.hook.RcptHook;
 import org.apache.james.smtpserver.JamesMessageHook;
 import org.apache.mailet.Mail;
-import org.apache.mailet.MailAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SPFHandler implements JamesMessageHook, MailHook, RcptHook, LifecycleAwareProtocolHandler {
+public class SPFHandler implements JamesMessageHook, MailHook, RcptHook, InitializingLifecycleAwareProtocolHandler {
 
     /** This log is the fall back shared by all instances */
     private static final Logger FALLBACK_LOG = LoggerFactory.getLogger(SPFHandler.class);
@@ -112,7 +112,7 @@ public class SPFHandler implements JamesMessageHook, MailHook, RcptHook, Lifecyc
             session.getLogger().info("No Sender or HELO/EHLO present");
         } else {
 
-            String ip = session.getRemoteIPAddress();
+            String ip = session.getRemoteAddress().getAddress().toString();
 
             SPFResult result = spf.checkSPF(ip, sender.toString(), heloEhlo);
 

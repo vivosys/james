@@ -19,16 +19,6 @@
 
 package org.apache.james.smtpserver.fastfail;
 
-import javax.annotation.Resource;
-
-import org.apache.james.dnsservice.api.DNSService;
-import org.apache.james.smtpserver.SMTPServerDNSServiceAdapter;
-
 public class ResolvableEhloHeloHandler extends org.apache.james.protocols.smtp.core.fastfail.ResolvableEhloHeloHandler {
-
-    @Resource(name = "dnsservice")
-    public void setDNSService(DNSService dns) {
-        super.setDNSService(new SMTPServerDNSServiceAdapter(dns));
-    }
 
 }
