@@ -27,13 +27,12 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-
 import org.apache.james.protocols.api.handler.ExtensibleHandler;
-import org.apache.james.protocols.api.handler.HandlersPackage;
-import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
 import org.apache.james.protocols.api.handler.ProtocolHandlerChain;
-import org.apache.james.protocols.api.handler.ProtocolHandlerLoader;
 import org.apache.james.protocols.api.handler.WiringException;
+import org.apache.james.protocols.lib.handler.HandlersPackage;
+import org.apache.james.protocols.lib.handler.ProtocolHandlerLoader;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
 
 public class ProtocolHandlerChainImpl implements ProtocolHandlerChain{
 
@@ -160,11 +159,11 @@ public class ProtocolHandlerChainImpl implements ProtocolHandlerChain{
     }
 
     /**
-     * Destroy all loaded {@link LifecycleAwareProtocolHandler}
+     * Destroy all loaded {@link InitializingLifecycleAwareProtocolHandler}
      */
     public void destroy() {
-        LinkedList<LifecycleAwareProtocolHandler> lHandlers = getHandlers(LifecycleAwareProtocolHandler.class);
-        for (LifecycleAwareProtocolHandler handler: lHandlers) {
+        LinkedList<InitializingLifecycleAwareProtocolHandler> lHandlers = getHandlers(InitializingLifecycleAwareProtocolHandler.class);
+        for (InitializingLifecycleAwareProtocolHandler handler: lHandlers) {
             handler.destroy();
         }
     }
