@@ -29,16 +29,16 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.james.protocols.api.ProtocolSession;
 import org.apache.james.protocols.api.Response;
 import org.apache.james.protocols.api.handler.CommandHandler;
+import org.apache.james.protocols.api.handler.ExtensibleHandler;
 import org.apache.james.protocols.api.handler.ProtocolHandler;
 import org.apache.james.protocols.api.handler.ProtocolHandlerResultHandler;
-import org.apache.james.protocols.api.handler.ExtensibleHandler;
-import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
 import org.apache.james.protocols.api.handler.WiringException;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
 
 /**
  * Expose JMX statistics for {@link CommandHandler}
  */
-public abstract class AbstractCommandHandlerResultJMXMonitor<R extends Response, S extends ProtocolSession> implements ProtocolHandlerResultHandler<R, S>, ExtensibleHandler, LifecycleAwareProtocolHandler {
+public abstract class AbstractCommandHandlerResultJMXMonitor<R extends Response, S extends ProtocolSession> implements ProtocolHandlerResultHandler<R, S>, ExtensibleHandler, InitializingLifecycleAwareProtocolHandler {
 
     private Map<String, AbstractCommandHandlerStats<R>> cStats = new HashMap<String, AbstractCommandHandlerStats<R>>();
     private String jmxName;

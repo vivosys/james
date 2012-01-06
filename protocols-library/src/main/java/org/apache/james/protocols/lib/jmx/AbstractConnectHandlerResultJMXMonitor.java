@@ -30,17 +30,17 @@ import org.apache.james.protocols.api.ProtocolSession;
 import org.apache.james.protocols.api.Response;
 import org.apache.james.protocols.api.handler.ConnectHandler;
 import org.apache.james.protocols.api.handler.ExtensibleHandler;
-import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
 import org.apache.james.protocols.api.handler.ProtocolHandler;
 import org.apache.james.protocols.api.handler.ProtocolHandlerResultHandler;
 import org.apache.james.protocols.api.handler.WiringException;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
 
 /**
  * Handler which will gather statistics for {@link ConnectHandler}'s
  * 
  * @param <S>
  */
-public abstract class AbstractConnectHandlerResultJMXMonitor<R extends Response, S extends ProtocolSession> implements ProtocolHandlerResultHandler<R,S>, ExtensibleHandler, LifecycleAwareProtocolHandler {
+public abstract class AbstractConnectHandlerResultJMXMonitor<R extends Response, S extends ProtocolSession> implements ProtocolHandlerResultHandler<R,S>, ExtensibleHandler, InitializingLifecycleAwareProtocolHandler {
 
     private Map<String, ConnectHandlerStats> cStats = new HashMap<String, ConnectHandlerStats>();
     private String jmxName;

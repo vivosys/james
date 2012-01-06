@@ -29,18 +29,18 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.james.protocols.api.ProtocolSession;
 import org.apache.james.protocols.api.Response;
 import org.apache.james.protocols.api.handler.ExtensibleHandler;
-import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
 import org.apache.james.protocols.api.handler.LineHandler;
 import org.apache.james.protocols.api.handler.ProtocolHandler;
 import org.apache.james.protocols.api.handler.ProtocolHandlerResultHandler;
 import org.apache.james.protocols.api.handler.WiringException;
+import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
 
 /**
  * Handler which will gather statistics for {@link LineHandler}'s
  * 
  * @param <S>
  */
-public abstract class AbstractLineHandlerResultJMXMonitor<R extends Response, S extends ProtocolSession> implements ProtocolHandlerResultHandler<R, S>, ExtensibleHandler, LifecycleAwareProtocolHandler {
+public abstract class AbstractLineHandlerResultJMXMonitor<R extends Response, S extends ProtocolSession> implements ProtocolHandlerResultHandler<R, S>, ExtensibleHandler, InitializingLifecycleAwareProtocolHandler {
 
     private Map<String, LineHandlerStats> lStats = new HashMap<String, LineHandlerStats>();
     private String jmxName;
