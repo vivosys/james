@@ -25,7 +25,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.james.filesystem.api.FileSystem;
-import org.apache.james.protocols.api.handler.ProtocolHandlerLoader;
+import org.apache.james.protocols.lib.handler.ProtocolHandlerLoader;
 import org.apache.james.protocols.lib.netty.AbstractConfigurableAsyncServer;
 import org.apache.james.protocols.lib.netty.AbstractServerFactory;
 import org.slf4j.Logger;
