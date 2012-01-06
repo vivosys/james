@@ -28,7 +28,8 @@ import org.apache.james.dnsservice.api.DNSService;
 import org.apache.james.dnsservice.library.netmatcher.NetMatcher;
 import org.apache.james.protocols.api.ProtocolSession;
 import org.apache.james.protocols.api.ProtocolTransport;
-import org.apache.james.protocols.api.handler.HandlersPackage;
+import org.apache.james.protocols.api.logger.ProtocolLoggerAdapter;
+import org.apache.james.protocols.lib.handler.HandlersPackage;
 import org.apache.james.protocols.lib.netty.AbstractProtocolAsyncServer;
 import org.apache.james.protocols.smtp.SMTPConfiguration;
 import org.apache.james.protocols.smtp.SMTPProtocol;
@@ -106,7 +107,7 @@ public class SMTPServer extends AbstractProtocolAsyncServer implements SMTPServe
             }
             authorizedNetworks = new NetMatcher(networks, dns);
         }
-        SMTPProtocol transport = new SMTPProtocol(getProtocolHandlerChain(), theConfigData) {
+        SMTPProtocol transport = new SMTPProtocol(getProtocolHandlerChain(), theConfigData, new ProtocolLoggerAdapter(getLogger())) {
 
             @Override
             public ProtocolSession newSession(ProtocolTransport transport) {
@@ -271,6 +272,18 @@ public class SMTPServer extends AbstractProtocolAsyncServer implements SMTPServe
          */
         public boolean verifyIdentity() {
             return SMTPServer.this.verifyIdentity;
+        }
+
+        @Override
+        public String getGreeting() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public String getSoftwareName() {
+            // TODO Auto-generated method stub
+            return null;
         }
 
     }

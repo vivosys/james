@@ -37,11 +37,11 @@ public class SMTPChannelUpstreamHandler extends BasicChannelUpstreamHandler {
 
 
     public SMTPChannelUpstreamHandler(Protocol protocol, Logger logger, Encryption encryption) {
-        super(protocol, logger, encryption);
+        super(protocol, encryption);
     }
 
     public SMTPChannelUpstreamHandler(Protocol protocol, Logger logger) {
-        super(protocol, logger);
+        super(protocol);
     }
 
     /**
