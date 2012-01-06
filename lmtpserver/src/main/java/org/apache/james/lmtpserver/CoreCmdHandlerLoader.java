@@ -23,19 +23,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.james.lmtpserver.hook.MailboxDeliverToRecipientHandler;
-import org.apache.james.protocols.api.handler.HandlersPackage;
-import org.apache.james.protocols.lmtp.LhloCmdHandler;
-import org.apache.james.protocols.lmtp.WelcomeMessageHandler;
+import org.apache.james.protocols.api.handler.CommandDispatcher;
+import org.apache.james.protocols.lib.handler.HandlersPackage;
+import org.apache.james.protocols.lmtp.core.LhloCmdHandler;
+import org.apache.james.protocols.lmtp.core.WelcomeMessageHandler;
 import org.apache.james.protocols.smtp.core.ExpnCmdHandler;
-import org.apache.james.protocols.smtp.core.log.HookResultLogger;
 import org.apache.james.protocols.smtp.core.NoopCmdHandler;
 import org.apache.james.protocols.smtp.core.PostmasterAbuseRcptHook;
 import org.apache.james.protocols.smtp.core.QuitCmdHandler;
 import org.apache.james.protocols.smtp.core.ReceivedDataLineFilter;
 import org.apache.james.protocols.smtp.core.RsetCmdHandler;
-import org.apache.james.protocols.smtp.core.SMTPCommandDispatcherLineHandler;
 import org.apache.james.protocols.smtp.core.VrfyCmdHandler;
 import org.apache.james.protocols.smtp.core.esmtp.MailSizeEsmtpExtension;
+import org.apache.james.protocols.smtp.core.log.HookResultLogger;
 import org.apache.james.smtpserver.AuthRequiredToRelayRcptHook;
 import org.apache.james.smtpserver.JamesDataCmdHandler;
 import org.apache.james.smtpserver.JamesMailCmdHandler;
@@ -48,7 +48,7 @@ import org.apache.james.smtpserver.fastfail.ValidRcptHandler;
  */
 public class CoreCmdHandlerLoader implements HandlersPackage {
 
-    private final String COMMANDDISPATCHER = SMTPCommandDispatcherLineHandler.class.getName();
+    private final String COMMANDDISPATCHER = CommandDispatcher.class.getName();
     private final String DATACMDHANDLER = JamesDataCmdHandler.class.getName();
     private final String EXPNCMDHANDLER = ExpnCmdHandler.class.getName();
     private final String LHLOCMDHANDLER = LhloCmdHandler.class.getName();
