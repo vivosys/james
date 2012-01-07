@@ -38,9 +38,9 @@ import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtoc
 /**
  * Expose JMX statistics for {@link CommandHandler}
  */
-public abstract class AbstractCommandHandlerResultJMXMonitor<R extends Response, S extends ProtocolSession> implements ProtocolHandlerResultHandler<R, S>, ExtensibleHandler, InitializingLifecycleAwareProtocolHandler {
+public abstract class AbstractCommandHandlerResultJMXMonitor<S extends ProtocolSession> implements ProtocolHandlerResultHandler<Response, S>, ExtensibleHandler, InitializingLifecycleAwareProtocolHandler {
 
-    private Map<String, AbstractCommandHandlerStats<R>> cStats = new HashMap<String, AbstractCommandHandlerStats<R>>();
+    private Map<String, AbstractCommandHandlerStats> cStats = new HashMap<String, AbstractCommandHandlerStats>();
     private String jmxName;
 
     /**
@@ -50,10 +50,10 @@ public abstract class AbstractCommandHandlerResultJMXMonitor<R extends Response,
      * org.apache.james.protocols.api.Response, long,
      * org.apache.james.protocols.api.handler.ProtocolHandler)
      */
-    public Response onResponse(ProtocolSession session, R response, long executionTime, ProtocolHandler handler) {
+    public Response onResponse(ProtocolSession session, Response response, long executionTime, ProtocolHandler handler) {
         if (handler instanceof CommandHandler) {
             String name = handler.getClass().getName();
-            AbstractCommandHandlerStats<R> stats = cStats.get(name);
+            AbstractCommandHandlerStats stats = cStats.get(name);
             if (stats != null) {
                 stats.increment(response);
             }
@@ -101,7 +101,7 @@ public abstract class AbstractCommandHandlerResultJMXMonitor<R extends Response,
      * @return stats
      * @throws Exception
      */
-    protected abstract AbstractCommandHandlerStats<R> createCommandHandlerStats(CommandHandler<S> handler) throws Exception;
+    protected abstract AbstractCommandHandlerStats createCommandHandlerStats(CommandHandler<S> handler) throws Exception;
 
 
     @Override
@@ -117,7 +117,7 @@ public abstract class AbstractCommandHandlerResultJMXMonitor<R extends Response,
     
     @Override
     public void destroy() {
-        Iterator<AbstractCommandHandlerStats<R>> it = cStats.values().iterator();
+        Iterator<AbstractCommandHandlerStats> it = cStats.values().iterator();
         while(it.hasNext()) {
             it.next().dispose();
         }

@@ -25,10 +25,11 @@ import javax.management.MBeanRegistrationException;
 import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 
+import org.apache.james.protocols.api.Response;
 import org.apache.james.protocols.lib.jmx.AbstractCommandHandlerStats;
 import org.apache.james.protocols.pop3.POP3Response;
 
-public class POP3CommandHandlerStats extends AbstractCommandHandlerStats<POP3Response> implements POP3CommandHandlerStatsMBean {
+public class POP3CommandHandlerStats extends AbstractCommandHandlerStats implements POP3CommandHandlerStatsMBean {
 
     private AtomicLong error = new AtomicLong(0);
     private AtomicLong ok = new AtomicLong(0);
@@ -42,7 +43,7 @@ public class POP3CommandHandlerStats extends AbstractCommandHandlerStats<POP3Res
      * org.apache.james.protocols.lib.jmx.AbstractCommandHandlerStats
      * #increment(org.apache.james.protocols.api.Response)
      */
-    protected void incrementStats(POP3Response response) {
+    protected void incrementStats(Response response) {
         String code = response.getRetCode();
         if (POP3Response.OK_RESPONSE.equals(code)) {
             ok.incrementAndGet();

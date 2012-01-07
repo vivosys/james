@@ -25,19 +25,18 @@ import org.apache.james.protocols.api.handler.CommandHandler;
 import org.apache.james.protocols.api.handler.LifecycleAwareProtocolHandler;
 import org.apache.james.protocols.lib.jmx.AbstractCommandHandlerResultJMXMonitor;
 import org.apache.james.protocols.lib.jmx.AbstractCommandHandlerStats;
-import org.apache.james.protocols.pop3.POP3Response;
 import org.apache.james.protocols.pop3.POP3Session;
 
 /**
  * Gather JMX stats for {@link CommandHandler}
  */
-public class CommandHandlerResultJMXMonitor extends AbstractCommandHandlerResultJMXMonitor<POP3Response, POP3Session> implements LifecycleAwareProtocolHandler {
+public class CommandHandlerResultJMXMonitor extends AbstractCommandHandlerResultJMXMonitor<POP3Session> implements LifecycleAwareProtocolHandler {
 
     /**
      * @see org.apache.james.protocols.lib.jmx.AbstractCommandHandlerResultJMXMonitor
      * #createCommandHandlerStats(org.apache.james.protocols.api.CommandHandler)
      */
-    protected AbstractCommandHandlerStats<POP3Response> createCommandHandlerStats(CommandHandler<POP3Session> handler) throws Exception {
+    protected AbstractCommandHandlerStats createCommandHandlerStats(CommandHandler<POP3Session> handler) throws Exception {
         Collection<String> col = handler.getImplCommands();
         String cName = handler.getClass().getName();
 

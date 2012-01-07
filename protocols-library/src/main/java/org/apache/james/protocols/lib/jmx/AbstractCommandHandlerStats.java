@@ -36,7 +36,7 @@ import org.apache.james.protocols.api.handler.CommandHandler;
 /**
  * Expose statistics for {@link CommandHandler} via JMX
  */
-public abstract class AbstractCommandHandlerStats<R extends Response> extends StandardMBean implements CommandHandlerStatsMBean, Disposable {
+public abstract class AbstractCommandHandlerStats extends StandardMBean implements CommandHandlerStatsMBean, Disposable {
 
     private AtomicLong all = new AtomicLong(0);
     private AtomicLong disconnect = new AtomicLong();
@@ -62,7 +62,7 @@ public abstract class AbstractCommandHandlerStats<R extends Response> extends St
      * 
      * @param response
      */
-    public void increment(R response) {
+    public void increment(Response response) {
         if (response.isEndSession()) {
             disconnect.incrementAndGet();
         }
@@ -76,7 +76,7 @@ public abstract class AbstractCommandHandlerStats<R extends Response> extends St
      * 
      * @param response
      */
-    protected abstract void incrementStats(R response);
+    protected abstract void incrementStats(Response response);
 
     /**
      * @see org.apache.james.protocols.lib.jmx.CommandHandlerStatsMBean#getAll()

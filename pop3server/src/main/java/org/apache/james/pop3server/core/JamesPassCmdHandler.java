@@ -50,7 +50,7 @@ public class JamesPassCmdHandler implements CommandHandler<POP3Session> {
     public Response onCommand(POP3Session session, Request request) {
         Response response =  handler.onCommand(session, request);
         if (POP3Response.OK_RESPONSE.equals(response.getRetCode())) {
-            POP3BeforeSMTPHelper.addIPAddress(session.getRemoteAddress().getAddress().toString());
+            POP3BeforeSMTPHelper.addIPAddress(session.getRemoteAddress().getAddress().getHostAddress());
         }
         return response;
     }

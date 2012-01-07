@@ -59,7 +59,7 @@ public class CoreCmdHandlerLoader implements HandlersPackage {
     private final static String COMMANDDISPATCHER = CommandDispatcher.class.getName();
 
     // logging stuff
-    private final String COMMANDHANDLERRESULTLOGGER = POP3CommandHandlerResultLogger.class.getName();
+    private final static String COMMANDHANDLERRESULTLOGGER = POP3CommandHandlerResultLogger.class.getName();
 
 
     private final List<String> commands = new LinkedList<String>();
