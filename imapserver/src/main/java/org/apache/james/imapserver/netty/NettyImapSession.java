@@ -29,7 +29,7 @@ import org.apache.james.imap.api.process.ImapSession;
 import org.apache.james.imap.api.process.SelectedMailbox;
 import org.apache.james.protocols.api.logger.ProtocolLoggerAdapter;
 import org.apache.james.protocols.api.logger.ProtocolSessionLogger;
-import org.apache.james.protocols.api.logger.Slf4jLoggerAdapter;
+import org.apache.james.protocols.lib.Slf4jLoggerAdapter;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.handler.codec.compression.ZlibDecoder;
 import org.jboss.netty.handler.codec.compression.ZlibEncoder;
