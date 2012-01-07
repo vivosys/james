@@ -24,7 +24,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.mail.internet.ParseException;
 
@@ -49,12 +48,34 @@ public class ValidRcptMXTest extends TestCase {
 
     private SMTPSession setupMockedSMTPSession(final MailAddress rcpt) {
         SMTPSession session = new BaseFakeSMTPSession() {
-            HashMap state = new HashMap();
 
-            public Map getState() {
-                return state;
+
+            private HashMap<String, Object> sstate = new HashMap<String, Object>();
+            private HashMap<String, Object> connectionState = new HashMap<String, Object>();
+
+            @Override
+            public Object setAttachment(String key, Object value, State state) {
+                if (state == State.Connection) {
+                    if (value == null) {
+                        return connectionState.remove(key);
+                    }
+                    return connectionState.put(key, value);
+                } else {
+                    if (value == null) {
+                        return sstate.remove(key);
+                    }
+                    return sstate.put(key, value);
+                }
             }
 
+            @Override
+            public Object getAttachment(String key, State state) {
+                if (state == State.Connection) {
+                    return connectionState.get(key);
+                } else {
+                    return sstate.get(key);
+                }
+            }    
             public String getRemoteIPAddress() {
                 return "127.0.0.1";
             }

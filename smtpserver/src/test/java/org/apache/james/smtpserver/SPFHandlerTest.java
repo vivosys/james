@@ -22,7 +22,6 @@ package org.apache.james.smtpserver;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -34,8 +33,6 @@ import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.hook.HookReturnCode;
 import org.apache.james.smtpserver.fastfail.SPFHandler;
-import org.apache.mailet.Mail;
-import org.apache.mailet.base.test.FakeMail;
 
 public class SPFHandlerTest extends TestCase {
 
@@ -44,8 +41,6 @@ public class SPFHandlerTest extends TestCase {
     private SMTPSession mockedSMTPSession;;
 
     private boolean relaying = false;
-
-    private String command = "MAIL";
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -120,64 +115,56 @@ public class SPFHandlerTest extends TestCase {
 
         };
     }
-
-    private void setCommand(String command) {
-        this.command = command;
-    }
-
+    
     /**
      * Setup mocked smtpsession
      */
     private void setupMockedSMTPSession(final String ip, final String helo) {
         mockedSMTPSession = new BaseFakeSMTPSession() {
-            HashMap state = new HashMap();
+            private HashMap<String, Object> sstate = new HashMap<String, Object>();
+            private HashMap<String, Object> connectionState = new HashMap<String, Object>();
 
-            HashMap connectionState = new HashMap();
-
-            Mail mail = new FakeMail();
-
-            boolean stopHandler = false;
-
-            public void writeResponse(String respString) {
-                // Do nothing
+            @Override
+            public Object setAttachment(String key, Object value, State state) {
+                if (state == State.Connection) {
+                    if (value == null) {
+                        return connectionState.remove(key);
+                    }
+                    return connectionState.put(key, value);
+                } else {
+                    if (value == null) {
+                        return sstate.remove(key);
+                    }
+                    return sstate.put(key, value);
+                }
             }
 
-            public String getCommandName() {
-                return command;
-            }
+            @Override
+            public Object getAttachment(String key, State state) {
+                sstate.put(SMTPSession.CURRENT_HELO_NAME, helo);
 
-            public Mail getMail() {
-                return mail;
-            }
-
+                if (state == State.Connection) {
+                    return connectionState.get(key);
+                } else {
+                    return sstate.get(key);
+                }
+            }    
+            
             public String getRemoteIPAddress() {
                 return ip;
             }
 
-            public Map getState() {
-                state.put(SMTPSession.CURRENT_HELO_NAME, helo);
-                return state;
-            }
+            
 
             public boolean isRelayingAllowed() {
                 return relaying;
             }
 
-            public boolean isAuthRequired() {
-                return false;
-            }
 
             public int getRcptCount() {
                 return 0;
             }
 
-            public Map getConnectionState() {
-                return connectionState;
-            }
-
-            public void resetConnectionState() {
-                connectionState.clear();
-            }
 
         };
     }

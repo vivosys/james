@@ -36,6 +36,7 @@ import org.apache.james.core.MimeMessageCopyOnWriteProxy;
 import org.apache.james.core.MimeMessageInputStream;
 import org.apache.james.core.MimeMessageInputStreamSource;
 import org.apache.james.lifecycle.api.LifecycleUtil;
+import org.apache.james.protocols.api.ProtocolSession.State;
 import org.apache.james.protocols.api.Response;
 import org.apache.james.protocols.api.handler.ExtensibleHandler;
 import org.apache.james.protocols.api.handler.LineHandler;
@@ -77,7 +78,7 @@ public class DataLineJamesMessageHookHandler implements DataLineFilter, Extensib
         byte[] line = new byte[lineByteBuffer.remaining()];
         lineByteBuffer.get(line, 0, line.length);
         
-        MimeMessageInputStreamSource mmiss = (MimeMessageInputStreamSource) session.getState().get(SMTPConstants.DATA_MIMEMESSAGE_STREAMSOURCE);
+        MimeMessageInputStreamSource mmiss = (MimeMessageInputStreamSource) session.getAttachment(SMTPConstants.DATA_MIMEMESSAGE_STREAMSOURCE, State.Transaction);
 
         try {
             OutputStream out = mmiss.getWritableOutputStream();
@@ -88,8 +89,8 @@ public class DataLineJamesMessageHookHandler implements DataLineFilter, Extensib
                 out.flush();
                 out.close();
 
-                List<MailAddress> recipientCollection = (List<MailAddress>) session.getState().get(SMTPSession.RCPT_LIST);
-                MailAddress mailAddress = (MailAddress) session.getState().get(SMTPSession.SENDER);
+                List<MailAddress> recipientCollection = (List<MailAddress>) session.getAttachment(SMTPSession.RCPT_LIST, State.Transaction);
+                MailAddress mailAddress = (MailAddress) session.getAttachment(SMTPSession.SENDER, State.Transaction);
                 
                 List<org.apache.mailet.MailAddress> rcpts = new ArrayList<org.apache.mailet.MailAddress>();
                 for (MailAddress address: recipientCollection) {
@@ -99,7 +100,7 @@ public class DataLineJamesMessageHookHandler implements DataLineFilter, Extensib
 
                 // store mail in the session so we can be sure it get disposed
                 // later
-                session.getState().put(SMTPConstants.MAIL, mail);
+                session.setAttachment(SMTPConstants.MAIL, mail, State.Transaction);
 
                 MimeMessageCopyOnWriteProxy mimeMessageCopyOnWriteProxy = null;
                 try {
@@ -151,7 +152,7 @@ public class DataLineJamesMessageHookHandler implements DataLineFilter, Extensib
     protected Response processExtensions(SMTPSession session, Mail mail) {
         if (mail != null && messageHandlers != null) {
             try {
-                MimeMessageInputStreamSource mmiss = (MimeMessageInputStreamSource) session.getState().get(SMTPConstants.DATA_MIMEMESSAGE_STREAMSOURCE);
+                MimeMessageInputStreamSource mmiss = (MimeMessageInputStreamSource) session.getAttachment(SMTPConstants.DATA_MIMEMESSAGE_STREAMSOURCE, State.Transaction);
                 OutputStream out = null;
                 try {
                     out = mmiss.getWritableOutputStream();

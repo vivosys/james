@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
@@ -60,7 +59,6 @@ public class URIRBLHandlerTest extends TestCase {
         mockedMail = mail;
         mockedSMTPSession = new BaseFakeSMTPSession() {
 
-            private HashMap state = new HashMap();
 
             private String ipAddress = "192.168.0.1";
 
@@ -76,11 +74,37 @@ public class URIRBLHandlerTest extends TestCase {
                 return ipAddress;
             }
 
-            public Map getState() {
-                state.put(SMTPSession.SENDER, "sender@james.apache.org");
-                return state;
+
+
+            private HashMap<String, Object> sstate = new HashMap<String, Object>();
+            private HashMap<String, Object> connectionState = new HashMap<String, Object>();
+
+            @Override
+            public Object setAttachment(String key, Object value, State state) {
+                if (state == State.Connection) {
+                    if (value == null) {
+                        return connectionState.remove(key);
+                    }
+                    return connectionState.put(key, value);
+                } else {
+                    if (value == null) {
+                        return sstate.remove(key);
+                    }
+                    return sstate.put(key, value);
+                }
             }
 
+            @Override
+            public Object getAttachment(String key, State state) {
+                sstate.put(SMTPSession.SENDER, "sender@james.apache.org");
+
+                if (state == State.Connection) {
+                    return connectionState.get(key);
+                } else {
+                    return sstate.get(key);
+                }
+            }    
+            
             public boolean isRelayingAllowed() {
                 return relayingAllowed;
             }

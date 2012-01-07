@@ -21,6 +21,7 @@ package org.apache.james.smtpserver.netty;
 import org.apache.james.lifecycle.api.LifecycleUtil;
 import org.apache.james.protocols.api.Encryption;
 import org.apache.james.protocols.api.Protocol;
+import org.apache.james.protocols.api.ProtocolSession.State;
 import org.apache.james.protocols.netty.BasicChannelUpstreamHandler;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.smtpserver.SMTPConstants;
@@ -54,8 +55,8 @@ public class SMTPChannelUpstreamHandler extends BasicChannelUpstreamHandler {
         SMTPSession smtpSession = (SMTPSession) ctx.getAttachment();
 
         if (smtpSession != null) {
-            LifecycleUtil.dispose(smtpSession.getState().get(SMTPConstants.MAIL));
-            LifecycleUtil.dispose(smtpSession.getState().get(SMTPConstants.DATA_MIMEMESSAGE_STREAMSOURCE));
+            LifecycleUtil.dispose(smtpSession.getAttachment(SMTPConstants.MAIL, State.Transaction));
+            LifecycleUtil.dispose(smtpSession.getAttachment(SMTPConstants.DATA_MIMEMESSAGE_STREAMSOURCE, State.Transaction));
         }
 
         super.cleanup(ctx);

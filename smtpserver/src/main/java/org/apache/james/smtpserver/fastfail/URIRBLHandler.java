@@ -36,6 +36,7 @@ import javax.mail.internet.MimePart;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.james.dnsservice.api.DNSService;
+import org.apache.james.protocols.api.ProtocolSession.State;
 import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.dsn.DSNStatus;
@@ -119,8 +120,8 @@ public class URIRBLHandler implements JamesMessageHook, InitializingLifecycleAwa
      */
     public HookResult onMessage(SMTPSession session, Mail mail) {
         if (check(session, mail)) {
-            String uRblServer = (String) session.getState().get(URBLSERVER);
-            String target = (String) session.getState().get(LISTED_DOMAIN);
+            String uRblServer = (String) session.getAttachment(URBLSERVER, State.Transaction);
+            String target = (String) session.getAttachment(LISTED_DOMAIN, State.Transaction);
             String detail = null;
 
             // we should try to retrieve details
@@ -217,8 +218,8 @@ public class URIRBLHandler implements JamesMessageHook, InitializingLifecycleAwa
                         dnsService.getByName(address);
 
                         // store server name for later use
-                        session.getState().put(URBLSERVER, uRblServer);
-                        session.getState().put(LISTED_DOMAIN, target);
+                        session.setAttachment(URBLSERVER, uRblServer, State.Transaction);
+                        session.setAttachment(LISTED_DOMAIN, target, State.Transaction);
 
                         return true;
 

@@ -27,6 +27,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.james.domainlist.api.mock.SimpleDomainList;
+import org.apache.james.protocols.api.ProtocolSession.State;
 import org.apache.james.protocols.smtp.BaseFakeSMTPSession;
 import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPConfiguration;
@@ -67,15 +68,37 @@ public class ValidRcptHandlerTest extends TestCase {
 
     private SMTPSession setupMockedSMTPSession(final SMTPConfiguration conf, final MailAddress rcpt, final boolean relayingAllowed) {
         SMTPSession session = new BaseFakeSMTPSession() {
-            HashMap<String, Object> state = new HashMap<String, Object>();
 
             public boolean isRelayingAllowed() {
                 return relayingAllowed;
             }
 
-            public Map<String, Object> getState() {
-                return state;
+            private HashMap<String, Object> sstate = new HashMap<String, Object>();
+            private HashMap<String, Object> connectionState = new HashMap<String, Object>();
+
+            @Override
+            public Object setAttachment(String key, Object value, State state) {
+                if (state == State.Connection) {
+                    if (value == null) {
+                        return connectionState.remove(key);
+                    }
+                    return connectionState.put(key, value);
+                } else {
+                    if (value == null) {
+                        return sstate.remove(key);
+                    }
+                    return sstate.put(key, value);
+                }
             }
+
+            @Override
+            public Object getAttachment(String key, State state) {
+                if (state == State.Connection) {
+                    return connectionState.get(key);
+                } else {
+                    return sstate.get(key);
+                }
+            }    
         };
 
         return session;
@@ -166,14 +189,6 @@ public class ValidRcptHandlerTest extends TestCase {
                 throw new UnsupportedOperationException("Unimplemented Stub Method");
             }
 
-            public int getResetLength() {
-                throw new UnsupportedOperationException("Unimplemented Stub Method");
-            }
-
-            public String getSMTPGreeting() {
-                throw new UnsupportedOperationException("Unimplemented Stub Method");
-            }
-
             public boolean isRelayingAllowed(String remoteIP) {
                 throw new UnsupportedOperationException("Unimplemented Stub Method");
             }
@@ -188,10 +203,6 @@ public class ValidRcptHandlerTest extends TestCase {
 
             public boolean isAuthRequired(String remoteIP) {
                 throw new UnsupportedOperationException("Unimplemented Stub Method");
-            }
-
-            public boolean isStartTLSSupported() {
-                return false;
             }
 
             @Override
@@ -252,7 +263,7 @@ public class ValidRcptHandlerTest extends TestCase {
 
         int rCode = handler.doRcpt(session, null, mailAddress).getResult();
 
-        assertNull("Valid Error mapping", session.getState().get("VALID_USER"));
+        assertNull("Valid Error mapping", session.getAttachment("VALID_USER", State.Transaction));
         assertEquals("Error mapping", rCode, HookReturnCode.DENY);
     }
 }

@@ -150,6 +150,7 @@ public class ValidRcptMX implements InitializingLifecycleAwareProtocolHandler, R
         return new HookResult(HookReturnCode.DECLINED);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void init(Configuration config) throws ConfigurationException {
 

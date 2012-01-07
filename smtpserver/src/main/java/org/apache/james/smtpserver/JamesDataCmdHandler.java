@@ -22,6 +22,7 @@ import javax.mail.MessagingException;
 
 import org.apache.james.core.MailImpl;
 import org.apache.james.core.MimeMessageInputStreamSource;
+import org.apache.james.protocols.api.ProtocolSession.State;
 import org.apache.james.protocols.smtp.SMTPResponse;
 import org.apache.james.protocols.smtp.SMTPRetCode;
 import org.apache.james.protocols.smtp.SMTPSession;
@@ -44,7 +45,7 @@ public class JamesDataCmdHandler extends DataCmdHandler {
     protected SMTPResponse doDATA(SMTPSession session, String argument) {
         try {
             MimeMessageInputStreamSource mmiss = new MimeMessageInputStreamSource(MailImpl.getId());
-            session.getState().put(SMTPConstants.DATA_MIMEMESSAGE_STREAMSOURCE, mmiss);
+            session.setAttachment(SMTPConstants.DATA_MIMEMESSAGE_STREAMSOURCE, mmiss, State.Transaction);
         } catch (MessagingException e) {
             session.getLogger().warn("Error creating mimemessagesource for incoming data", e);
             return new SMTPResponse(SMTPRetCode.LOCAL_ERROR, "Unexpected error preparing to receive DATA.");

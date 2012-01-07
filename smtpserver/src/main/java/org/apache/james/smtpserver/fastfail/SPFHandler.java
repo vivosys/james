@@ -26,6 +26,7 @@ import org.apache.james.jspf.core.exceptions.SPFErrorConstants;
 import org.apache.james.jspf.executor.SPFResult;
 import org.apache.james.jspf.impl.DefaultSPF;
 import org.apache.james.jspf.impl.SPF;
+import org.apache.james.protocols.api.ProtocolSession.State;
 import org.apache.james.protocols.lib.lifecycle.InitializingLifecycleAwareProtocolHandler;
 import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPRetCode;
@@ -105,7 +106,7 @@ public class SPFHandler implements JamesMessageHook, MailHook, RcptHook, Initial
      *            SMTP session object
      */
     private void doSPFCheck(SMTPSession session, MailAddress sender) {
-        String heloEhlo = (String) session.getState().get(SMTPSession.CURRENT_HELO_NAME);
+        String heloEhlo = (String) session.getAttachment(SMTPSession.CURRENT_HELO_NAME, State.Transaction);
 
         // We have no Sender or HELO/EHLO yet return false
         if (sender == null || heloEhlo == null) {
@@ -121,7 +122,7 @@ public class SPFHandler implements JamesMessageHook, MailHook, RcptHook, Initial
             String explanation = "Blocked - see: " + result.getExplanation();
 
             // Store the header
-            session.getState().put(SPF_HEADER, result.getHeaderText());
+            session.setAttachment(SPF_HEADER, result.getHeaderText(), State.Transaction);
 
             session.getLogger().info("Result for " + ip + " - " + sender + " - " + heloEhlo + " = " + spfResult);
 
@@ -131,11 +132,11 @@ public class SPFHandler implements JamesMessageHook, MailHook, RcptHook, Initial
                 if (spfResult.equals(SPFErrorConstants.PERM_ERROR_CONV)) {
                     explanation = "Block caused by an invalid SPF record";
                 }
-                session.getState().put(SPF_DETAIL, explanation);
-                session.getState().put(SPF_BLOCKLISTED, "true");
+                session.setAttachment(SPF_DETAIL, explanation, State.Transaction);
+                session.setAttachment(SPF_BLOCKLISTED, "true", State.Transaction);
 
             } else if (spfResult.equals(SPFErrorConstants.TEMP_ERROR_CONV)) {
-                session.getState().put(SPF_TEMPBLOCKLISTED, "true");
+                session.setAttachment(SPF_TEMPBLOCKLISTED, "true", State.Transaction);
             }
 
         }
@@ -149,9 +150,9 @@ public class SPFHandler implements JamesMessageHook, MailHook, RcptHook, Initial
     public HookResult doRcpt(SMTPSession session, MailAddress sender, MailAddress rcpt) {
         if (!session.isRelayingAllowed()) {
             // Check if session is blocklisted
-            if (session.getState().get(SPF_BLOCKLISTED) != null) {
-                return new HookResult(HookReturnCode.DENY, DSNStatus.getStatus(DSNStatus.PERMANENT, DSNStatus.SECURITY_AUTH) + " " + session.getState().get(SPF_TEMPBLOCKLISTED));
-            } else if (session.getState().get(SPF_TEMPBLOCKLISTED) != null) {
+            if (session.getAttachment(SPF_BLOCKLISTED, State.Transaction) != null) {
+                return new HookResult(HookReturnCode.DENY, DSNStatus.getStatus(DSNStatus.PERMANENT, DSNStatus.SECURITY_AUTH) + " " + session.getAttachment(SPF_TEMPBLOCKLISTED, State.Transaction));
+            } else if (session.getAttachment(SPF_TEMPBLOCKLISTED, State.Transaction) != null) {
                 return new HookResult(HookReturnCode.DENYSOFT, SMTPRetCode.LOCAL_ERROR, DSNStatus.getStatus(DSNStatus.TRANSIENT, DSNStatus.NETWORK_DIR_SERVER) + " " + "Temporarily rejected: Problem on SPF lookup");
             }
         }
@@ -291,7 +292,7 @@ public class SPFHandler implements JamesMessageHook, MailHook, RcptHook, Initial
      */
     public HookResult onMessage(SMTPSession session, Mail mail) {
         // Store the spf header as attribute for later using
-        mail.setAttribute(SPF_HEADER_MAIL_ATTRIBUTE_NAME, (String) session.getState().get(SPF_HEADER));
+        mail.setAttribute(SPF_HEADER_MAIL_ATTRIBUTE_NAME, (String) session.getAttachment(SPF_HEADER, State.Transaction));
 
         return null;
     }
