@@ -88,9 +88,14 @@ public class DataLineJamesMessageHookHandler implements DataLineFilter, Extensib
                 out.flush();
                 out.close();
 
-                List recipientCollection = (List) session.getState().get(SMTPSession.RCPT_LIST);
+                List<MailAddress> recipientCollection = (List<MailAddress>) session.getState().get(SMTPSession.RCPT_LIST);
                 MailAddress mailAddress = (MailAddress) session.getState().get(SMTPSession.SENDER);
-                MailImpl mail = new MailImpl(MailImpl.getId(), new MailetMailAddressAdapter(mailAddress), recipientCollection);
+                
+                List<org.apache.mailet.MailAddress> rcpts = new ArrayList<org.apache.mailet.MailAddress>();
+                for (MailAddress address: recipientCollection) {
+                    rcpts.add(new MailetMailAddressAdapter(address));
+                }
+                MailImpl mail = new MailImpl(MailImpl.getId(), new MailetMailAddressAdapter(mailAddress), rcpts);
 
                 // store mail in the session so we can be sure it get disposed
                 // later
