@@ -50,10 +50,10 @@ public class ValidSenderDomainHandler extends org.apache.james.protocols.smtp.co
             }
     
         if (records == null || records.size() == 0) {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
 }

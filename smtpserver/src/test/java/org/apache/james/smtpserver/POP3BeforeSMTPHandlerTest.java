@@ -19,6 +19,8 @@
 
 package org.apache.james.smtpserver;
 
+import java.net.InetSocketAddress;
+
 import org.apache.james.protocols.lib.POP3BeforeSMTPHelper;
 import org.apache.james.protocols.smtp.BaseFakeSMTPSession;
 import org.apache.james.protocols.smtp.SMTPSession;
@@ -33,6 +35,11 @@ public class POP3BeforeSMTPHandlerTest extends TestCase {
     private void setupMockedSMTPSession() {
         mockedSession = new BaseFakeSMTPSession() {
             private boolean relayingAllowed = false;
+
+            @Override
+            public InetSocketAddress getRemoteAddress() {
+                return new InetSocketAddress(getRemoteIPAddress(), 0);
+            }
 
             public String getRemoteIPAddress() {
                 return "192.168.200.1";

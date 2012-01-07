@@ -112,7 +112,7 @@ public class SPFHandler implements JamesMessageHook, MailHook, RcptHook, Initial
             session.getLogger().info("No Sender or HELO/EHLO present");
         } else {
 
-            String ip = session.getRemoteAddress().getAddress().toString();
+            String ip = session.getRemoteAddress().getAddress().getHostAddress();
 
             SPFResult result = spf.checkSPF(ip, sender.toString(), heloEhlo);
 

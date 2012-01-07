@@ -134,7 +134,7 @@ public class SpamAssassinHandler implements JamesMessageHook, InitializingLifecy
                     // if the hits are bigger the rejectionHits reject the
                     // message
                     if (spamdRejectionHits <= hits) {
-                        StringBuffer buffer = new StringBuffer(256).append("Rejected message from ").append(session.getState().get(SMTPSession.SENDER).toString()).append(" from host ").append(session.getRemoteAddress().getHostName()).append(" (").append(session.getRemoteAddress().getAddress().toString())
+                        StringBuffer buffer = new StringBuffer(256).append("Rejected message from ").append(session.getState().get(SMTPSession.SENDER).toString()).append(" from host ").append(session.getRemoteAddress().getHostName()).append(" (").append(session.getRemoteAddress().getAddress().getHostAddress())
                                 .append(") This message reach the spam hits treshold. Required rejection hits: ").append(spamdRejectionHits).append(" hits: ").append(hits);
                         session.getLogger().info(buffer.toString());
 

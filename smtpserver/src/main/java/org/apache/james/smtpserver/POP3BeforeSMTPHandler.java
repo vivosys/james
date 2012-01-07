@@ -70,7 +70,7 @@ public class POP3BeforeSMTPHandler implements ConnectHandler<SMTPSession>, Confi
         }
 
         // Check if the ip is allowed to relay
-        if (!session.isRelayingAllowed() && POP3BeforeSMTPHelper.isAuthorized(session.getRemoteAddress().getAddress().toString())) {
+        if (!session.isRelayingAllowed() && POP3BeforeSMTPHelper.isAuthorized(session.getRemoteAddress().getAddress().getHostAddress())) {
             session.setRelayingAllowed(true);
         }
         return null;

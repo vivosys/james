@@ -19,6 +19,24 @@
 
 package org.apache.james.smtpserver.fastfail;
 
+import java.net.UnknownHostException;
+
+import javax.annotation.Resource;
+
+import org.apache.james.dnsservice.api.DNSService;
+
 public class ResolvableEhloHeloHandler extends org.apache.james.protocols.smtp.core.fastfail.ResolvableEhloHeloHandler {
 
+    private DNSService dns;
+
+    @Resource(name = "dnsservice")
+    public void setDNSService(DNSService dns) {
+        this.dns = dns;
+    }
+
+    @Override
+    protected String resolve(String host) throws UnknownHostException {
+        return dns.getByName(host).getHostName();
+    }
+    
 }
