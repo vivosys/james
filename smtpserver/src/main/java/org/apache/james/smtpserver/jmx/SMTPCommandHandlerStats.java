@@ -26,14 +26,15 @@ import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 
 import org.apache.james.lifecycle.api.Disposable;
+import org.apache.james.protocols.api.Response;
 import org.apache.james.protocols.api.handler.CommandHandler;
 import org.apache.james.protocols.lib.jmx.AbstractCommandHandlerStats;
-import org.apache.james.protocols.smtp.SMTPResponse;
+
 
 /**
  * Expose statistics for {@link CommandHandler} via JMX
  */
-public class SMTPCommandHandlerStats extends AbstractCommandHandlerStats<SMTPResponse> implements SMTPCommandHandlerStatsMBean, Disposable {
+public class SMTPCommandHandlerStats extends AbstractCommandHandlerStats implements SMTPCommandHandlerStatsMBean, Disposable {
 
     private AtomicLong temp = new AtomicLong(0);
     private AtomicLong perm = new AtomicLong(0);
@@ -70,7 +71,7 @@ public class SMTPCommandHandlerStats extends AbstractCommandHandlerStats<SMTPRes
      * @see
      * org.apache.james.protocols.lib.jmx.AbstractCommandHandlerStats#incrementStats(org.apache.james.protocols.api.Response)
      */
-    protected void incrementStats(SMTPResponse response) {
+    protected void incrementStats(Response response) {
         try {
             String code = response.getRetCode();
             char c = code.charAt(0);
