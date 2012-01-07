@@ -392,10 +392,10 @@ public class JDBCGreylistHandler extends AbstractGreylistHandler implements Init
      *      org.apache.mailet.MailAddress, org.apache.mailet.MailAddress)
      */
     public HookResult doRcpt(SMTPSession session, MailAddress sender, MailAddress rcpt) {
-        if ((wNetworks == null) || (!wNetworks.matchInetNetwork(session.getRemoteAddress().getAddress().toString()))) {
+        if ((wNetworks == null) || (!wNetworks.matchInetNetwork(session.getRemoteAddress().getAddress().getHostAddress()))) {
             return super.doRcpt(session, sender, rcpt);
         } else {
-            session.getLogger().info("IpAddress " + session.getRemoteAddress().getAddress().toString() + " is whitelisted. Skip greylisting.");
+            session.getLogger().info("IpAddress " + session.getRemoteAddress().getAddress().getHostAddress() + " is whitelisted. Skip greylisting.");
         }
         return new HookResult(HookReturnCode.DECLINED);
     }
