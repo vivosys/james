@@ -18,10 +18,13 @@
  ****************************************************************/
 package org.apache.james.pop3server.core;
 
+import java.util.Collection;
+
 import javax.annotation.Resource;
 
 import org.apache.james.protocols.api.Request;
 import org.apache.james.protocols.api.Response;
+import org.apache.james.protocols.api.handler.CommandHandler;
 import org.apache.james.protocols.lib.POP3BeforeSMTPHelper;
 import org.apache.james.protocols.pop3.POP3Response;
 import org.apache.james.protocols.pop3.POP3Session;
@@ -32,27 +35,29 @@ import org.apache.james.protocols.pop3.mailbox.MailboxFactory;
  * {@link PassCmdHandler} which also handles POP3 Before SMTP
  * 
  */
-public class JamesPassCmdHandler extends PassCmdHandler {
+public class JamesPassCmdHandler implements CommandHandler<POP3Session> {
 
-    // TODO fix me as a final field...
-    private MailboxFactory factory;
+    private PassCmdHandler handler;
 
     public JamesPassCmdHandler() {
-        super(null);
     }
 
     @Resource(name = "mailboxfactory")
     public void setMailboxFactory(MailboxFactory factory) {
-        this.factory = factory;
+        this.handler = new PassCmdHandler(factory);
     }
 
-    @Override
     public Response onCommand(POP3Session session, Request request) {
-        Response response =  super.onCommand(session, request);
+        Response response =  handler.onCommand(session, request);
         if (POP3Response.OK_RESPONSE.equals(response.getRetCode())) {
             POP3BeforeSMTPHelper.addIPAddress(session.getRemoteAddress().getAddress().toString());
         }
         return response;
     }
-    
+
+    @Override
+    public Collection<String> getImplCommands() {
+        return handler.getImplCommands();
+    }
+
 }
