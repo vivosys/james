@@ -71,13 +71,18 @@ public class IMAPServer extends AbstractConfigurableAsyncServer implements ImapC
     private boolean plainAuthDisallowed;
     
     
-
+    private int timeout;
+    
     // Use a big default
     public final static int DEFAULT_MAX_LINE_LENGTH = 65536;
 
     // Use 10MB as default
     public final static int DEFAULT_IN_MEMORY_SIZE_LIMIT = 10485760;
 
+    // default timeout is 30 seconds
+    public final static int DEFAULT_TIMEOUT = 30 * 60;
+
+    
     @Resource(name = "imapDecoder")
     public void setImapDecoder(ImapDecoder decoder) {
         this.decoder = decoder;
@@ -101,6 +106,10 @@ public class IMAPServer extends AbstractConfigurableAsyncServer implements ImapC
         maxLineLength = configuration.getInt("maxLineLength", DEFAULT_MAX_LINE_LENGTH);
         inMemorySizeLimit = configuration.getInt("inMemorySizeLimit", DEFAULT_IN_MEMORY_SIZE_LIMIT);
         plainAuthDisallowed = configuration.getBoolean("plainAuthDisallowed", false);
+        timeout = configuration.getInt("timeout", DEFAULT_TIMEOUT);
+        if (timeout < DEFAULT_TIMEOUT) {
+            throw new ConfigurationException("Minimum timeout of 30 minutes required. See rfc2060 5.4 for details");
+        }
     }
 
     /**
@@ -124,14 +133,12 @@ public class IMAPServer extends AbstractConfigurableAsyncServer implements ImapC
             private final ChannelGroupHandler groupHandler = new ChannelGroupHandler(group);
             private final HashedWheelTimer timer = new HashedWheelTimer();
             
-            // Timeout of 30 minutes See rfc2060 5.4 for details
-            private final static int TIMEOUT = 60 * 30;
             private final TimeUnit TIMEOUT_UNIT = TimeUnit.SECONDS;
 
             public ChannelPipeline getPipeline() throws Exception {
                 ChannelPipeline pipeline = pipeline();
                 pipeline.addLast(GROUP_HANDLER, groupHandler);
-                pipeline.addLast("idleHandler", new IdleStateHandler(timer, 0, 0, TIMEOUT, TIMEOUT_UNIT));
+                pipeline.addLast("idleHandler", new IdleStateHandler(timer, 0, 0, timeout, TIMEOUT_UNIT));
                 pipeline.addLast(TIMEOUT_HANDLER, new ImapIdleStateHandler());
                 pipeline.addLast(CONNECTION_LIMIT_HANDLER, new ConnectionLimitUpstreamHandler(IMAPServer.this.connectionLimit));
 
