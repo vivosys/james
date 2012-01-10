@@ -305,7 +305,7 @@ public class JMSMailQueue implements ManageableMailQueue, JMSSupport, MailPriori
 
         StringBuilder recipientsBuilder = new StringBuilder();
 
-        Iterator<org.apache.james.protocols.smtp.MailAddress> recipients = mail.getRecipients().iterator();
+        Iterator<MailAddress> recipients = mail.getRecipients().iterator();
         while (recipients.hasNext()) {
             String recipient = recipients.next().toString();
             recipientsBuilder.append(recipient.trim());
