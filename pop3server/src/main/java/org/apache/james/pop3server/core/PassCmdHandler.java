@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package org.apache.james.pop3server.mailbox;
+package org.apache.james.pop3server.core;
 
 import java.io.IOException;
 
@@ -28,22 +28,41 @@ import org.apache.james.mailbox.MailboxManager;
 import org.apache.james.mailbox.MailboxPath;
 import org.apache.james.mailbox.MailboxSession;
 import org.apache.james.mailbox.MessageManager;
+import org.apache.james.pop3server.mailbox.MailboxAdapter;
+import org.apache.james.protocols.api.Request;
+import org.apache.james.protocols.api.Response;
+import org.apache.james.protocols.lib.POP3BeforeSMTPHelper;
 import org.apache.james.protocols.lib.Slf4jLoggerAdapter;
+import org.apache.james.protocols.pop3.POP3Response;
 import org.apache.james.protocols.pop3.POP3Session;
+import org.apache.james.protocols.pop3.core.AbstractPassCmdHandler;
 import org.apache.james.protocols.pop3.mailbox.Mailbox;
-import org.apache.james.protocols.pop3.mailbox.MailboxFactory;
 
-public class JamesMailboxFactory implements MailboxFactory {
+/**
+ * {@link PassCmdHandler} which also handles POP3 Before SMTP
+ * 
+ */
+public class PassCmdHandler extends AbstractPassCmdHandler  {
 
     private MailboxManager manager;
+
 
     @Resource(name = "mailboxmanager")
     public void setMailboxManager(MailboxManager manager) {
         this.manager = manager;
     }
 
+    public Response onCommand(POP3Session session, Request request) {
+        Response response =  super.onCommand(session, request);
+        if (POP3Response.OK_RESPONSE.equals(response.getRetCode())) {
+            POP3BeforeSMTPHelper.addIPAddress(session.getRemoteAddress().getAddress().getHostAddress());
+        }
+        return response;
+    }
+
+
     @Override
-    public Mailbox getMailbox(POP3Session session, String password) throws IOException {
+    protected Mailbox auth(POP3Session session, String password) throws Exception {
         MailboxSession mSession = null;
         try {
             mSession = manager.login(session.getUser(), password, new Slf4jLoggerAdapter(session.getLogger()));

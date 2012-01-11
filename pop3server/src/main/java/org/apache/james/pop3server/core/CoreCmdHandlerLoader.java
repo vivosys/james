@@ -37,12 +37,13 @@ import org.apache.james.protocols.pop3.core.TopCmdHandler;
 import org.apache.james.protocols.pop3.core.UidlCmdHandler;
 import org.apache.james.protocols.pop3.core.UnknownCmdHandler;
 import org.apache.james.protocols.pop3.core.UserCmdHandler;
+import org.apache.james.protocols.pop3.core.WelcomeMessageHandler;
 
 public class CoreCmdHandlerLoader implements HandlersPackage {
 
     private final static String CAPACMDHANDLER = CapaCmdHandler.class.getName();
     private final static String USERCMDHANDLER = UserCmdHandler.class.getName();
-    private final static String PASSCMDHANDLER = JamesPassCmdHandler.class.getName();
+    private final static String PASSCMDHANDLER = PassCmdHandler.class.getName();
     private final static String LISTCMDHANDLER = ListCmdHandler.class.getName();
     private final static String UIDLCMDHANDLER = UidlCmdHandler.class.getName();
     private final static String RSETCMDHANDLER = RsetCmdHandler.class.getName();

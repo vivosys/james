@@ -21,11 +21,11 @@ package org.apache.james.pop3server.netty;
 
 import org.apache.james.pop3server.core.CoreCmdHandlerLoader;
 import org.apache.james.pop3server.jmx.JMXHandlersLoader;
+import org.apache.james.protocols.api.ProtocolConfiguration;
 import org.apache.james.protocols.api.logger.ProtocolLoggerAdapter;
 import org.apache.james.protocols.lib.handler.HandlersPackage;
 import org.apache.james.protocols.lib.netty.AbstractProtocolAsyncServer;
 import org.apache.james.protocols.netty.BasicChannelUpstreamHandler;
-import org.apache.james.protocols.pop3.POP3Configuration;
 import org.apache.james.protocols.pop3.POP3Protocol;
 import org.jboss.netty.channel.ChannelUpstreamHandler;
 
@@ -36,7 +36,7 @@ public class POP3Server extends AbstractProtocolAsyncServer implements POP3Serve
     /**
      * The configuration data to be passed to the handler
      */
-    private POP3Configuration theConfigData = new POP3HandlerConfigurationDataImpl();
+    private ProtocolConfiguration theConfigData = new POP3Configuration();
     private BasicChannelUpstreamHandler coreHandler;
     
     @Override
@@ -54,13 +54,23 @@ public class POP3Server extends AbstractProtocolAsyncServer implements POP3Serve
     /**
      * A class to provide POP3 handler configuration to the handlers
      */
-    private class POP3HandlerConfigurationDataImpl extends POP3Configuration {
+    private class POP3Configuration implements ProtocolConfiguration {
 
         /**
          * @see org.apache.james.pop3server.POP3HandlerConfiguration#getHelloName()
          */
         public String getHelloName() {
             return POP3Server.this.getHelloName();
+        }
+
+        @Override
+        public String getGreeting() {
+            return null;
+        }
+
+        @Override
+        public String getSoftwareName() {
+            return "JAMES POP3 Server ";
         }
     }
 
