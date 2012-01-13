@@ -52,6 +52,7 @@ public class PassCmdHandler extends AbstractPassCmdHandler  {
         this.manager = manager;
     }
 
+    @Override
     public Response onCommand(POP3Session session, Request request) {
         Response response =  super.onCommand(session, request);
         if (POP3Response.OK_RESPONSE.equals(response.getRetCode())) {
@@ -62,7 +63,7 @@ public class PassCmdHandler extends AbstractPassCmdHandler  {
 
 
     @Override
-    protected Mailbox auth(POP3Session session, String password) throws Exception {
+    protected Mailbox auth(POP3Session session, String username, String password) throws Exception {
         MailboxSession mSession = null;
         try {
             mSession = manager.login(session.getUser(), password, new Slf4jLoggerAdapter(session.getLogger()));
