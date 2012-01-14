@@ -276,14 +276,12 @@ public class SMTPServer extends AbstractProtocolAsyncServer implements SMTPServe
 
         @Override
         public String getGreeting() {
-            // TODO Auto-generated method stub
-            return null;
+            return SMTPServer.this.smtpGreeting;
         }
 
         @Override
         public String getSoftwareName() {
-            // TODO Auto-generated method stub
-            return null;
+            return "JAMES SMTP Server ";
         }
 
     }
