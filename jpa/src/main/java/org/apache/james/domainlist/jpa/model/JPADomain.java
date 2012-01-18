@@ -44,6 +44,14 @@ public class JPADomain {
     @Id
     @Column(name = "DOMAIN_NAME", nullable = false, length = 100)
     private String name;
+    
+    /**
+     * Default no-args constructor to avoid warning during JPA class enhancement.
+     * Do not us this.
+     */
+    @SuppressWarnings(value = "unused" )
+    private JPADomain() {
+    }
 
     /**
      * Use this simple constructor to create a new Domain.

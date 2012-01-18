@@ -101,6 +101,14 @@ public class JPARecipientRewrite {
      */
     @Column(name = "TARGET_ADDRESS", nullable = false, length = 100)
     private String targetAddress = "";
+    
+    /**
+     * Default no-args constructor to avoid warning during JPA class enhancement.
+     * Do not us this.
+     */
+    @SuppressWarnings(value = "unused" )
+    private JPARecipientRewrite() {
+    }
 
     /**
      * Use this simple constructor to create a new RecipientRewriteTable.
