@@ -50,8 +50,6 @@
         <module>dnsservice-library</module>
         <module>fetchmail</module>
         <module>filesystem-api</module>
-        <module>imapserver</module>
-        <module>lmtpserver</module>
         <module>data-api</module>
         <module>data-library</module>
         <module>data-hbase</module>
@@ -66,9 +64,11 @@
         <module>mailetcontainer-api</module>
         <module>mailetcontainer-camel</module>
         <module>mailets</module>
+        <module>protocols-imap4</module>
         <module>protocols-library</module>
-        <module>pop3server</module>
-        <module>smtpserver</module>
+        <module>protocols-lmtp</module>
+        <module>protocols-pop3</module>
+        <module>protocols-smtp</module>
         <module>queue-api</module>
         <module>queue-file</module>
         <module>queue-jms</module>
@@ -453,23 +453,23 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-lmtpserver</artifactId>
+                <artifactId>james-server-protocols-lmtp</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-smtpserver</artifactId>
+                <artifactId>james-server-protocols-smtp</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-imapserver</artifactId>
+                <artifactId>james-server-protocols-imap4</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-pop3server</artifactId>
+                <artifactId>james-server-protocols-pop3</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
             <dependency>
@@ -536,7 +536,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-smtpserver</artifactId>
+                <artifactId>james-server-protocols-smtp</artifactId>
                 <version>${james.server.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>

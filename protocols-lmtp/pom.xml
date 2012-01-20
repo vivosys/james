@@ -31,7 +31,7 @@
     </parent>
 
     <groupId>org.apache.james</groupId>
-    <artifactId>james-server-lmtpserver</artifactId>
+    <artifactId>james-server-protocols-lmtp</artifactId>
 
     <name>Apache James Server LMTP</name>
 
@@ -48,7 +48,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.james</groupId>
-            <artifactId>james-server-smtpserver</artifactId>
+            <artifactId>james-server-protocols-smtp</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.james</groupId>
