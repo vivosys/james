@@ -52,6 +52,10 @@
         </dependency>
         <dependency>
             <groupId>org.apache.james</groupId>
+            <artifactId>james-server-filesystem-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.james</groupId>
             <artifactId>apache-james-imap-api</artifactId>
         </dependency>
         <dependency>
@@ -61,7 +65,6 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.james.protocols</groupId>
