@@ -287,6 +287,13 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.james.protocols</groupId>
+                <artifactId>protocols-api</artifactId>
+                <version>${protocols.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.james.protocols</groupId>
                 <artifactId>protocols-netty</artifactId>
                 <version>${protocols.version}</version>
             </dependency>
