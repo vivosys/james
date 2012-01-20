@@ -19,15 +19,14 @@
 
 package org.apache.james.smtpserver;
 
-import junit.framework.TestCase;
-
-import org.apache.james.protocols.smtp.BaseFakeSMTPSession;
-import org.apache.james.protocols.smtp.SMTPSession;
-import org.apache.james.smtpserver.SetMimeHeaderHandler;
-import org.apache.mailet.Mail;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+
+import junit.framework.TestCase;
+
+import org.apache.james.protocols.smtp.SMTPSession;
+import org.apache.james.protocols.smtp.utils.BaseFakeSMTPSession;
+import org.apache.mailet.Mail;
 
 public class SetMimeHeaderHandlerTest extends TestCase {
 

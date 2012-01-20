@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.james.protocols.api.handler.CommandDispatcher;
+import org.apache.james.protocols.api.handler.CommandHandlerResultLogger;
 import org.apache.james.protocols.lib.handler.HandlersPackage;
 import org.apache.james.protocols.pop3.core.CapaCmdHandler;
 import org.apache.james.protocols.pop3.core.DeleCmdHandler;
@@ -60,7 +61,7 @@ public class CoreCmdHandlerLoader implements HandlersPackage {
     private final static String COMMANDDISPATCHER = CommandDispatcher.class.getName();
 
     // logging stuff
-    private final static String COMMANDHANDLERRESULTLOGGER = POP3CommandHandlerResultLogger.class.getName();
+    private final static String COMMANDHANDLERRESULTLOGGER = CommandHandlerResultLogger.class.getName();
 
 
     private final List<String> commands = new LinkedList<String>();

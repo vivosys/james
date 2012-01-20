@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.james.lmtpserver.hook.MailboxDeliverToRecipientHandler;
 import org.apache.james.protocols.api.handler.CommandDispatcher;
+import org.apache.james.protocols.api.handler.CommandHandlerResultLogger;
 import org.apache.james.protocols.lib.handler.HandlersPackage;
 import org.apache.james.protocols.lmtp.core.LhloCmdHandler;
 import org.apache.james.protocols.lmtp.core.WelcomeMessageHandler;
@@ -40,7 +41,6 @@ import org.apache.james.smtpserver.AuthRequiredToRelayRcptHook;
 import org.apache.james.smtpserver.JamesDataCmdHandler;
 import org.apache.james.smtpserver.JamesMailCmdHandler;
 import org.apache.james.smtpserver.JamesRcptCmdHandler;
-import org.apache.james.smtpserver.SMTPCommandHandlerResultLogger;
 import org.apache.james.smtpserver.fastfail.ValidRcptHandler;
 
 /**
@@ -69,7 +69,7 @@ public class CoreCmdHandlerLoader implements HandlersPackage {
     private final String DELIVERTORECIPIENTHANDLER = MailboxDeliverToRecipientHandler.class.getName();
 
     // logging stuff
-    private final String COMMANDHANDLERRESULTLOGGER = SMTPCommandHandlerResultLogger.class.getName();
+    private final String COMMANDHANDLERRESULTLOGGER = CommandHandlerResultLogger.class.getName();
     private final String HOOKRESULTLOGGER = HookResultLogger.class.getName();
 
     private final List<String> commands = new LinkedList<String>();

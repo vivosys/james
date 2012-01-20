@@ -21,12 +21,11 @@ package org.apache.james.smtpserver;
 
 import java.net.InetSocketAddress;
 
-import org.apache.james.protocols.lib.POP3BeforeSMTPHelper;
-import org.apache.james.protocols.smtp.BaseFakeSMTPSession;
-import org.apache.james.protocols.smtp.SMTPSession;
-import org.apache.james.smtpserver.POP3BeforeSMTPHandler;
-
 import junit.framework.TestCase;
+
+import org.apache.james.protocols.lib.POP3BeforeSMTPHelper;
+import org.apache.james.protocols.smtp.SMTPSession;
+import org.apache.james.protocols.smtp.utils.BaseFakeSMTPSession;
 
 public class POP3BeforeSMTPHandlerTest extends TestCase {
 

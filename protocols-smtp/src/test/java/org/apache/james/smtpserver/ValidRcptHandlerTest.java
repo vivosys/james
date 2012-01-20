@@ -28,11 +28,11 @@ import junit.framework.TestCase;
 
 import org.apache.james.domainlist.api.mock.SimpleDomainList;
 import org.apache.james.protocols.api.ProtocolSession.State;
-import org.apache.james.protocols.smtp.BaseFakeSMTPSession;
 import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.SMTPConfiguration;
 import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.hook.HookReturnCode;
+import org.apache.james.protocols.smtp.utils.BaseFakeSMTPSession;
 import org.apache.james.rrt.api.RecipientRewriteTable;
 import org.apache.james.rrt.api.RecipientRewriteTableException;
 import org.apache.james.smtpserver.fastfail.ValidRcptHandler;

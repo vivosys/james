@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.james.protocols.api.handler.CommandDispatcher;
+import org.apache.james.protocols.api.handler.CommandHandlerResultLogger;
 import org.apache.james.protocols.lib.handler.HandlersPackage;
 import org.apache.james.protocols.smtp.core.ExpnCmdHandler;
 import org.apache.james.protocols.smtp.core.HeloCmdHandler;
@@ -72,7 +73,7 @@ public class CoreCmdHandlerLoader implements HandlersPackage {
     private final String SENDMAILHANDLER = SendMailHandler.class.getName();
 
     // logging stuff
-    private final String COMMANDHANDLERRESULTLOGGER = SMTPCommandHandlerResultLogger.class.getName();
+    private final String COMMANDHANDLERRESULTLOGGER = CommandHandlerResultLogger.class.getName();
     private final String HOOKRESULTLOGGER = HookResultLogger.class.getName();
 
     private final List<String> commands = new LinkedList<String>();
