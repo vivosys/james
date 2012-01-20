@@ -54,11 +54,12 @@
         <module>lmtpserver</module>
         <module>data-api</module>
         <module>data-library</module>
-        <module>hbase</module>
-        <module>jpa</module>
-        <module>jcr</module>
-        <module>jdbc</module>
-        <module>file</module>
+        <module>data-hbase</module>
+        <module>data-jpa</module>
+        <module>data-jcr</module>
+        <module>data-jdbc</module>
+        <module>data-file</module>
+        <module>data-ldap</module>
         <module>lifecycle-api</module>
         <module>lifecycle-spring</module>
         <module>mailbox-adapter</module>
@@ -72,7 +73,6 @@
         <module>queue-file</module>
         <module>queue-jms</module>
         <module>queue-activemq</module>
-        <module>ldap</module>
         <module>util</module>
         <module>cli</module>
     </modules>
@@ -160,12 +160,12 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-filesystem-api</artifactId>
+                <artifactId>james-server-data-filesystem-api</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-filesystem-api</artifactId>
+                <artifactId>james-server-data-filesystem-api</artifactId>
                 <type>test-jar</type>
                 <scope>test</scope>
                 <version>${james.server.version}</version>
@@ -360,27 +360,27 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-jpa</artifactId>
+                <artifactId>james-server-data-jpa</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-hbase</artifactId>
+                <artifactId>james-server-data-hbase</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-file</artifactId>
+                <artifactId>james-server-data-file</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-jdbc</artifactId>
+                <artifactId>james-server-data-jdbc</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-jcr</artifactId>
+                <artifactId>james-server-data-jcr</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
             <dependency>
@@ -448,7 +448,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>james-server-ldap</artifactId>
+                <artifactId>james-server-data-ldap</artifactId>
                 <version>${james.server.version}</version>
             </dependency>
             <dependency>
