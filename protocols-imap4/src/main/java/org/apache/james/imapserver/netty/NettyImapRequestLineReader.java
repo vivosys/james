@@ -22,6 +22,7 @@ package org.apache.james.imapserver.netty;
 import java.io.InputStream;
 
 import org.apache.commons.io.input.BoundedInputStream;
+import org.apache.james.imap.api.display.HumanReadableText;
 import org.apache.james.imap.decode.DecodingException;
 import org.apache.james.imap.decode.ImapRequestLineReader;
 import org.apache.james.imap.decode.base.EolInputStream;
@@ -39,12 +40,14 @@ public class NettyImapRequestLineReader extends AbstractNettyImapRequestLineRead
 
     private ChannelBuffer buffer;
     private int read = 0;
+    private final int maxLiteralSize;
 
-    public NettyImapRequestLineReader(Channel channel, ChannelBuffer buffer, boolean retry) {
+    public NettyImapRequestLineReader(Channel channel, ChannelBuffer buffer, boolean retry, int maxLiteralSize) {
         super(channel, retry);
         this.buffer = buffer;
-
+        this.maxLiteralSize  = maxLiteralSize;
     }
+    
 
     /**
      * Return the next char to read. This will return the same char on every
@@ -79,6 +82,10 @@ public class NettyImapRequestLineReader extends AbstractNettyImapRequestLineRead
         int crlf = 0;
         if (extraCRLF) {
             crlf = 2;
+        }
+        
+        if (maxLiteralSize > 0 && maxLiteralSize > size) {
+            throw new DecodingException(HumanReadableText.FAILED, "Specified literal is greater then the allowed size");
         }
         // Check if we have enough data
         if (size + crlf > buffer.readableBytes()) {

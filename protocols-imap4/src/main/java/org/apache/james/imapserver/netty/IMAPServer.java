@@ -73,6 +73,9 @@ public class IMAPServer extends AbstractConfigurableAsyncServer implements ImapC
     
     private int timeout;
     
+    private int literalSizeLimit;
+
+
     // Use a big default
     public final static int DEFAULT_MAX_LINE_LENGTH = 65536;
 
@@ -82,7 +85,8 @@ public class IMAPServer extends AbstractConfigurableAsyncServer implements ImapC
     // default timeout is 30 seconds
     public final static int DEFAULT_TIMEOUT = 30 * 60;
 
-    
+    public final static int DEFAULT_LITERAL_SIZE_LIMIT = 0;
+
     @Resource(name = "imapDecoder")
     public void setImapDecoder(ImapDecoder decoder) {
         this.decoder = decoder;
@@ -105,6 +109,8 @@ public class IMAPServer extends AbstractConfigurableAsyncServer implements ImapC
         compress = configuration.getBoolean("compress", false);
         maxLineLength = configuration.getInt("maxLineLength", DEFAULT_MAX_LINE_LENGTH);
         inMemorySizeLimit = configuration.getInt("inMemorySizeLimit", DEFAULT_IN_MEMORY_SIZE_LIMIT);
+        literalSizeLimit = configuration.getInt("literalSizeLimit", DEFAULT_LITERAL_SIZE_LIMIT);
+
         plainAuthDisallowed = configuration.getBoolean("plainAuthDisallowed", false);
         timeout = configuration.getInt("timeout", DEFAULT_TIMEOUT);
         if (timeout < DEFAULT_TIMEOUT) {
@@ -169,7 +175,7 @@ public class IMAPServer extends AbstractConfigurableAsyncServer implements ImapC
                     pipeline.addLast(EXECUTION_HANDLER, ehandler);
 
                 }
-                pipeline.addLast(REQUEST_DECODER, new ImapRequestFrameDecoder(decoder, inMemorySizeLimit));
+                pipeline.addLast(REQUEST_DECODER, new ImapRequestFrameDecoder(decoder, inMemorySizeLimit, literalSizeLimit));
 
                 pipeline.addLast(CORE_HANDLER, createCoreHandler());
                 return pipeline;

@@ -50,13 +50,15 @@ public class ImapRequestFrameDecoder extends FrameDecoder implements NettyConsta
 
     private final ImapDecoder decoder;
     private final int inMemorySizeLimit;
+    private final int literalSizeLimit;
     private final static String NEEDED_DATA = "NEEDED_DATA";
     private final static String STORED_DATA = "STORED_DATA";
     private final static String WRITTEN_DATA = "WRITTEN_DATA";
 
-    public ImapRequestFrameDecoder(ImapDecoder decoder, int inMemorySizeLimit) {
+    public ImapRequestFrameDecoder(ImapDecoder decoder, int inMemorySizeLimit, int literalSizeLimit) {
         this.decoder = decoder;
         this.inMemorySizeLimit = inMemorySizeLimit;
+        this.literalSizeLimit = literalSizeLimit;
     }
 
     @Override
@@ -152,10 +154,10 @@ public class ImapRequestFrameDecoder extends FrameDecoder implements NettyConsta
 
             } else {
 
-                reader = new NettyImapRequestLineReader(channel, buffer, retry);
+                reader = new NettyImapRequestLineReader(channel, buffer, retry, literalSizeLimit);
             }
         } else {
-            reader = new NettyImapRequestLineReader(channel, buffer, retry);
+            reader = new NettyImapRequestLineReader(channel, buffer, retry, literalSizeLimit);
         }
 
         ImapSession session = (ImapSession) attributes.get(channel);
