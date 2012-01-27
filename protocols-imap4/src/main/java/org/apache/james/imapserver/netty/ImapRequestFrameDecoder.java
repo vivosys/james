@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +34,6 @@ import org.apache.james.imap.api.process.ImapSession;
 import org.apache.james.imap.decode.ImapDecoder;
 import org.apache.james.imap.decode.ImapRequestLineReader;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFutureListener;
@@ -110,21 +108,13 @@ public class ImapRequestFrameDecoder extends FrameDecoder implements NettyConsta
 
                     }
 
-                    InputStream bufferIn = null;
                     OutputStream out = null;
-                    try {
-                        bufferIn = new ChannelBufferInputStream(buffer);
-                        out = new FileOutputStream(f, true);
 
-                        // write the needed data to the file
-                        int i = -1;
-                        while (written < size && (i = bufferIn.read()) != -1) {
-                            out.write(i);
-                            written++;
-                        }
+                    try {
+                        out = new FileOutputStream(f, true);
+                        buffer.readBytes(out, buffer.readableBytes());
 
                     } finally {
-                        IOUtils.closeQuietly(bufferIn);
                         IOUtils.closeQuietly(out);
                     }
                     // Check if all needed data was streamed to the file.
