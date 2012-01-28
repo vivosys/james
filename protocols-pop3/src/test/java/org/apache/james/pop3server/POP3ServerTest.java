@@ -34,11 +34,15 @@ import org.apache.commons.net.pop3.POP3Client;
 import org.apache.commons.net.pop3.POP3MessageInfo;
 import org.apache.commons.net.pop3.POP3Reply;
 import org.apache.james.filesystem.api.mock.MockFileSystem;
+import org.apache.james.mailbox.MailboxACLResolver;
+import org.apache.james.mailbox.MailboxACLResolver.GroupMembershipResolver;
 import org.apache.james.mailbox.MailboxConstants;
 import org.apache.james.mailbox.MailboxException;
 import org.apache.james.mailbox.MailboxPath;
 import org.apache.james.mailbox.MailboxSession;
 import org.apache.james.mailbox.MessageManager;
+import org.apache.james.mailbox.SimpleGroupMembershipResolver;
+import org.apache.james.mailbox.UnionMailboxACLResolver;
 import org.apache.james.mailbox.inmemory.InMemoryMailboxSessionMapperFactory;
 import org.apache.james.mailbox.store.Authenticator;
 import org.apache.james.mailbox.store.StoreMailboxManager;
@@ -110,7 +114,8 @@ public class POP3ServerTest extends TestCase {
         chain.put("usersrepository", m_usersRepository);
 
         InMemoryMailboxSessionMapperFactory factory = new InMemoryMailboxSessionMapperFactory();
-
+        MailboxACLResolver aclResolver = new UnionMailboxACLResolver();
+        GroupMembershipResolver groupMembershipResolver = new SimpleGroupMembershipResolver();
         manager = new StoreMailboxManager<Long>(factory, new Authenticator() {
 
             public boolean isAuthentic(String userid, CharSequence passwd) {
@@ -122,7 +127,7 @@ public class POP3ServerTest extends TestCase {
                     return false;
                 }
             }
-        });
+        }, aclResolver, groupMembershipResolver);
         manager.init();
         chain.put("mailboxmanager", manager);
 
