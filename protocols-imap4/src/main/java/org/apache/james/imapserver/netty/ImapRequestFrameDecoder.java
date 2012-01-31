@@ -111,9 +111,9 @@ public class ImapRequestFrameDecoder extends FrameDecoder implements NettyConsta
                     OutputStream out = null;
 
                     try {
+                        int amount = Math.min(buffer.readableBytes(), size - written);
                         out = new FileOutputStream(f, true);
-                        buffer.readBytes(out, buffer.readableBytes());
-
+                        buffer.readBytes(out, amount);
                     } finally {
                         IOUtils.closeQuietly(out);
                     }
