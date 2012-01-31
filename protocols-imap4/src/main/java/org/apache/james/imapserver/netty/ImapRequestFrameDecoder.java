@@ -52,6 +52,8 @@ public class ImapRequestFrameDecoder extends FrameDecoder implements NettyConsta
     private final static String NEEDED_DATA = "NEEDED_DATA";
     private final static String STORED_DATA = "STORED_DATA";
     private final static String WRITTEN_DATA = "WRITTEN_DATA";
+    private final static String OUTPUT_STREAM = "OUTPUT_STREAM";
+
 
     public ImapRequestFrameDecoder(ImapDecoder decoder, int inMemorySizeLimit, int literalSizeLimit) {
         this.decoder = decoder;
@@ -95,30 +97,36 @@ public class ImapRequestFrameDecoder extends FrameDecoder implements NettyConsta
                     final File f;
                     int written;
 
+                    OutputStream out = null;
                     // check if we have created a temporary file already or if
                     // we need to create a new one
                     if (attachment.containsKey(STORED_DATA)) {
                         f = (File) attachment.get(STORED_DATA);
                         written = (Integer) attachment.get(WRITTEN_DATA);
+                        out = (OutputStream) attachment.get(OUTPUT_STREAM);
                     } else {
                         f = File.createTempFile("imap-literal", ".tmp");
                         attachment.put(STORED_DATA, f);
                         written = 0;
                         attachment.put(WRITTEN_DATA, written);
+                        out = new FileOutputStream(f, true);
+                        attachment.put(OUTPUT_STREAM, out);
 
                     }
 
-                    OutputStream out = null;
 
                     try {
                         int amount = Math.min(buffer.readableBytes(), size - written);
-                        out = new FileOutputStream(f, true);
                         buffer.readBytes(out, amount);
-                    } finally {
+                        written += amount;
+                    } catch (Exception e) {
                         IOUtils.closeQuietly(out);
+                        throw e;
                     }
                     // Check if all needed data was streamed to the file.
                     if (written == size) {
+                        IOUtils.closeQuietly(out);
+
                         reader = new NettyStreamImapRequestLineReader(channel, new FileInputStream(f) {
                             /**
                              * Delete the File on close too
