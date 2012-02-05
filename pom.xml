@@ -29,7 +29,7 @@
     <parent>
         <artifactId>james-project</artifactId>
         <groupId>org.apache.james</groupId>
-        <version>1.9-SNAPSHOT</version>
+        <version>1.8</version>
         <relativePath></relativePath>
     </parent>
 
@@ -989,9 +989,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.jboss.netty</groupId>
+                <groupId>io.netty</groupId>
                 <artifactId>netty</artifactId>
-                <version>3.2.7.Final</version>
+                <version>3.3.1</version>
                 <scope>compile</scope>
             </dependency>
             <!-- This needed to let the bundle plugin to generate the right import statement -->
