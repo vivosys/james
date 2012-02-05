@@ -37,6 +37,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFutureListener;
+import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
@@ -53,7 +54,6 @@ public class ImapRequestFrameDecoder extends FrameDecoder implements NettyConsta
     private final static String STORED_DATA = "STORED_DATA";
     private final static String WRITTEN_DATA = "WRITTEN_DATA";
     private final static String OUTPUT_STREAM = "OUTPUT_STREAM";
-
 
     public ImapRequestFrameDecoder(ImapDecoder decoder, int inMemorySizeLimit, int literalSizeLimit) {
         this.decoder = decoder;
@@ -173,6 +173,11 @@ public class ImapRequestFrameDecoder extends FrameDecoder implements NettyConsta
                 if (size == -1) {
                     reader.consumeLine();
                 }
+                
+                ChannelHandler handler = (ChannelHandler) attachment.remove(FRAMER);
+                if (handler != null) {
+                    channel.getPipeline().addFirst(FRAMER, handler);
+                }
                 attachment.clear();
                 return message;
             } catch (NettyImapRequestLineReader.NotEnoughDataException e) {
@@ -181,6 +186,11 @@ public class ImapRequestFrameDecoder extends FrameDecoder implements NettyConsta
                 int neededData = e.getNeededSize();
                 // store the needed data size for later usage
                 attachment.put(NEEDED_DATA, neededData);
+                
+
+                ChannelHandler handler = channel.getPipeline().remove(FRAMER);
+                attachment.put(FRAMER, handler);
+                
                 buffer.resetReaderIndex();
                 return null;
             }
@@ -191,6 +201,21 @@ public class ImapRequestFrameDecoder extends FrameDecoder implements NettyConsta
                 channel.write(ChannelBuffers.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             }
             return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected ChannelBuffer createCumulationDynamicBuffer(ChannelHandlerContext ctx) {
+        if (inMemorySizeLimit > 0) {
+            return ChannelBuffers.dynamicBuffer(inMemorySizeLimit, ctx.getChannel().getConfig().getBufferFactory());
+        } else {
+            Map<String, Object> attachment = (Map<String, Object>) ctx.getAttachment();
+            int size = (Integer) attachment.get(NEEDED_DATA);
+            if (size > 0) {
+                return ChannelBuffers.dynamicBuffer(size, ctx.getChannel().getConfig().getBufferFactory());
+            }
+            return super.createCumulationDynamicBuffer(ctx);
         }
     }
 
