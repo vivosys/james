@@ -120,11 +120,15 @@ public class JPADomainList extends AbstractDomainList {
      * org.apache.james.domainlist.api.DomainList#addDomain(java.lang.String)
      */
     public void addDomain(String domain) throws DomainListException {
+        String lowerCasedDomain = domain.toLowerCase();
+        if (containsDomain(lowerCasedDomain)) {
+            throw new DomainListException(lowerCasedDomain + " already exists.");
+        }
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         final EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            JPADomain jpaDomain = new JPADomain(domain);
+            JPADomain jpaDomain = new JPADomain(lowerCasedDomain);
             entityManager.persist(jpaDomain);
             transaction.commit();
         } catch (PersistenceException e) {

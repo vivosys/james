@@ -21,6 +21,7 @@ package org.apache.james.domainlist.lib;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.james.dnsservice.api.DNSService;
@@ -35,6 +36,7 @@ public abstract class AbstractDomainListTest extends TestCase {
 
     // Domains we will play with.
     private final String DOMAIN_1 = "domain1.tld";
+    private final String DOMAIN_1_UPPER_CASE = "Domain1.tld";
     private final String DOMAIN_2 = "domain2.tld";
     private final String DOMAIN_3 = "domain3.tld";
     private final String DOMAIN_4 = "domain4.tld";
@@ -88,6 +90,24 @@ public abstract class AbstractDomainListTest extends TestCase {
         domainList.addDomain(DOMAIN_1);
         domainList.removeDomain(DOMAIN_1);
         assertEquals(null, domainList.getDomains());
+    }
+
+    /**
+     * Add two same domains with different cases, and check we've got an exception.
+     * 
+     * @throws DomainListException
+     */
+    public void testUpperCaseSameDomain() throws DomainListException {
+        domainList.addDomain(DOMAIN_1);
+        assertEquals(1, domainList.getDomains().length);
+        try {
+            domainList.addDomain(DOMAIN_1_UPPER_CASE);
+        }
+        catch (DomainListException domainListException) {
+            Assert.assertTrue(domainListException.getMessage().contains(DOMAIN_1));
+            return;
+        }
+        Assert.fail("We should not be able to insert same domains, even with different caxes");
     }
 
     /**
