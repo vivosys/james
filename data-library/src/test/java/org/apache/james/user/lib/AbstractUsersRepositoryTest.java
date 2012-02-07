@@ -22,6 +22,7 @@ package org.apache.james.user.lib;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.james.lifecycle.api.LifecycleUtil;
@@ -47,6 +48,22 @@ public abstract class AbstractUsersRepositoryTest extends TestCase {
      */
     protected abstract UsersRepository getUsersRepository() throws Exception;
 
+    /**
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+        this.usersRepository = getUsersRepository();
+    }
+
+    /**
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        disposeUsersRepository();
+        super.tearDown();
+    }
+
     public void testUsersRepositoryEmpty() throws UsersRepositoryException {
         assertEquals("users repository not empty", 0, usersRepository.countUsers());
         assertFalse("users repository not empty", usersRepository.list().hasNext());
@@ -57,9 +74,8 @@ public abstract class AbstractUsersRepositoryTest extends TestCase {
         try {
             usersRepository.addUser("username", "password2");
             fail("User added twice!");
-
         } catch (UsersRepositoryException e) {
-
+            // UsersRepositoryException must be thrown by implementation.
         }
         try {
             usersRepository.addUser("username2", "password2");
@@ -69,7 +85,6 @@ public abstract class AbstractUsersRepositoryTest extends TestCase {
         } catch (UnsupportedOperationException e) {
 
         }
-
     }
 
     public void testUserAddedIsFound() throws UsersRepositoryException {
@@ -114,6 +129,17 @@ public abstract class AbstractUsersRepositoryTest extends TestCase {
         assertEquals("Some user has not be found", 0, check.size());
     }
 
+    public void testUpperCaseSameUser() throws UsersRepositoryException {
+        usersRepository.addUser("myUsername", "password");
+        try {
+            usersRepository.addUser("MyUsername", "password");
+            Assert.fail("We should not be able to insert same users, even with different cases");
+        }
+        catch (UsersRepositoryException e) {
+            Assert.assertTrue("The exception message must contain the username value", e.getMessage().contains("myusername"));
+        }
+    }
+
     public void testUserPassword() throws UsersRepositoryException {
         usersRepository.addUser("username", "password");
         assertEquals("didn't accept the correct password ", usersRepository.test("username", "password"), getPasswordsEnabled());
@@ -124,18 +150,14 @@ public abstract class AbstractUsersRepositoryTest extends TestCase {
         assertFalse("accepted the wrong password #5", usersRepository.test("userName", "password"));
     }
 
-    protected boolean getPasswordsEnabled() {
-        return true;
-    }
-
     public void testUserAddRemoveCycle() throws UsersRepositoryException {
         assertFalse("accepted login when no user existed", usersRepository.test("username", "password"));
         try {
             usersRepository.removeUser("username");
             // UsersFileRepository accept this call for every argument
             // fail("removing an unknown user didn't fail!");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (UsersRepositoryException e) {
+            // Do nothing, we should come here if test works.
         }
         usersRepository.addUser("username", "password");
         assertEquals("didn't accept the correct password", usersRepository.test("username", "password"), getPasswordsEnabled());
@@ -167,41 +189,18 @@ public abstract class AbstractUsersRepositoryTest extends TestCase {
     }
 
     /**
-     * @return
-     */
-    protected boolean getCheckCase() {
-        return true;
-    }
-
-    protected boolean getAllowMultipleUsersWithDifferentCases() {
-        return getCheckCase();
-    }
-
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.usersRepository = getUsersRepository();
-    }
-
-    /**
-     * @see junit.framework.TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        disposeUsersRepository();
-        super.tearDown();
-    }
-
-    /**
      * Dispose the repository
      * 
      * @throws UsersRepositoryException
      */
-    protected void disposeUsersRepository() throws UsersRepositoryException {
+    private void disposeUsersRepository() throws UsersRepositoryException {
         if (usersRepository != null) {
             LifecycleUtil.dispose(this.usersRepository);
         }
+    }
+
+    private boolean getPasswordsEnabled() {
+        return true;
     }
 
 }
