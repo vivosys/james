@@ -19,6 +19,11 @@
 
 package org.apache.james.user.file;
 
+import java.util.Iterator;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -27,11 +32,6 @@ import org.apache.james.repository.file.FilePersistentObjectRepository;
 import org.apache.james.user.api.UsersRepositoryException;
 import org.apache.james.user.api.model.User;
 import org.apache.james.user.lib.AbstractJamesUsersRepository;
-
-import java.util.Iterator;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 
 /**
  * <p>
@@ -122,6 +122,9 @@ public class UsersFileRepository extends AbstractJamesUsersRepository {
      * @see org.apache.james.user.lib.AbstractJamesUsersRepository#doAddUser(org.apache.james.user.api.model.User)
      */
     protected void doAddUser(User user) throws UsersRepositoryException {
+        if (contains(user.getUserName())) {
+            throw new UsersRepositoryException(user.getUserName() + " already exists.");
+        }
         try {
             objectRepository.put(user.getUserName(), user);
         } catch (Exception e) {
@@ -159,7 +162,7 @@ public class UsersFileRepository extends AbstractJamesUsersRepository {
      * @return The real name
      * @throws UsersRepositoryException
      */
-    public String getRealName(String name, boolean ignoreCase) throws UsersRepositoryException {
+    private String getRealName(String name, boolean ignoreCase) throws UsersRepositoryException {
         if (ignoreCase) {
             Iterator<String> it = list();
             while (it.hasNext()) {
@@ -181,7 +184,7 @@ public class UsersFileRepository extends AbstractJamesUsersRepository {
      * @return The real name
      * @throws UsersRepositoryException
      */
-    public String getRealName(String name) throws UsersRepositoryException {
+    private String getRealName(String name) throws UsersRepositoryException {
         return getRealName(name, ignoreCase);
     }
 
@@ -189,7 +192,7 @@ public class UsersFileRepository extends AbstractJamesUsersRepository {
      * @throws UsersRepositoryException
      * @see org.apache.james.user.lib.AbstractJamesUsersRepository#doUpdateUser(org.apache.james.user.api.model.User)
      */
-    public void doUpdateUser(User user) throws UsersRepositoryException {
+    protected void doUpdateUser(User user) throws UsersRepositoryException {
         try {
             objectRepository.put(user.getUserName(), user);
         } catch (Exception e) {
@@ -219,7 +222,7 @@ public class UsersFileRepository extends AbstractJamesUsersRepository {
      * This is not longer in the api (deprecated)
      * @see org.apache.james.user.api.UsersRepository#containsCaseInsensitive(java.lang.String)
      */
-    public boolean containsCaseInsensitive(String name) throws UsersRepositoryException {
+    private boolean containsCaseInsensitive(String name) throws UsersRepositoryException {
         Iterator<String> it = list();
         while (it.hasNext()) {
             if (name.equalsIgnoreCase((String) it.next())) {
