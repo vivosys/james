@@ -364,16 +364,20 @@ public class JCRUsersRepository extends AbstractUsersRepository {
 
     @Override
     protected void doAddUser(String username, String password) throws UsersRepositoryException {
+        String lowerCasedUsername = username.toLowerCase();
+        if (contains(lowerCasedUsername)) {
+            throw new UsersRepositoryException(lowerCasedUsername + " already exists.");
+        }
         try {
             final Session session = login();
             try {
-                final String name = toSafeName(username);
+                final String name = toSafeName(lowerCasedUsername);
                 final String path = USERS_PATH + "/" + name;
                 final Node rootNode = session.getRootNode();
                 try {
                     rootNode.getNode(path);
                     getLogger().info("User already exists");
-                    throw new UsersRepositoryException("User " + username + " already exists");
+                    throw new UsersRepositoryException("User " + lowerCasedUsername + " already exists");
                 } catch (PathNotFoundException e) {
                     // user does not exist
                 }
@@ -387,13 +391,13 @@ public class JCRUsersRepository extends AbstractUsersRepository {
                 }
 
                 Node node = parent.addNode(name);
-                node.setProperty(USERNAME_PROPERTY, username);
+                node.setProperty(USERNAME_PROPERTY, lowerCasedUsername);
                 final String hashedPassword;
                 if (password == null) {
                     // Support easy password reset
                     hashedPassword = "";
                 } else {
-                    hashedPassword = JCRUser.hashPassword(username, password);
+                    hashedPassword = JCRUser.hashPassword(lowerCasedUsername, password);
                 }
                 node.setProperty(PASSWD_PROPERTY, hashedPassword);
                 session.save();
@@ -403,9 +407,9 @@ public class JCRUsersRepository extends AbstractUsersRepository {
 
         } catch (RepositoryException e) {
             if (getLogger().isInfoEnabled()) {
-                getLogger().info("Failed to add user: " + username, e);
+                getLogger().info("Failed to add user: " + lowerCasedUsername, e);
             }
-            throw new UsersRepositoryException("Failed to add user: " + username, e);
+            throw new UsersRepositoryException("Failed to add user: " + lowerCasedUsername, e);
 
         }
 
