@@ -94,7 +94,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
         if (existingUser == null) {
             throw new UsersRepositoryException("Please provide an existing user to update");
         }
-        putUser((DefaultUser) user);
+        putUser((DefaultUser) user, false);
     }
 
     /**
@@ -224,7 +224,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
     protected void doAddUser(String username, String password) throws UsersRepositoryException {
         DefaultUser user = new DefaultUser(username, algo);
         user.setPassword(password);
-        putUser(user);
+        putUser(user, true);
     }
     
     /**
@@ -257,16 +257,23 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
     }
     
     /**
-     * Utility mehtod to put a User in HBase.
+     * Utility method to put a User in HBase.
      * 
      * @param user
      * @throws UsersRepositoryException
      */
-    private void putUser(DefaultUser user) throws UsersRepositoryException {
+    private void putUser(DefaultUser user, boolean isAdd) throws UsersRepositoryException {
+        String username = user.getUserName();
+        if (isAdd) {
+            username = user.getUserName().toLowerCase();
+            if (contains(username)) {
+                throw new UsersRepositoryException(username + " already exists.");
+            }
+        }
         HTable table = null;
         try {
             table = TablePool.getInstance().getUsersRepositoryTable();
-            Put put = new Put(Bytes.toBytes(user.getUserName()));
+            Put put = new Put(Bytes.toBytes(username));
             put.add(HUsersRepository.COLUMN_FAMILY_NAME, HUsersRepository.COLUMN.PWD, Bytes.toBytes(user.getHashedPassword()));
             table.put(put);
             table.flushCommits();
