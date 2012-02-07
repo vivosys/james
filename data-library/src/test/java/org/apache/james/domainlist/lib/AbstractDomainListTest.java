@@ -102,12 +102,12 @@ public abstract class AbstractDomainListTest extends TestCase {
         assertEquals(1, domainList.getDomains().length);
         try {
             domainList.addDomain(DOMAIN_1_UPPER_CASE);
+            Assert.fail("We should not be able to insert same domains, even with different cases");
         }
         catch (DomainListException domainListException) {
             Assert.assertTrue(domainListException.getMessage().contains(DOMAIN_1));
             return;
         }
-        Assert.fail("We should not be able to insert same domains, even with different caxes");
     }
 
     /**
