@@ -19,6 +19,11 @@
 
 package org.apache.james.user.jdbc;
 
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.sql.DataSource;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
 import org.apache.commons.dbcp.BasicDataSource;
@@ -29,21 +34,13 @@ import org.apache.james.rrt.api.RecipientRewriteTable;
 import org.apache.james.user.api.UsersRepository;
 import org.apache.james.user.api.UsersRepositoryException;
 import org.apache.james.user.api.model.JamesUser;
-import org.apache.james.user.jdbc.AbstractJdbcUsersRepository;
-import org.apache.james.user.jdbc.JamesUsersJdbcRepository;
-import org.apache.james.user.lib.AbstractUsersRepositoryTest;
 import org.apache.mailet.MailAddress;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
-import java.util.Iterator;
-
-import javax.sql.DataSource;
 
 /**
  * Test basic behaviors of UsersFileRepository
  */
-public class JamesUsersJdbcRepositoryTest extends AbstractUsersRepositoryTest {
+public class JamesUsersJdbcRepositoryTest extends AbstractUsersJdbcRepositoryTest {
 
     /**
      * Create the repository to be tested.
