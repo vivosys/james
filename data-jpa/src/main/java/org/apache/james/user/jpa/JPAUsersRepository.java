@@ -273,11 +273,15 @@ public class JPAUsersRepository extends AbstractUsersRepository {
      * org.apache.james.user.lib.AbstractUsersRepository#doAddUser(java.lang.String, java.lang.String)
      */
     protected void doAddUser(String username, String password) throws UsersRepositoryException {
+        String lowerCasedUsername = username.toLowerCase();
+        if (contains(lowerCasedUsername)) {
+            throw new UsersRepositoryException(lowerCasedUsername + " already exists.");
+        }
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         final EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            JPAUser user = new JPAUser(username, password, algo);
+            JPAUser user = new JPAUser(lowerCasedUsername, password, algo);
             entityManager.persist(user);
             transaction.commit();
         } catch (PersistenceException e) {
