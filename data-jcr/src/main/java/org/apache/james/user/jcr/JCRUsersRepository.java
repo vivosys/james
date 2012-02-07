@@ -222,7 +222,7 @@ public class JCRUsersRepository extends AbstractUsersRepository {
             final Session session = login();
             try {
                 final Node rootNode = session.getRootNode();
-                final String path = USERS_PATH + "/" + toSafeName(name);
+                final String path = USERS_PATH + "/" + toSafeName(name.toLowerCase());
                 rootNode.getNode(path);
                 return true;
             } finally {
