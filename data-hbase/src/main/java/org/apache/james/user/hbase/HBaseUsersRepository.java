@@ -127,7 +127,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
      */
     @Override
     public boolean contains(String name) throws UsersRepositoryException {
-        KeyValue keyValue = getKeyValue(name);
+        KeyValue keyValue = getKeyValue(name.toLowerCase());
         return (keyValue != null);
     }
 
