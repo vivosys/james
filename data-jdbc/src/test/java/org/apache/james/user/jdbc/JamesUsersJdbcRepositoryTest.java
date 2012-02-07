@@ -19,7 +19,6 @@
 
 package org.apache.james.user.jdbc;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import javax.sql.DataSource;
@@ -30,11 +29,8 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.derby.jdbc.EmbeddedDriver;
 import org.apache.james.filesystem.api.mock.MockFileSystem;
 import org.apache.james.lifecycle.api.LifecycleUtil;
-import org.apache.james.rrt.api.RecipientRewriteTable;
 import org.apache.james.user.api.UsersRepository;
 import org.apache.james.user.api.UsersRepositoryException;
-import org.apache.james.user.api.model.JamesUser;
-import org.apache.mailet.MailAddress;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -95,46 +91,6 @@ public class JamesUsersJdbcRepositoryTest extends AbstractUsersJdbcRepositoryTes
             this.usersRepository.removeUser((String) i.next());
         }
         LifecycleUtil.dispose(this.usersRepository);
-    }
-
-    public void testRecipientRewriteTableImpl() throws Exception {
-        String username = "test";
-        String password = "pass";
-        String alias = "alias";
-        String domain = "localhost";
-        String forward = "forward@somewhere";
-
-        JamesUsersJdbcRepository repos = (JamesUsersJdbcRepository) getUsersRepository();
-        repos.setEnableAliases(true);
-        repos.setEnableForwarding(true);
-        repos.addUser(username, password);
-
-        JamesUser user = (JamesUser) repos.getUserByName(username);
-        user.setAlias(alias);
-        repos.updateUser(user);
-
-        Collection<String> map = ((RecipientRewriteTable) repos).getMappings(username, domain);
-        assertNull("No mapping", map);
-
-        user.setAliasing(true);
-        repos.updateUser(user);
-        map = ((RecipientRewriteTable) repos).getMappings(username, domain);
-        assertEquals("One mapping", 1, map.size());
-        assertEquals("Alias found", map.iterator().next().toString(), alias + "@" + domain);
-
-        user.setForwardingDestination(new MailAddress(forward));
-        repos.updateUser(user);
-        map = ((RecipientRewriteTable) repos).getMappings(username, domain);
-        assertTrue("One mapping", map.size() == 1);
-        assertEquals("Alias found", map.iterator().next().toString(), alias + "@" + domain);
-
-        user.setForwarding(true);
-        repos.updateUser(user);
-        map = ((RecipientRewriteTable) repos).getMappings(username, domain);
-        Iterator<String> mappings = map.iterator();
-        assertTrue("Two mapping", map.size() == 2);
-        assertEquals("Alias found", mappings.next().toString(), alias + "@" + domain);
-        assertEquals("Forward found", mappings.next().toString(), forward);
     }
 
 }
