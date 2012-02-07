@@ -52,14 +52,10 @@ public class HBaseDomainList extends AbstractDomainList {
      */
     @Override
     public boolean containsDomain(String domain) throws DomainListException {
-        String lowerCasedDomain = domain.toLowerCase();
-        if (containsDomain(lowerCasedDomain)) {
-            throw new DomainListException(lowerCasedDomain + " already exists.");
-        }
         HTable table = null;
         try {
             table = TablePool.getInstance().getDomainlistTable();
-            Get get = new Get(Bytes.toBytes(lowerCasedDomain));
+            Get get = new Get(Bytes.toBytes(domain));
             Result result = table.get(get);
             if (! result.isEmpty()) {
                 return true;
@@ -84,10 +80,14 @@ public class HBaseDomainList extends AbstractDomainList {
      */
     @Override
     public void addDomain(String domain) throws DomainListException {
+        String lowerCasedDomain = domain.toLowerCase();
+        if (containsDomain(lowerCasedDomain)) {
+            throw new DomainListException(lowerCasedDomain + " already exists.");
+        }
         HTable table = null;
         try {
             table = TablePool.getInstance().getDomainlistTable();
-            Put put = new Put(Bytes.toBytes(domain));
+            Put put = new Put(Bytes.toBytes(lowerCasedDomain));
             put.add(HDomainList.COLUMN_FAMILY_NAME, HDomainList.COLUMN.DOMAIN, null);
             table.put(put);
             table.flushCommits();
