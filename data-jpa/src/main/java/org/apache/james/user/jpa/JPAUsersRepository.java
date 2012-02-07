@@ -176,7 +176,7 @@ public class JPAUsersRepository extends AbstractUsersRepository {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            return ((Long) entityManager.createNamedQuery("containsUser").setParameter("name", name).getSingleResult()).longValue() > 0;
+            return ((Long) entityManager.createNamedQuery("containsUser").setParameter("name", name.toLowerCase()).getSingleResult()).longValue() > 0;
         } catch (PersistenceException e) {
             getLogger().debug("Failed to find user", e);
             throw new UsersRepositoryException("Failed to find user" + name, e);
