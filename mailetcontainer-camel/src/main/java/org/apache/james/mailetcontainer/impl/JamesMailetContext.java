@@ -245,13 +245,13 @@ public class JamesMailetContext implements MailetContext, LogEnabled, Configurab
         try {
             if (name.indexOf("@") == -1) {
                 try {
-                    return isLocalEmail(new MailAddress(name, domains.getDefaultDomain()));
+                    return isLocalEmail(new MailAddress(name.toLowerCase(), domains.getDefaultDomain()));
                 } catch (DomainListException e) {
                     log("Unable to access DomainList", e);
                     return false;
                 }
             } else {
-                return isLocalEmail(new MailAddress(name));
+                return isLocalEmail(new MailAddress(name.toLowerCase()));
             }
         } catch (ParseException e) {
             log("Error checking isLocalUser for user " + name);
@@ -263,13 +263,13 @@ public class JamesMailetContext implements MailetContext, LogEnabled, Configurab
      * @see org.apache.mailet.MailetContext#isLocalEmail(org.apache.mailet.MailAddress)
      */
     public boolean isLocalEmail(MailAddress mailAddress) {
-        String userName = mailAddress.toString();
-        if (!isLocalServer(mailAddress.getDomain())) {
+        String userName = mailAddress.toString().toLowerCase();
+        if (!isLocalServer(mailAddress.getDomain().toLowerCase())) {
             return false;
         }
         try {
             if (localusers.supportVirtualHosting() == false) {
-                userName = mailAddress.getLocalPart();
+                userName = mailAddress.getLocalPart().toLowerCase();
             }
             return localusers.contains(userName);
 
