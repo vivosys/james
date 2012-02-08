@@ -28,38 +28,7 @@ public abstract class AbstractUsersJdbcRepositoryTest extends AbstractUsersRepos
      * @see org.apache.james.user.lib.AbstractUsersRepositoryTest#testUsersRepositoryEmpty()
      */
     @Override
-    public void testUsersRepositoryEmpty() {
-        return;
-    }
-
-    /* Deactivate this test for the Jdbc implementation
-     * Should be disable via @Ignore with JUnit4
-     * 
-     * @see org.apache.james.user.lib.AbstractUsersRepositoryTest#testUsersRepositoryEmpty()
-     */
-    @Override
-    public void testAddUserOnce() {
-        return;
-    }
-
-    /* Deactivate this test for the Jdbc implementation
-     * Should be disable via @Ignore with JUnit4
-     * 
-     * @see org.apache.james.user.lib.AbstractUsersRepositoryTest#testUsersRepositoryEmpty()
-     */
-    @Override
-    public void testUserAddedIsFound() {
-        return;
-    }
-
-    /* Deactivate this test for the Jdbc implementation
-     * Should be disable via @Ignore with JUnit4
-     * 
-     * @see org.apache.james.user.lib.AbstractUsersRepositoryTest#testUsersRepositoryEmpty()
-     */
-    @Override
     public void testUserListing() {
-        return;
     }
 
     /* Deactivate this test for the Jdbc implementation
@@ -69,7 +38,15 @@ public abstract class AbstractUsersJdbcRepositoryTest extends AbstractUsersRepos
      */
     @Override
     public void testUpperCaseSameUser() {
-        return;
+    }
+
+    /* Deactivate this test for the Jdbc implementation
+     * Should be disable via @Ignore with JUnit4
+     * 
+     * @see org.apache.james.user.lib.AbstractUsersRepositoryTest#testUsersRepositoryEmpty()
+     */
+    @Override
+    public void testUserAddedIsFound() {
     }
 
     /* Deactivate this test for the Jdbc implementation
@@ -79,7 +56,6 @@ public abstract class AbstractUsersJdbcRepositoryTest extends AbstractUsersRepos
      */
     @Override
     public void testUserPassword() {
-        return;
     }
 
     /* Deactivate this test for the Jdbc implementation
@@ -89,8 +65,6 @@ public abstract class AbstractUsersJdbcRepositoryTest extends AbstractUsersRepos
      */
     @Override
     public void testUserAddRemoveCycle() {
-        return;
     }
 
-    
 }
