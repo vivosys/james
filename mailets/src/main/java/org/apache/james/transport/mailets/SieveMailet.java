@@ -27,12 +27,12 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.james.core.MimeMessageInputStream;
 import org.apache.james.filesystem.api.FileSystem;
-import org.apache.james.mailbox.BadCredentialsException;
-import org.apache.james.mailbox.MailboxException;
 import org.apache.james.mailbox.MailboxManager;
-import org.apache.james.mailbox.MailboxPath;
 import org.apache.james.mailbox.MailboxSession;
 import org.apache.james.mailbox.MessageManager;
+import org.apache.james.mailbox.exception.BadCredentialsException;
+import org.apache.james.mailbox.exception.MailboxException;
+import org.apache.james.mailbox.model.MailboxPath;
 import org.apache.james.transport.util.MailetContextLog;
 import org.apache.james.user.api.UsersRepository;
 import org.apache.james.user.api.UsersRepositoryException;

@@ -24,9 +24,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.james.mailbox.MailboxException;
 import org.apache.james.mailbox.MailboxManager;
 import org.apache.james.mailbox.copier.MailboxCopier;
+import org.apache.james.mailbox.exception.MailboxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;

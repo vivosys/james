@@ -22,12 +22,12 @@ import java.io.IOException;
 
 import javax.annotation.Resource;
 
-import org.apache.james.mailbox.BadCredentialsException;
-import org.apache.james.mailbox.MailboxException;
 import org.apache.james.mailbox.MailboxManager;
-import org.apache.james.mailbox.MailboxPath;
 import org.apache.james.mailbox.MailboxSession;
 import org.apache.james.mailbox.MessageManager;
+import org.apache.james.mailbox.exception.BadCredentialsException;
+import org.apache.james.mailbox.exception.MailboxException;
+import org.apache.james.mailbox.model.MailboxPath;
 import org.apache.james.pop3server.mailbox.MailboxAdapter;
 import org.apache.james.protocols.api.Request;
 import org.apache.james.protocols.api.Response;

@@ -24,10 +24,10 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.apache.james.mailbox.MailboxException;
 import org.apache.james.mailbox.MailboxManager;
-import org.apache.james.mailbox.MailboxPath;
 import org.apache.james.mailbox.MailboxSession;
+import org.apache.james.mailbox.exception.MailboxException;
+import org.apache.james.mailbox.model.MailboxPath;
 import org.apache.james.protocols.lib.Slf4jLoggerAdapter;
 import org.apache.james.protocols.lmtp.hook.DeliverToRecipientHook;
 import org.apache.james.protocols.smtp.MailAddress;
