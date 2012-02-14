@@ -103,7 +103,7 @@
         <javax.activation.artifactId>activation</javax.activation.artifactId>
         <javax.mail.groupId>javax.mail</javax.mail.groupId>
         <javax.mail.artifactId>mail</javax.mail.artifactId>
-        <jsieve.version>0.4</jsieve.version>
+        <jsieve.version>0.5-SNAPSHOT</jsieve.version>
         <mailbox.version>0.4-SNAPSHOT</mailbox.version>
         <productName>Apache-James Mail Server</productName>
         <protocols.version>1.6.2</protocols.version>
