@@ -29,7 +29,7 @@
     <parent>
         <artifactId>james-project</artifactId>
         <groupId>org.apache.james</groupId>
-        <version>1.8</version>
+        <version>1.9-SNAPSHOT</version>
         <relativePath></relativePath>
     </parent>
 
@@ -106,8 +106,8 @@
         <jsieve.version>0.4</jsieve.version>
         <mailbox.version>0.4-SNAPSHOT</mailbox.version>
         <productName>Apache-James Mail Server</productName>
-        <protocols.version>1.6.1</protocols.version>
-        <spring.version>3.0.5.RELEASE</spring.version>
+        <protocols.version>1.6.2-SNAPSHOT</protocols.version>
+        <spring.version>3.1.0.RELEASE</spring.version>
     </properties>
 
     <dependencyManagement>
