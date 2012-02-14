@@ -91,12 +91,12 @@
         <dependency>
             <groupId>org.apache.james</groupId>
             <artifactId>apache-jsieve-mailet</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>apache-mime4j</artifactId>
-                    <groupId>org.apache.james</groupId>
-                </exclusion>
-            </exclusions>
+<!--             <exclusions> -->
+<!--                 <exclusion> -->
+<!--                     <artifactId>apache-mime4j</artifactId> -->
+<!--                     <groupId>org.apache.james</groupId> -->
+<!--                 </exclusion> -->
+<!--             </exclusions> -->
         </dependency>
         <dependency>
             <groupId>org.apache.james</groupId>
