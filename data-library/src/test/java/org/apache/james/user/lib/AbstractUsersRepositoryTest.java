@@ -136,7 +136,7 @@ public abstract class AbstractUsersRepositoryTest extends TestCase {
             Assert.fail("We should not be able to insert same users, even with different cases");
         }
         catch (UsersRepositoryException e) {
-            Assert.assertTrue("The exception message must contain the username value", e.getMessage().contains("myusername"));
+            Assert.assertTrue("The exception message must contain the username value but was=" + e.getMessage(), e.getMessage().contains("MyUsername"));
         }
     }
 
