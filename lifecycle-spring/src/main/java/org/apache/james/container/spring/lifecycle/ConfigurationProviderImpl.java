@@ -35,6 +35,7 @@ import org.springframework.core.io.ResourceLoader;
  * Register Configuration and act as Configuration Provider.
  */
 public class ConfigurationProviderImpl implements ConfigurationProvider, ResourceLoaderAware, InitializingBean {
+    private static final String CONFIGURATION_FILE_SUFFIX = ".conf";
 
     /**
      * A map of loaded configuration per bean.
@@ -116,7 +117,7 @@ public class ConfigurationProviderImpl implements ConfigurationProvider, Resourc
                 resourceName = name;
             }
 
-            Resource resource = loader.getResource(getConfigPrefix() + resourceName + ".xml");
+            Resource resource = loader.getResource(getConfigPrefix() + resourceName + CONFIGURATION_FILE_SUFFIX);
 
             if (resource.exists()) {
                 try {
