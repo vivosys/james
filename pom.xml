@@ -593,7 +593,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.james</groupId>
-                <artifactId>apache-jsieve</artifactId>
+                <artifactId>apache-jsieve-core</artifactId>
                 <version>${jsieve.version}</version>
             </dependency>
             <dependency>
