@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 
 import org.apache.commons.collections.iterators.IteratorChain;
+import org.apache.james.domainlist.api.DomainList;
 import org.apache.james.filesystem.api.FileSystem;
 import org.apache.james.mailbox.MailboxManager;
 import org.apache.james.user.api.UsersRepository;
@@ -36,29 +37,20 @@ import org.apache.mailet.MailetContext;
 import org.apache.mailet.base.GenericMailet;
 
 /**
- * Receives a Mail from JamesSpoolManager and takes care of delivery of the
+ * Receives a Mail from the Queue and takes care of delivery of the
  * message to local inboxes.
  * 
- * Since James 2.3.0 this mailet is a composition of
- * UserRepositoryAliasingForwarding and ToMultiRepository configurated to mimic
- * the old "LocalDelivery" behaviour.
+ * This mailet is a composition of RecipientRewriteTable, SieveMailet 
+ * and MailboxManager configured to mimic the old "LocalDelivery"
+ * James 2.3 behavior.
  */
 public class LocalDelivery extends GenericMailet {
-
-    /**
-     * Mailet that apply aliasing and forwarding
-     */
-    private UsersRepositoryAliasingForwarding aliasingMailet;
-
-    /**
-     * Mailet that actually store the message
-     */
-    private SieveMailet sieveMailet;
-
+    private RecipientRewriteTable recipientRewriteTable;  // Mailet that applies RecipientRewriteTable
+    private SieveMailet sieveMailet;  // Mailet that actually stores the message
     private UsersRepository usersRepository;
-
+    private org.apache.james.rrt.api.RecipientRewriteTable rrt;
     private MailboxManager mailboxManager;
-    
+    private DomainList domainList;
     private FileSystem fileSystem;
 
     @Resource(name = "usersrepository")
@@ -66,6 +58,11 @@ public class LocalDelivery extends GenericMailet {
         this.usersRepository = usersRepository;
     }
 
+    @Resource(name = "domainlist")
+    public void setDomainList(DomainList domainList) {
+        this.domainList = domainList;
+    }
+    
     @Resource(name = "mailboxmanager")
     public void setMailboxManager(MailboxManager mailboxManager) {
         this.mailboxManager = mailboxManager;
@@ -76,17 +73,20 @@ public class LocalDelivery extends GenericMailet {
         this.fileSystem = fileSystem;
     }
 
+    @Resource(name = "recipientrewritetable")
+    public final void setRecipientRewriteTable(org.apache.james.rrt.api.RecipientRewriteTable rrt) {
+        this.rrt = rrt;
+    }
+
     /**
      * Delivers a mail to a local mailbox.
      * 
-     * @param mail
-     *            the mail being processed
+     * @param mail the mail being processed
      * 
-     * @throws MessagingException
-     *             if an error occurs while storing the mail
+     * @throws MessagingException if an error occurs while storing the mail
      */
     public void service(Mail mail) throws MessagingException {
-        aliasingMailet.service(mail);
+        recipientRewriteTable.service(mail);
         if (mail.getState() != Mail.GHOST) {
             sieveMailet.service(mail);
         }
@@ -105,15 +105,20 @@ public class LocalDelivery extends GenericMailet {
      * @see org.apache.mailet.base.GenericMailet#init()
      */
     public void init() throws MessagingException {
+        
         super.init();
 
-        aliasingMailet = new UsersRepositoryAliasingForwarding();
-        aliasingMailet.setUsersRepository(usersRepository);
-        aliasingMailet.init(getMailetConfig());
+        recipientRewriteTable = new RecipientRewriteTable();
+        recipientRewriteTable.setDomainList(domainList);
+        recipientRewriteTable.setRecipientRewriteTable(rrt);
+        recipientRewriteTable.init(getMailetConfig());
+ 
         sieveMailet = new SieveMailet();
-        MailetConfig m = new MailetConfig() {
-
-            /**
+        sieveMailet.setUsersRepository(usersRepository);
+        sieveMailet.setMailboxManager(mailboxManager);
+        sieveMailet.setFileSystem(fileSystem);
+        sieveMailet.init(new MailetConfig() {
+            /*
              * @see org.apache.mailet.MailetConfig#getInitParameter(java.lang.String)
              */
             public String getInitParameter(String name) {
@@ -125,11 +130,10 @@ public class LocalDelivery extends GenericMailet {
                     return getMailetConfig().getInitParameter(name);
                 }
             }
-
-            /**
+            /*
              * @see org.apache.mailet.MailetConfig#getInitParameterNames()
              */
-            public Iterator getInitParameterNames() {
+            public Iterator<String> getInitParameterNames() {
                 IteratorChain c = new IteratorChain();
                 Collection<String> h = new ArrayList<String>();
                 h.add("addDeliveryHeader");
@@ -138,28 +142,23 @@ public class LocalDelivery extends GenericMailet {
                 c.addIterator(h.iterator());
                 return c;
             }
-
-            /**
+            /*
              * @see org.apache.mailet.MailetConfig#getMailetContext()
              */
             public MailetContext getMailetContext() {
                 return getMailetConfig().getMailetContext();
             }
-
-            /**
+            /*
              * @see org.apache.mailet.MailetConfig#getMailetName()
              */
             public String getMailetName() {
                 return getMailetConfig().getMailetName();
             }
 
-        };
-        sieveMailet.setUsersRepository(usersRepository);
-        sieveMailet.setMailboxManager(mailboxManager);
-        sieveMailet.setFileSystem(fileSystem);
-        sieveMailet.init(m);
+        });
         // Override the default value of "quiet"
         sieveMailet.setQuiet(getInitParameter("quiet", true));
+        
     }
 
 }
