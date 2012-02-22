@@ -18,10 +18,7 @@
  *
  */
 
-package org.apache.james.managesieve.file;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+package org.apache.james.filesystem.api;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,8 +27,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.io.FileUtils;
-import org.apache.james.filesystem.api.FileSystem;
 import org.apache.james.managesieve.api.DuplicateException;
 import org.apache.james.managesieve.api.DuplicateUserException;
 import org.apache.james.managesieve.api.IsActiveException;
@@ -42,14 +40,11 @@ import org.apache.james.managesieve.api.ScriptSummary;
 import org.apache.james.managesieve.api.SieveRepository;
 import org.apache.james.managesieve.api.StorageException;
 import org.apache.james.managesieve.api.UserNotFoundException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * <code>SieveFileRepositoryTestCase</code>
  */
-public class SieveFileRepositoryTestCase {
+public class SieveFileRepositoryTestCase extends TestCase {
     private static final String SIEVE_ROOT = FileSystem.FILE_PROTOCOL + "sieve";
     
     private FileSystem fs = new FileSystem() {
@@ -72,7 +67,7 @@ public class SieveFileRepositoryTestCase {
      *
      * @throws java.lang.Exception
      */
-    @Before
+//    @Before
     public void setUp() throws Exception {
         File root = fs.getFile(SIEVE_ROOT);
         // Remove files from the previous test, if any
@@ -88,7 +83,7 @@ public class SieveFileRepositoryTestCase {
      *
      * @throws java.lang.Exception
      */
-    @After
+//    @After
     public void tearDown() throws Exception {
         // Files from the current run are not removed to allow post run analysis
     }
@@ -96,7 +91,7 @@ public class SieveFileRepositoryTestCase {
     /**
      * Test method for {@link org.apache.james.managesieve.file.SieveFileRepository#SieveFileRepository(org.apache.james.filesystem.api.FileSystem)}.
      */
-    @Test
+//    @Test
     public final void testSieveFileRepository() {
         SieveRepository repo = new SieveFileRepository(fs);
         assertTrue(repo instanceof SieveRepository);
@@ -113,7 +108,7 @@ public class SieveFileRepositoryTestCase {
      * @throws ScriptNotFoundException 
      * @throws FileNotFoundException 
      */
-    @Test
+//    @Test
     public final void testDeleteScript() throws DuplicateUserException, StorageException,
             UserNotFoundException, QuotaExceededException, ScriptNotFoundException,
             IsActiveException, FileNotFoundException {
@@ -158,7 +153,7 @@ public class SieveFileRepositoryTestCase {
      * @throws QuotaExceededException 
      * @throws ScriptNotFoundException 
      */
-    @Test
+//    @Test
     public final void testGetScript() throws DuplicateUserException, StorageException, UserNotFoundException, QuotaExceededException, ScriptNotFoundException {
         SieveRepository repo = new SieveFileRepository(fs);
         String user = "test";
@@ -188,7 +183,7 @@ public class SieveFileRepositoryTestCase {
      * @throws StorageException 
      * @throws ScriptNotFoundException 
      */
-    @Test
+//    @Test
     public final void testHaveSpace() throws DuplicateUserException, UserNotFoundException, QuotaExceededException, StorageException, ScriptNotFoundException {
         SieveRepository repo = new SieveFileRepository(fs);
         String user = "test";
@@ -255,7 +250,7 @@ public class SieveFileRepositoryTestCase {
      * @throws QuotaExceededException 
      * @throws ScriptNotFoundException 
      */
-    @Test
+//    @Test
     public final void testListScripts() throws DuplicateUserException, StorageException, UserNotFoundException, QuotaExceededException, ScriptNotFoundException {
         SieveRepository repo = new SieveFileRepository(fs);
         String user = "test";
@@ -300,7 +295,7 @@ public class SieveFileRepositoryTestCase {
      * @throws UserNotFoundException 
      * @throws FileNotFoundException 
      */
-    @Test
+//    @Test
     public final void testPutScript() throws DuplicateUserException, UserNotFoundException,
             StorageException, QuotaExceededException, FileNotFoundException {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -342,7 +337,7 @@ public class SieveFileRepositoryTestCase {
      * @throws ScriptNotFoundException 
      * @throws QuotaExceededException 
      */
-    @Test
+//    @Test
     public final void testRenameScript() throws DuplicateUserException, StorageException, UserNotFoundException, IsActiveException, DuplicateException, ScriptNotFoundException, QuotaExceededException {
         SieveRepository repo = new SieveFileRepository(fs);
         String user = "test";
@@ -389,7 +384,7 @@ public class SieveFileRepositoryTestCase {
      * @throws UserNotFoundException 
      * @throws ScriptNotFoundException 
      */
-    @Test
+//    @Test
     public final void testGetActive() throws DuplicateUserException, StorageException, UserNotFoundException, QuotaExceededException, ScriptNotFoundException {
         SieveRepository repo = new SieveFileRepository(fs);
         String user = "test";
@@ -429,7 +424,7 @@ public class SieveFileRepositoryTestCase {
      * @throws ScriptNotFoundException 
      * @throws QuotaExceededException 
      */
-    @Test
+//    @Test
     public final void testSetActive() throws DuplicateUserException, StorageException,
             UserNotFoundException, ScriptNotFoundException, QuotaExceededException {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -471,7 +466,7 @@ public class SieveFileRepositoryTestCase {
         assertTrue(scriptNotFoundExceptionThrown);
     }
     
-    @Test
+//    @Test
     public final void testAddUser() throws DuplicateUserException, StorageException
     {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -481,7 +476,7 @@ public class SieveFileRepositoryTestCase {
         assertTrue(repo.hasUser(user));
     }
     
-    @Test
+//    @Test
     public final void testRemoveUser() throws StorageException, DuplicateUserException, UserNotFoundException
     {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -502,7 +497,7 @@ public class SieveFileRepositoryTestCase {
         assertTrue(!repo.hasUser(user));
     }
     
-    @Test
+//    @Test
     public final void testHasUser() throws DuplicateUserException, StorageException
     {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -516,7 +511,7 @@ public class SieveFileRepositoryTestCase {
         assertTrue(repo.hasUser(user));
     }
     
-    @Test
+//    @Test
     public final void testGetQuota() throws StorageException, QuotaNotFoundException
     {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -535,7 +530,7 @@ public class SieveFileRepositoryTestCase {
         assertEquals(Long.MAX_VALUE, repo.getQuota());
     }
     
-    @Test
+//    @Test
     public final void testHasQuota() throws StorageException
     {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -548,7 +543,7 @@ public class SieveFileRepositoryTestCase {
         assertTrue(repo.hasQuota());
     }
     
-    @Test
+//    @Test
     public final void testRemoveQuota() throws StorageException, QuotaNotFoundException
     {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -568,7 +563,7 @@ public class SieveFileRepositoryTestCase {
         assertTrue(!repo.hasQuota());
     } 
     
-    @Test
+//    @Test
     public final void testSetQuota() throws QuotaNotFoundException, StorageException
     {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -577,7 +572,7 @@ public class SieveFileRepositoryTestCase {
         assertEquals(Long.MAX_VALUE, repo.getQuota());   
     }
     
-    @Test
+//    @Test
     public final void testGetUserQuota() throws StorageException, QuotaNotFoundException, DuplicateUserException, UserNotFoundException
     {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -598,7 +593,7 @@ public class SieveFileRepositoryTestCase {
         assertEquals(Long.MAX_VALUE, repo.getQuota(user));
     }
     
-    @Test
+//    @Test
     public final void testHasUserQuota() throws StorageException, DuplicateUserException, UserNotFoundException
     {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -613,7 +608,7 @@ public class SieveFileRepositoryTestCase {
         assertTrue(repo.hasQuota(user));
     }
     
-    @Test
+//    @Test
     public final void testRemoveUserQuota() throws StorageException, QuotaNotFoundException, DuplicateUserException, UserNotFoundException
     {
         SieveRepository repo = new SieveFileRepository(fs);
@@ -635,7 +630,7 @@ public class SieveFileRepositoryTestCase {
         assertTrue(!repo.hasQuota(user));
     } 
     
-    @Test
+//    @Test
     public final void testSetUserQuota() throws QuotaNotFoundException, StorageException, DuplicateUserException, UserNotFoundException
     {
         SieveRepository repo = new SieveFileRepository(fs);

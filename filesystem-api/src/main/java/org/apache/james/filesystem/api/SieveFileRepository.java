@@ -18,7 +18,7 @@
  *
  */
 
-package org.apache.james.managesieve.file;
+package org.apache.james.filesystem.api;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -38,7 +38,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.james.filesystem.api.FileSystem;
 import org.apache.james.managesieve.api.ConfigurationError;
 import org.apache.james.managesieve.api.DuplicateException;
 import org.apache.james.managesieve.api.DuplicateUserException;
