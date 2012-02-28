@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.transport.mailets;
 
 import java.util.Date;
@@ -32,6 +31,7 @@ import org.apache.james.mailbox.MailboxSession;
 import org.apache.james.mailbox.MessageManager;
 import org.apache.james.mailbox.exception.BadCredentialsException;
 import org.apache.james.mailbox.exception.MailboxException;
+import org.apache.james.mailbox.model.MailboxConstants;
 import org.apache.james.mailbox.model.MailboxPath;
 import org.apache.james.transport.util.MailetContextLog;
 import org.apache.james.user.api.UsersRepository;
@@ -46,10 +46,10 @@ import org.apache.mailet.MailetConfig;
  * Contains resource bindings.
  */
 public class SieveMailet extends SieveMailboxMailet implements Poster {
-
     private UsersRepository usersRepos;
     private MailboxManager mailboxManager;
     private FileSystem fileSystem;
+    private String folder;
 
     @Resource(name = "usersrepository")
     public void setUsersRepository(UsersRepository usersRepos) {
@@ -66,6 +66,17 @@ public class SieveMailet extends SieveMailboxMailet implements Poster {
         this.fileSystem = fileSystem;
     }
     
+    public void setFolder(String folder) {
+        this.folder = folder;
+    }
+    
+    public SieveMailet() {
+        super();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.jsieve.mailet.SieveMailboxMailet#init(org.apache.mailet.MailetConfig)
+     */
     @Override
     public void init(MailetConfig config) throws MessagingException {
         // ATM Fixed implementation
@@ -76,11 +87,6 @@ public class SieveMailet extends SieveMailboxMailet implements Poster {
         }
         setPoster(this);
         super.init(config);
-    }
-
-    public SieveMailet() {
-        super();
-
     }
 
     /**
@@ -105,36 +111,42 @@ public class SieveMailet extends SieveMailboxMailet implements Poster {
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.jsieve.mailet.SieveMailboxMailet#storeMail(org.apache.mailet.MailAddress, org.apache.mailet.MailAddress, org.apache.mailet.Mail)
+     */
     @Override
     public void storeMail(MailAddress sender, MailAddress recipient, Mail mail) throws MessagingException {
         super.storeMail(sender, recipient, mail);
-
         String s;
         if (sender != null) {
             s = sender.toString();
         } else {
             s = "<>";
         }
-        // if no exception was thrown the message was successfully stored in the
-        // mailbox
-        log("Local delivered mail " + mail.getName() + " sucessfully from " + s + " to " + recipient.toString());
+        // If no exception was thrown the message was successfully stored in the mailbox
+        log("Local delivered mail " + mail.getName() + " sucessfully from " + s + " to " + recipient.toString() + " in folder " + this.folder);
     }
-
-    /**
-     * @see org.apache.jsieve.mailet.Poster#post(java.lang.String,
-     *      javax.mail.internet.MimeMessage)
+    
+    /* (non-Javadoc)
+     * @see org.apache.jsieve.mailet.Poster#post(java.lang.String, javax.mail.internet.MimeMessage)
      */
+    @Override
     public void post(String url, MimeMessage mail) throws MessagingException {
+        
         final int endOfScheme = url.indexOf(':');
+        
         if (endOfScheme < 0) {
             throw new MessagingException("Malformed URI");
-        } else {
+        } 
+        
+        else {
+
             final String scheme = url.substring(0, endOfScheme);
             if ("mailbox".equals(scheme)) {
                 final int startOfUser = endOfScheme + 3;
                 final int endOfUser = url.indexOf('@', startOfUser);
                 if (endOfUser < 0) {
-                    // TODO: when user missing, append to a default location
+                    // TODO: When user missing, append to a default location
                     throw new MessagingException("Shared mailbox is not supported");
                 } else {
                     // lowerCase the user - see https://issues.apache.org/jira/browse/JAMES-1369
@@ -145,13 +157,12 @@ public class SieveMailet extends SieveMailboxMailet implements Poster {
                     final String urlPath;
                     final int length = url.length();
                     if (endOfHost + 1 == length) {
-                        urlPath = "INBOX";
+                        urlPath = this.folder;
                     } else {
                         urlPath = url.substring(endOfHost, length);
                     }
 
-                    // check if we should use the full emailaddress as
-                    // username
+                    // Check if we should use the full email address as username
                     try {
                         if (usersRepos.supportVirtualHosting()) {
                             user = user + "@" + host;
@@ -169,7 +180,7 @@ public class SieveMailet extends SieveMailboxMailet implements Poster {
                         throw new MessagingException("Can not access mailbox", e);
                     }
 
-                    // start processing request
+                    // Start processing request
                     mailboxManager.startProcessingRequest(session);
 
                     // This allows Sieve scripts to use a standard delimiter
@@ -177,16 +188,15 @@ public class SieveMailet extends SieveMailboxMailet implements Poster {
                     String destination = urlPath.replace('/', session.getPathDelimiter());
 
                     if (destination == null || "".equals(destination)) {
-                        destination = "INBOX";
+                        destination = this.folder;
                     }
                     if (destination.startsWith(session.getPathDelimiter() + ""))
                         destination = destination.substring(1);
                     
-                    // Use the MailboxSession to construct the MailboxPath.
-                    // See JAMES-1326
-                    final MailboxPath path = MailboxPath.inbox(session);
+                    // Use the MailboxSession to construct the MailboxPath - See JAMES-1326
+                    final MailboxPath path = new MailboxPath(MailboxConstants.USER_NAMESPACE, user, this.folder);
                     try {
-                        if ("INBOX".equalsIgnoreCase(destination) && !(mailboxManager.mailboxExists(path, session))) {
+                        if (this.folder.equalsIgnoreCase(destination) && !(mailboxManager.mailboxExists(path, session))) {
                             mailboxManager.createMailbox(path, session);
                         }
                         final MessageManager mailbox = mailboxManager.getMailbox(path, session);
@@ -196,6 +206,7 @@ public class SieveMailet extends SieveMailboxMailet implements Poster {
                         }
 
                         mailbox.appendMessage(new MimeMessageInputStream(mail), new Date(), session, true, null);
+                    
                     } catch (MailboxException e) {
                         throw new MessagingException("Unable to access mailbox.", e);
                     } finally {
@@ -206,17 +217,21 @@ public class SieveMailet extends SieveMailboxMailet implements Poster {
                             throw new MessagingException("Can logout from mailbox", e);
                         }
 
-                        // stop processing request
+                        // Stop processing request
                         mailboxManager.endProcessingRequest(session);
 
                     }
                 }
-            } else {
+                
+            } 
+            
+            else {
                 // TODO: add support for more protocols
-                // TODO: for example mailto: for forwarding over SMTP
-                // TODO: for example xmpp: for forwarding over Jabber
+                // TODO: - for example mailto: for forwarding over SMTP
+                // TODO: - for example xmpp: for forwarding over Jabber
                 throw new MessagingException("Unsupported protocol");
             }
         }
     }
+
 }

@@ -45,38 +45,19 @@ import org.apache.mailet.base.GenericMailet;
  * James 2.3 behavior.
  */
 public class LocalDelivery extends GenericMailet {
-    private RecipientRewriteTable recipientRewriteTable;  // Mailet that applies RecipientRewriteTable
-    private SieveMailet sieveMailet;  // Mailet that actually stores the message
-    private UsersRepository usersRepository;
+    @Resource(name = "recipientrewritetable")
     private org.apache.james.rrt.api.RecipientRewriteTable rrt;
+    @Resource(name = "usersrepository")
+    private UsersRepository usersRepository;
+    @Resource(name = "mailboxmanager")
     private MailboxManager mailboxManager;
+    @Resource(name = "domainlist")
     private DomainList domainList;
+    @Resource(name = "filesystem")
     private FileSystem fileSystem;
 
-    @Resource(name = "usersrepository")
-    public void setUsersRepository(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
-    }
-
-    @Resource(name = "domainlist")
-    public void setDomainList(DomainList domainList) {
-        this.domainList = domainList;
-    }
-    
-    @Resource(name = "mailboxmanager")
-    public void setMailboxManager(MailboxManager mailboxManager) {
-        this.mailboxManager = mailboxManager;
-    }
-    
-    @Resource(name = "filesystem")
-    public void setFileSystem(FileSystem fileSystem) {
-        this.fileSystem = fileSystem;
-    }
-
-    @Resource(name = "recipientrewritetable")
-    public final void setRecipientRewriteTable(org.apache.james.rrt.api.RecipientRewriteTable rrt) {
-        this.rrt = rrt;
-    }
+    private SieveMailet sieveMailet;  // Mailet that actually stores the message
+    private RecipientRewriteTable recipientRewriteTable;  // Mailet that applies RecipientRewriteTable
 
     /**
      * Delivers a mail to a local mailbox.
@@ -158,6 +139,7 @@ public class LocalDelivery extends GenericMailet {
         });
         // Override the default value of "quiet"
         sieveMailet.setQuiet(getInitParameter("quiet", true));
+        sieveMailet.setFolder("INBOX");
         
     }
 
