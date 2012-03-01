@@ -31,7 +31,7 @@
     </parent>
 
     <artifactId>james-server</artifactId>
-    <version>3.0-beta4-SNAPSHOT</version>
+    <version>3.0-beta4</version>
     <packaging>pom</packaging>
 
     <name>Apache James Server</name>
@@ -75,9 +75,9 @@
     </modules>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/james/server/trunk</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/james/server/trunk</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/james/server/trunk?root=Apache-SVN</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/james/server/tags/james-server-3.0-beta4</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/james/server/tags/james-server-3.0-beta4</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/james/server/trunk/tags/james-server-3.0-beta4?root=Apache-SVN</url>
     </scm>
 
     <distributionManagement>
