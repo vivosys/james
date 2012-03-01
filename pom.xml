@@ -31,7 +31,7 @@
     </parent>
 
     <artifactId>james-server</artifactId>
-    <version>3.0-beta5-SNAPSHOT</version>
+    <version>3.0-beta4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Apache James Server</name>
