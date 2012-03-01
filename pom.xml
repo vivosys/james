@@ -94,17 +94,17 @@
         <activemq.version>5.4.2</activemq.version>
         <camel.version>2.5.0</camel.version>
         <derby.version>10.7.1.1</derby.version>
-        <hadoop.version>0.20-append-r1057313</hadoop.version>
-        <hbase.version>0.90.3</hbase.version>
-        <imap.version>0.3-SNAPSHOT</imap.version>
+        <hadoop.version>0.20.205.0</hadoop.version>
+        <hbase.version>0.90.4</hbase.version>
+        <imap.version>0.3</imap.version>
         <jackrabbit.version>2.2.5</jackrabbit.version>
         <james.server.version>${project.version}</james.server.version>
         <javax.activation.groupId>javax.activation</javax.activation.groupId>
         <javax.activation.artifactId>activation</javax.activation.artifactId>
         <javax.mail.groupId>javax.mail</javax.mail.groupId>
         <javax.mail.artifactId>mail</javax.mail.artifactId>
-        <jsieve.version>0.5-SNAPSHOT</jsieve.version>
-        <mailbox.version>0.4-SNAPSHOT</mailbox.version>
+        <jsieve.version>0.5</jsieve.version>
+        <mailbox.version>0.4</mailbox.version>
         <productName>Apache-James Mail Server</productName>
         <protocols.version>1.6.2</protocols.version>
         <spring.version>3.1.0.RELEASE</spring.version>
@@ -1030,6 +1030,11 @@
                 <scope>test</scope>
                 <type>test-jar</type>
                 <version>${hbase.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-core</artifactId>
+                <version>${hadoop.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
