@@ -49,7 +49,7 @@ public class HBaseUsersRepositoryTest extends AbstractUsersRepositoryTest {
      */
     @After
     @Override
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
 	super.tearDown();
     }
 
