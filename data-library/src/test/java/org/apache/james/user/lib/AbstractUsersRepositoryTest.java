@@ -61,7 +61,7 @@ public abstract class AbstractUsersRepositoryTest {
      * @see junit.framework.TestCase#tearDown()
      */
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
 	disposeUsersRepository();
     }
 

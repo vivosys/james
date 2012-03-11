@@ -49,7 +49,7 @@ public abstract class AbstractRecipientRewriteTableTest {
     }
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
 
 	Map<String, Collection<String>> mappings = virtualUserTable.getAllMappings();
 
