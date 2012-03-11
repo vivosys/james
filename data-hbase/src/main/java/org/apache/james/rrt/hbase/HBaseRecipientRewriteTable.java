@@ -87,7 +87,7 @@ public class HBaseRecipientRewriteTable extends AbstractRecipientRewriteTable {
         } finally {
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -146,7 +146,7 @@ public class HBaseRecipientRewriteTable extends AbstractRecipientRewriteTable {
             }
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -177,7 +177,7 @@ public class HBaseRecipientRewriteTable extends AbstractRecipientRewriteTable {
         } finally {
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -247,7 +247,7 @@ public class HBaseRecipientRewriteTable extends AbstractRecipientRewriteTable {
         } finally {
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -277,7 +277,7 @@ public class HBaseRecipientRewriteTable extends AbstractRecipientRewriteTable {
         } finally {
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }

@@ -109,20 +109,6 @@ public class TablePool {
     }
 
     /**
-     * Put back the table in the pool after usage.
-     * 
-     * With later HBase versions, we won't have to put back the table in the pool.
-     * See https://issues.apache.org/jira/browse/HBASE-4054
-     * 
-     * @param table
-     */
-    public void putTable(HTable table) {
-        if (table != null) {
-            htablePool.putTable(table);
-        }
-    }
-    
-    /**
      * Create a table if needed.
      * 
      * @param tableName

@@ -66,7 +66,7 @@ public class HBaseDomainList extends AbstractDomainList {
         } finally {
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -97,7 +97,7 @@ public class HBaseDomainList extends AbstractDomainList {
         } finally {
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -119,7 +119,7 @@ public class HBaseDomainList extends AbstractDomainList {
         } finally {
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -154,7 +154,7 @@ public class HBaseDomainList extends AbstractDomainList {
             }
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }

@@ -61,6 +61,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
     /**
      * @see org.apache.james.user.lib.AbstractUsersRepository#doConfigure(HierarchicalConfiguration)
      */
+    @Override
     public void doConfigure(HierarchicalConfiguration config) throws ConfigurationException {
         algo = config.getString("algorithm", "MD5");
         super.doConfigure(config);
@@ -114,7 +115,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
         } finally {
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -173,7 +174,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
             }
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -208,7 +209,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
             }
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -248,7 +249,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
         } finally {
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }
@@ -283,7 +284,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
         } finally {
             if (table != null) {
                 try {
-                    TablePool.getInstance().putTable(table);
+                    table.close();
                 } catch (IOException e) {
                     // Do nothing, we can't get access to the HBaseSchema.
                 }

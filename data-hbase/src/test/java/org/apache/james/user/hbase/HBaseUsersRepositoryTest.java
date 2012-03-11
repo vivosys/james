@@ -19,7 +19,6 @@
 package org.apache.james.user.hbase;
 
 import java.util.Iterator;
-
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
 import org.apache.james.user.api.UsersRepository;
 import org.apache.james.user.api.UsersRepositoryException;
@@ -39,20 +38,19 @@ public class HBaseUsersRepositoryTest extends AbstractUsersRepositoryTest {
     /**
      * @see org.apache.james.user.lib.AbstractUsersRepositoryTest#setUp()
      */
-    @Override
     @Before
-    protected void setUp() throws Exception {
-        super.setUp();
-        deleteAll();
+    @Override
+    public void setUp() throws Exception {
+	deleteAll();
     }
 
     /**
      * @see org.apache.james.user.lib.AbstractUsersRepositoryTest#tearDown()
      */
-    @Override
     @After
+    @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
+	super.tearDown();
     }
 
     /**
@@ -62,21 +60,20 @@ public class HBaseUsersRepositoryTest extends AbstractUsersRepositoryTest {
      * @throws Exception
      */
     private void deleteAll() throws UsersRepositoryException, Exception {
-        Iterator<String> it = getUsersRepository().list();
-        while (it.hasNext()) {
-            getUsersRepository().removeUser(it.next());
-        }
+	Iterator<String> it = getUsersRepository().list();
+	while (it.hasNext()) {
+	    getUsersRepository().removeUser(it.next());
+	}
     }
-    
+
     /**
      * @see org.apache.james.user.lib.AbstractUsersRepositoryTest#getUsersRepository()
      */
     @Override
     protected UsersRepository getUsersRepository() throws Exception {
-        HBaseUsersRepository userRepository = new HBaseUsersRepository();
-        userRepository.setLog(LoggerFactory.getLogger("MockLog"));
-        userRepository.configure(new DefaultConfigurationBuilder());
-        return userRepository;
+	HBaseUsersRepository userRepository = new HBaseUsersRepository();
+	userRepository.setLog(LoggerFactory.getLogger("MockLog"));
+	userRepository.configure(new DefaultConfigurationBuilder());
+	return userRepository;
     }
-
 }
