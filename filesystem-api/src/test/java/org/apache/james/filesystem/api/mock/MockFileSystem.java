@@ -16,48 +16,46 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.filesystem.api.mock;
 
-import org.apache.james.filesystem.api.FileSystem;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.FileInputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import org.apache.james.filesystem.api.FileSystem;
 
 public class MockFileSystem implements FileSystem {
+
+    @Override
     public File getBasedir() throws FileNotFoundException {
-        return new File(".");
+	return new File(".");
     }
 
+    @Override
     public InputStream getResource(String url) throws IOException {
-        return new FileInputStream(getFile(url));
+	return new FileInputStream(getFile(url));
     }
 
+    @Override
     public File getFile(String fileURL) throws FileNotFoundException {
-        try {
-            if (fileURL.startsWith("file://")) {
-                if (fileURL.startsWith("file://conf/")) {
-                    URL url = MockFileSystem.class.getClassLoader().getResource("./" + fileURL.substring(12));
-                    try {
-                        return new File(new URI(url.toString()));
-                    } catch (URISyntaxException e) {
-                        throw new FileNotFoundException("Unable to load file");
-                    }
-                    // return new File("./src"+fileURL.substring(6));
-                } else {
-                    return new File(fileURL.substring(FileSystem.FILE_PROTOCOL.length()));
-                }
-            } else {
-                throw new UnsupportedOperationException("getFile: " + fileURL);
-            }
-        } catch (NullPointerException npe) {
-            throw new FileNotFoundException("NPE on: " + fileURL);
-        }
+	try {
+	    if (fileURL.startsWith("file://")) {
+		if (fileURL.startsWith("file://conf/")) {
+		    URL url = MockFileSystem.class.getClassLoader().getResource("./" + fileURL.substring(12));
+		    try {
+			return new File(new URI(url.toString()));
+		    } catch (URISyntaxException e) {
+			throw new FileNotFoundException("Unable to load file");
+		    }
+		    // return new File("./src"+fileURL.substring(6));
+		} else {
+		    return new File(fileURL.substring(FileSystem.FILE_PROTOCOL.length()));
+		}
+	    } else {
+		throw new UnsupportedOperationException("getFile: " + fileURL);
+	    }
+	} catch (NullPointerException npe) {
+	    throw new FileNotFoundException("NPE on: " + fileURL);
+	}
     }
 }
