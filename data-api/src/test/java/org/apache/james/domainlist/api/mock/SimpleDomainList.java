@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.domainlist.api.mock;
 
 import java.util.LinkedList;
@@ -29,29 +28,36 @@ import org.apache.james.domainlist.api.DomainListException;
  * Simplest implementation for ManageableDomainList
  */
 public class SimpleDomainList implements DomainList {
+
     private List<String> domains = new LinkedList<String>();
 
+    @Override
     public boolean containsDomain(String domain) throws DomainListException {
-        return domains.contains(domain);
+	return domains.contains(domain);
     }
 
+    @Override
     public String[] getDomains() throws DomainListException {
-        return domains.toArray(new String[domains.size()]);
+	return domains.toArray(new String[domains.size()]);
     }
 
+    @Override
     public void addDomain(String domain) throws DomainListException {
-        if (domains.contains(domain))
-            throw new DomainListException("Domain " + domain + " already exist");
-        domains.add(domain);
+	if (domains.contains(domain)) {
+	    throw new DomainListException("Domain " + domain + " already exist");
+	}
+	domains.add(domain);
     }
 
+    @Override
     public void removeDomain(String domain) throws DomainListException {
-        if (domains.remove(domain) == false) {
-            throw new DomainListException("Domain " + domain + " does not exist");
-        }
+	if (domains.remove(domain) == false) {
+	    throw new DomainListException("Domain " + domain + " does not exist");
+	}
     }
 
+    @Override
     public String getDefaultDomain() {
-        return "localhost";
+	return "localhost";
     }
 }
