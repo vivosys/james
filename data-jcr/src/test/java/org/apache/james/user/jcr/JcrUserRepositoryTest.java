@@ -16,17 +16,16 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.user.jcr;
 
 import java.io.File;
-
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
 import org.apache.jackrabbit.core.RepositoryImpl;
 import org.apache.jackrabbit.core.config.RepositoryConfig;
 import org.apache.james.user.api.UsersRepository;
-import org.apache.james.user.jcr.JCRUsersRepository;
 import org.apache.james.user.lib.AbstractUsersRepositoryTest;
+import org.junit.After;
+import org.junit.Before;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
@@ -35,39 +34,45 @@ public class JcrUserRepositoryTest extends AbstractUsersRepositoryTest {
     private static final String JACKRABBIT_HOME = "target/jackrabbit";
     private RepositoryImpl repository;
 
+    @Override
     protected UsersRepository getUsersRepository() throws Exception {
-        JCRUsersRepository repos = new JCRUsersRepository();
-        repos.setRepository(repository);
-        DefaultConfigurationBuilder config = new DefaultConfigurationBuilder();
-        config.addProperty("username", "admin");
-        config.addProperty("password", "test");
-        repos.configure(config);
-        repos.setLog(LoggerFactory.getLogger("MockLog"));
-        return repos;
+	JCRUsersRepository repos = new JCRUsersRepository();
+	repos.setRepository(repository);
+	DefaultConfigurationBuilder config = new DefaultConfigurationBuilder();
+	config.addProperty("username", "admin");
+	config.addProperty("password", "test");
+	repos.configure(config);
+	repos.setLog(LoggerFactory.getLogger("MockLog"));
+	return repos;
     }
 
-    protected void setUp() throws Exception {
-        File home = new File(JACKRABBIT_HOME);
-        if (home.exists()) {
-            delete(home);
-        }
-        RepositoryConfig config = RepositoryConfig.create(new InputSource(this.getClass().getClassLoader().getResourceAsStream("test-repository.xml")), JACKRABBIT_HOME);
-        repository = RepositoryImpl.create(config);
-        super.setUp();
+    @Override
+    @Before
+    public void setUp() throws Exception {
+	File home = new File(JACKRABBIT_HOME);
+	if (home.exists()) {
+	    delete(home);
+	}
+	RepositoryConfig config = RepositoryConfig.create(new InputSource(this.getClass().getClassLoader().
+		getResourceAsStream("test-repository.xml")), JACKRABBIT_HOME);
+	repository = RepositoryImpl.create(config);
+	super.setUp();
     }
 
     private void delete(File file) {
-        if (file.isDirectory()) {
-            File[] contents = file.listFiles();
-            for (int i = 0; i < contents.length; i++) {
-                delete(contents[i]);
-            }
-        }
-        file.delete();
+	if (file.isDirectory()) {
+	    File[] contents = file.listFiles();
+	    for (int i = 0; i < contents.length; i++) {
+		delete(contents[i]);
+	    }
+	}
+	file.delete();
     }
 
+    @Override
+    @After
     protected void tearDown() throws Exception {
-        super.tearDown();
-        repository.shutdown();
+	super.tearDown();
+	repository.shutdown();
     }
 }
