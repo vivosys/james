@@ -21,6 +21,7 @@ package org.apache.james.mailrepository.jdbc;
 
 public class JDBCDBFileMailRepositoryTest extends JDBCMailRepositoryTest {
 
+    @Override
     protected String getType() {
         return "dbfile";
     }

@@ -44,6 +44,7 @@ public class JamesUsersJdbcRepositoryTest extends AbstractUsersJdbcRepositoryTes
      * @return the user repository
      * @throws Exception
      */
+    @Override
     protected UsersRepository getUsersRepository() throws Exception {
         JamesUsersJdbcRepository res = new JamesUsersJdbcRepository();
         String tableString = "jamesusers";

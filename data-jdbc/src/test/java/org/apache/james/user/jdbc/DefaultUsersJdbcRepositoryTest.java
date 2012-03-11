@@ -44,6 +44,7 @@ public class DefaultUsersJdbcRepositoryTest extends AbstractUsersJdbcRepositoryT
      * @return the user repository
      * @throws Exception
      */
+    @Override
     protected UsersRepository getUsersRepository() throws Exception {
         DefaultUsersJdbcRepository res = new DefaultUsersJdbcRepository();
         String tableString = "defusers";
