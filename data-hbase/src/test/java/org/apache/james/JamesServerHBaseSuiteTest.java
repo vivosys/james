@@ -30,6 +30,7 @@ import org.apache.james.user.hbase.HBaseUsersRepositoryTest;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -42,10 +43,10 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-    TablePoolTest.class,
-    HBaseDomainListTest.class,
-    HBaseRecipientRewriteTableTest.class,
-    HBaseUsersRepositoryTest.class
+//    TablePoolTest.class,
+//    HBaseDomainListTest.class,
+//    HBaseRecipientRewriteTableTest.class,
+//    HBaseUsersRepositoryTest.class
   })
 public class JamesServerHBaseSuiteTest {
 
@@ -64,7 +65,8 @@ public class JamesServerHBaseSuiteTest {
      * 
      * @throws Exception
      */
-    @BeforeClass
+
+//    @BeforeClass
     public static void setup() throws Throwable {
         HBaseTestingUtility htu = new HBaseTestingUtility();
         htu.getConfiguration().setBoolean("dfs.support.append", true);
@@ -91,7 +93,7 @@ public class JamesServerHBaseSuiteTest {
      * 
      * @throws Exception
      */
-    @AfterClass
+//    @AfterClass
     public static void tearDown() throws Exception {
        if (hbaseCluster != null) {
            hbaseCluster.shutdown();
