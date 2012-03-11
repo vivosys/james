@@ -20,19 +20,19 @@ package org.apache.james.domainlist.lib;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.apache.james.dnsservice.api.DNSService;
 import org.apache.james.dnsservice.api.mock.MockDNSService;
 import org.apache.james.domainlist.api.DomainList;
 import org.apache.james.domainlist.api.DomainListException;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test the implementation of the DomainList.
  */
-public abstract class AbstractDomainListTest extends TestCase {
+public abstract class AbstractDomainListTest {
 
     // Domains we will play with.
     private final String DOMAIN_1 = "domain1.tld";
@@ -41,22 +41,15 @@ public abstract class AbstractDomainListTest extends TestCase {
     private final String DOMAIN_3 = "domain3.tld";
     private final String DOMAIN_4 = "domain4.tld";
     private final String DOMAIN_5 = "domain5.tld";
-
     /**
      * The JPA DomainList service.
      */
     private DomainList domainList;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        domainList = createDomainList();
-        deleteAll();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @Before
+    public void setUp() throws Exception {
+	domainList = createDomainList();
+	deleteAll();
     }
 
     /**
@@ -64,11 +57,12 @@ public abstract class AbstractDomainListTest extends TestCase {
      * 
      * @throws DomainListException
      */
+    @Test
     public void createListDomains() throws DomainListException {
-        domainList.addDomain(DOMAIN_3);
-        domainList.addDomain(DOMAIN_4);
-        domainList.addDomain(DOMAIN_5);
-        assertEquals(3, domainList.getDomains().length);
+	domainList.addDomain(DOMAIN_3);
+	domainList.addDomain(DOMAIN_4);
+	domainList.addDomain(DOMAIN_5);
+	assertEquals(3, domainList.getDomains().length);
     }
 
     /**
@@ -76,9 +70,10 @@ public abstract class AbstractDomainListTest extends TestCase {
      * 
      * @throws DomainListException
      */
+    @Test
     public void testAddContainsDomain() throws DomainListException {
-        domainList.addDomain(DOMAIN_2);
-        domainList.containsDomain(DOMAIN_2);
+	domainList.addDomain(DOMAIN_2);
+	domainList.containsDomain(DOMAIN_2);
     }
 
     /**
@@ -86,10 +81,11 @@ public abstract class AbstractDomainListTest extends TestCase {
      * 
      * @throws DomainListException
      */
+    @Test
     public void testAddRemoveContainsSameDomain() throws DomainListException {
-        domainList.addDomain(DOMAIN_1);
-        domainList.removeDomain(DOMAIN_1);
-        assertEquals(null, domainList.getDomains());
+	domainList.addDomain(DOMAIN_1);
+	domainList.removeDomain(DOMAIN_1);
+	assertThat(domainList.getDomains(), nullValue());
     }
 
     /**
@@ -97,17 +93,16 @@ public abstract class AbstractDomainListTest extends TestCase {
      * 
      * @throws DomainListException
      */
+    @Test
     public void testUpperCaseSameDomain() throws DomainListException {
-        domainList.addDomain(DOMAIN_1);
-        assertEquals(1, domainList.getDomains().length);
-        try {
-            domainList.addDomain(DOMAIN_1_UPPER_CASE);
-            Assert.fail("We should not be able to insert same domains, even with different cases");
-        }
-        catch (DomainListException domainListException) {
-            Assert.assertTrue(domainListException.getMessage().contains(DOMAIN_1));
-            return;
-        }
+	domainList.addDomain(DOMAIN_1);
+	assertEquals(1, domainList.getDomains().length);
+	try {
+	    domainList.addDomain(DOMAIN_1_UPPER_CASE);
+	    fail("We should not be able to insert same domains, even with different cases");
+	} catch (DomainListException domainListException) {
+	    assertTrue(domainListException.getMessage().contains(DOMAIN_1));
+	}
     }
 
     /**
@@ -116,11 +111,12 @@ public abstract class AbstractDomainListTest extends TestCase {
      * 
      * @throws DomainListException
      */
+    @Test
     public void testAddRemoveContainsDifferentDomain() throws DomainListException {
-        domainList.addDomain(DOMAIN_1);
-        domainList.removeDomain(DOMAIN_2);
-        assertEquals(1, domainList.getDomains().length);
-        assertEquals(true, domainList.containsDomain(DOMAIN_1));
+	domainList.addDomain(DOMAIN_1);
+	domainList.removeDomain(DOMAIN_2);
+	assertEquals(1, domainList.getDomains().length);
+	assertEquals(true, domainList.containsDomain(DOMAIN_1));
     }
 
     /**
@@ -129,11 +125,11 @@ public abstract class AbstractDomainListTest extends TestCase {
      * @throws DomainListException
      */
     private void deleteAll() throws DomainListException {
-        domainList.removeDomain(DOMAIN_1);
-        domainList.removeDomain(DOMAIN_2);
-        domainList.removeDomain(DOMAIN_3);
-        domainList.removeDomain(DOMAIN_4);
-        domainList.removeDomain(DOMAIN_5);
+	domainList.removeDomain(DOMAIN_1);
+	domainList.removeDomain(DOMAIN_2);
+	domainList.removeDomain(DOMAIN_3);
+	domainList.removeDomain(DOMAIN_4);
+	domainList.removeDomain(DOMAIN_5);
     }
 
     /**
@@ -143,20 +139,26 @@ public abstract class AbstractDomainListTest extends TestCase {
      * @return
      */
     protected DNSService getDNSServer(final String hostName) {
-        DNSService dns = new MockDNSService() {
-            public String getHostName(InetAddress inet) {
-                return hostName;
-            }
-            public InetAddress[] getAllByName(String name) throws UnknownHostException {
-                return new InetAddress[] { InetAddress.getByName("127.0.0.1") };
-            }
-            public InetAddress getLocalHost() throws UnknownHostException {
-                return InetAddress.getLocalHost();
-            }
-        };
-        return dns;
+	DNSService dns = new MockDNSService() {
+
+	    @Override
+	    public String getHostName(InetAddress inet) {
+		return hostName;
+	    }
+
+	    @Override
+	    public InetAddress[] getAllByName(String name) throws UnknownHostException {
+		return new InetAddress[]{InetAddress.getByName("127.0.0.1")};
+	    }
+
+	    @Override
+	    public InetAddress getLocalHost() throws UnknownHostException {
+		return InetAddress.getLocalHost();
+	    }
+	};
+	return dns;
     }
-    
+
     /**
      * Implementing test classes must provide the corresponding implement
      * of the DomainList interface.
@@ -164,5 +166,4 @@ public abstract class AbstractDomainListTest extends TestCase {
      * @return an implementation of DomainList
      */
     protected abstract DomainList createDomainList();
-
 }

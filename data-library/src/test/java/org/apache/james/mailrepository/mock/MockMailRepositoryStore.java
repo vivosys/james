@@ -35,6 +35,7 @@ public class MockMailRepositoryStore implements MailRepositoryStore {
         m_storedObjectMap.put(url, obj);
     }
 
+    @Override
     public MailRepository select(String url) throws MailRepositoryStoreException {
         MailRepository result = get(url);
         return result;
@@ -45,6 +46,7 @@ public class MockMailRepositoryStore implements MailRepositoryStore {
         return m_storedObjectMap.get(key);
     }
 
+    @Override
     public List<String> getUrls() {
         return new ArrayList<String>(m_storedObjectMap.keySet());
     }
