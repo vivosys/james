@@ -71,7 +71,7 @@ public abstract class AbstractMailRepositoryTest {
     protected abstract MailRepository getMailRepository() throws Exception;
 
     @After
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
 	for (Iterator<String> i = mailRepository.list(); i.hasNext();) {
 	    mailRepository.remove(i.next());
 	}
