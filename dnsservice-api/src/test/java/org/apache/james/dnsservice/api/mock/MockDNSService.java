@@ -32,43 +32,48 @@ public class MockDNSService implements DNSService {
     /**
      * @see org.apache.james.dnsservice.api.DNSService#findMXRecords(String)
      */
+    @Override
     public Collection<String> findMXRecords(String hostname) {
-        throw new UnsupportedOperationException("Unimplemented Stub Method");
+	throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 
     /**
      * @see org.apache.james.dnsservice.api.DNSService#findTXTRecords(String)
      */
+    @Override
     public Collection<String> findTXTRecords(String hostname) {
-        throw new UnsupportedOperationException("Unimplemented Stub Method");
+	throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 
     /**
      * @see org.apache.james.dnsservice.api.DNSService#getAllByName(String)
      */
+    @Override
     public InetAddress[] getAllByName(String host) throws UnknownHostException {
-        throw new UnsupportedOperationException("Unimplemented Stub Method");
+	throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 
     /**
      * @see org.apache.james.dnsservice.api.DNSService#getByName(String)
      */
+    @Override
     public InetAddress getByName(String host) throws UnknownHostException {
-        throw new UnsupportedOperationException("Unimplemented Stub Method");
+	throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 
     /**
      * @see org.apache.james.dnsservice.api.DNSService#getHostName(java.net.InetAddress)
      */
+    @Override
     public String getHostName(InetAddress addr) {
-        throw new UnsupportedOperationException("Unimplemented Stub Method");
+	throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 
     /**
      * @see org.apache.james.dnsservice.api.DNSService#getLocalHost()
      */
+    @Override
     public InetAddress getLocalHost() throws UnknownHostException {
-        throw new UnsupportedOperationException("Unimplemented Stub Method");
+	throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
-
 }

@@ -23,35 +23,39 @@ import java.net.UnknownHostException;
 
 import org.apache.james.dnsservice.api.mock.MockDNSService;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Basic tests for AbstractDNSServer. The goal is to verify that the interface
  * remains constants and that the built platform has access to the Internet.
  */
-public class AbstractDNSServiceTest extends TestCase {
+public class AbstractDNSServiceTest {
 
     /**
      * Simple Mock DNSService relaying on InetAddress.
      */
     private static final DNSService DNS_SERVER = new MockDNSService() {
 
-        public String getHostName(InetAddress inet) {
-            return inet.getCanonicalHostName();
-        }
+	@Override
+	public String getHostName(InetAddress inet) {
+	    return inet.getCanonicalHostName();
+	}
 
-        public InetAddress[] getAllByName(String name) throws UnknownHostException {
-            return InetAddress.getAllByName(name);
-        }
+	@Override
+	public InetAddress[] getAllByName(String name) throws UnknownHostException {
+	    return InetAddress.getAllByName(name);
+	}
 
-        public InetAddress getLocalHost() throws UnknownHostException {
-            return InetAddress.getLocalHost();
-        }
+	@Override
+	public InetAddress getLocalHost() throws UnknownHostException {
+	    return InetAddress.getLocalHost();
+	}
 
-        public InetAddress getByName(String host) throws UnknownHostException {
-            return InetAddress.getByName(host);
-        }
-
+	@Override
+	public InetAddress getByName(String host) throws UnknownHostException {
+	    return InetAddress.getByName(host);
+	}
     };
 
     /**
@@ -59,14 +63,15 @@ public class AbstractDNSServiceTest extends TestCase {
      * 
      * @throws UnknownHostException
      */
+    @Test
     public void testLocalhost() throws UnknownHostException {
 
-        assertEquals("localhost/127.0.0.1", DNS_SERVER.getByName("localhost").toString());
+	assertEquals("localhost/127.0.0.1", DNS_SERVER.getByName("localhost").toString());
 
-        String localHost = DNS_SERVER.getHostName(InetAddress.getByName("127.0.0.1")).toString();
-        // We only can check if the returned localhost is not empty. Its value
-        // depends on the hosts file.
-        assertTrue(localHost.length() > 0);
+	String localHost = DNS_SERVER.getHostName(InetAddress.getByName("127.0.0.1")).toString();
+	// We only can check if the returned localhost is not empty. Its value
+	// depends on the hosts file.
+	assertTrue(localHost.length() > 0);
 
     }
 
@@ -75,8 +80,8 @@ public class AbstractDNSServiceTest extends TestCase {
      * 
      * @throws UnknownHostException
      */
+    @Test
     public void testApache() throws UnknownHostException {
-        assertEquals(true, DNS_SERVER.getByName("www.apache.org").toString().startsWith("www.apache.org"));
+	assertEquals(true, DNS_SERVER.getByName("www.apache.org").toString().startsWith("www.apache.org"));
     }
-
 }
