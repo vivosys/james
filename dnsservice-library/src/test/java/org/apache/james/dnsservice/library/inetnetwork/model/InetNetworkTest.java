@@ -23,22 +23,18 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.StringTokenizer;
-
-import org.apache.james.dnsservice.library.inetnetwork.model.Inet4Network;
-import org.apache.james.dnsservice.library.inetnetwork.model.Inet6Network;
-
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  * Test the InetNetwork class with various IPv4 and IPv6 network specification.
  */
-public class InetNetworkTest extends TestCase {
+public class InetNetworkTest {
 
     private static InetAddress address;
-
     private static InetAddress subnetmask4;
     private static Inet4Network network4;
-
     private static Integer subnetmask6;
     private static Inet6Network network6;
 
@@ -52,13 +48,14 @@ public class InetNetworkTest extends TestCase {
      * 
      * @throws UnknownHostException
      */
+    @Test
     public void testInetAddress() throws UnknownHostException {
 
-        // Test name alone (can be IPv4 or IPv6 depending on the OS plaform
-        // configuration).
-        address = InetAddress.getByName("localhost");
-        assertEquals(true, address instanceof InetAddress);
-        assertEquals(true, address.toString().contains("localhost"));
+	// Test name alone (can be IPv4 or IPv6 depending on the OS plaform
+	// configuration).
+	address = InetAddress.getByName("localhost");
+	assertEquals(true, address instanceof InetAddress);
+	assertEquals(true, address.toString().contains("localhost"));
 
     }
 
@@ -71,32 +68,32 @@ public class InetNetworkTest extends TestCase {
      * 
      * @throws UnknownHostException
      */
+    @Test
     public void testInet4Address() throws UnknownHostException {
 
-        // Test Bad IP V4 address.
-        try {
-            address = InetAddress.getByAddress(getBytesFromAddress("127.0.0.1.1"));
-            assertTrue(false);
-        } catch (UnknownHostException e) {
-            assertTrue(true);
-        }
+	// Test Bad IP V4 address.
+	try {
+	    address = InetAddress.getByAddress(getBytesFromAddress("127.0.0.1.1"));
+	    assertTrue(false);
+	} catch (UnknownHostException e) {
+	    assertTrue(true);
+	}
 
-        // Test IP V4 address.
-        address = InetAddress.getByAddress(getBytesFromAddress("127.0.0.1"));
-        assertEquals(true, address instanceof Inet4Address);
-        assertEquals(true, address.toString().contains("/127.0.0.1"));
+	// Test IP V4 address.
+	address = InetAddress.getByAddress(getBytesFromAddress("127.0.0.1"));
+	assertEquals(true, address instanceof Inet4Address);
+	assertEquals(true, address.toString().contains("/127.0.0.1"));
 
-        // Test IP V4 with 255 values (just 'like' a subnet mask).
-        address = InetAddress.getByAddress(getBytesFromAddress("255.255.225.0"));
-        assertEquals(true, address instanceof Inet4Address);
-        assertEquals(true, address.toString().contains("/255.255.225.0"));
+	// Test IP V4 with 255 values (just 'like' a subnet mask).
+	address = InetAddress.getByAddress(getBytesFromAddress("255.255.225.0"));
+	assertEquals(true, address instanceof Inet4Address);
+	assertEquals(true, address.toString().contains("/255.255.225.0"));
 
-        // Test IP V4 Address with name and IP address.
-        address = InetAddress.getByAddress("localhost", getBytesFromAddress("127.0.0.1"));
-        assertEquals(true, address instanceof Inet4Address);
-        assertEquals(true, address.toString().contains("localhost"));
-        assertEquals(true, address.toString().contains("/127.0.0.1"));
-
+	// Test IP V4 Address with name and IP address.
+	address = InetAddress.getByAddress("localhost", getBytesFromAddress("127.0.0.1"));
+	assertEquals(true, address instanceof Inet4Address);
+	assertEquals(true, address.toString().contains("localhost"));
+	assertEquals(true, address.toString().contains("/127.0.0.1"));
     }
 
     /**
@@ -108,26 +105,27 @@ public class InetNetworkTest extends TestCase {
      * 
      * @throws UnknownHostException
      */
+    @Test
     public void testInet6Address() throws UnknownHostException {
 
-        // Test Bad IP V6 address.
-        try {
-            address = InetAddress.getByAddress(getBytesFromAddress("0000:0000:0000:0000:0000:0000:0000:0001:00001"));
-            assertTrue(false);
-        } catch (UnknownHostException e) {
-            assertTrue(true);
-        }
+	// Test Bad IP V6 address.
+	try {
+	    address = InetAddress.getByAddress(getBytesFromAddress("0000:0000:0000:0000:0000:0000:0000:0001:00001"));
+	    assertTrue(false);
+	} catch (UnknownHostException e) {
+	    assertTrue(true);
+	}
 
-        // Test IP V6 address.
-        address = InetAddress.getByAddress(getBytesFromAddress("0000:0000:0000:0000:0000:0000:0000:0001"));
-        assertEquals(true, address instanceof Inet6Address);
-        assertEquals(true, address.toString().contains("/0:0:0:0:0:0:0:1"));
+	// Test IP V6 address.
+	address = InetAddress.getByAddress(getBytesFromAddress("0000:0000:0000:0000:0000:0000:0000:0001"));
+	assertEquals(true, address instanceof Inet6Address);
+	assertEquals(true, address.toString().contains("/0:0:0:0:0:0:0:1"));
 
-        // Test IP V6 Address with name and IP address.
-        address = InetAddress.getByAddress("localhost", getBytesFromAddress("0000:0000:0000:0000:0000:0000:0000:0001"));
-        assertEquals(true, address instanceof Inet6Address);
-        assertEquals(true, address.toString().contains("localhost"));
-        assertEquals(true, address.toString().contains("/0:0:0:0:0:0:0:1"));
+	// Test IP V6 Address with name and IP address.
+	address = InetAddress.getByAddress("localhost", getBytesFromAddress("0000:0000:0000:0000:0000:0000:0000:0001"));
+	assertEquals(true, address instanceof Inet6Address);
+	assertEquals(true, address.toString().contains("localhost"));
+	assertEquals(true, address.toString().contains("/0:0:0:0:0:0:0:1"));
 
     }
 
@@ -136,23 +134,23 @@ public class InetNetworkTest extends TestCase {
      * 
      * @throws UnknownHostException
      */
+    @Test
     public void testInet4Network() throws UnknownHostException {
 
-        // Test with null parameter.
-        address = InetAddress.getByAddress(getBytesFromAddress("127.0.0.1"));
-        try {
-            network4 = new Inet4Network(address, null);
-            assertTrue(false);
-        } catch (NullPointerException e) {
-            assertTrue(true);
-        }
+	// Test with null parameter.
+	address = InetAddress.getByAddress(getBytesFromAddress("127.0.0.1"));
+	try {
+	    network4 = new Inet4Network(address, null);
+	    assertTrue(false);
+	} catch (NullPointerException e) {
+	    assertTrue(true);
+	}
 
-        // Test IP V4.
-        address = InetAddress.getByAddress(getBytesFromAddress("127.0.0.1"));
-        subnetmask4 = InetAddress.getByAddress(getBytesFromAddress("255.255.255.0"));
-        network4 = new Inet4Network(address, subnetmask4);
-        assertEquals("127.0.0.0/255.255.255.0", network4.toString());
-
+	// Test IP V4.
+	address = InetAddress.getByAddress(getBytesFromAddress("127.0.0.1"));
+	subnetmask4 = InetAddress.getByAddress(getBytesFromAddress("255.255.255.0"));
+	network4 = new Inet4Network(address, subnetmask4);
+	assertEquals("127.0.0.0/255.255.255.0", network4.toString());
     }
 
     /**
@@ -160,59 +158,59 @@ public class InetNetworkTest extends TestCase {
      * 
      * @throws UnknownHostException
      */
+    @Test
     public void testInet6Network() throws UnknownHostException {
 
-        // Test with null parameter.
-        address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
-        try {
-            network6 = new Inet6Network(address, null);
-            assertTrue(false);
-        } catch (NullPointerException e) {
-            assertTrue(true);
-        }
+	// Test with null parameter.
+	address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
+	try {
+	    network6 = new Inet6Network(address, null);
+	    assertTrue(false);
+	} catch (NullPointerException e) {
+	    assertTrue(true);
+	}
 
-        // Test IP V6 with subnet mask 32768.
-        address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
-        subnetmask6 = 32768;
-        network6 = new Inet6Network(address, subnetmask6);
-        assertEquals("2781:db8:1234:8612:45ee:0:f05e:1/32768", network6.toString());
+	// Test IP V6 with subnet mask 32768.
+	address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
+	subnetmask6 = 32768;
+	network6 = new Inet6Network(address, subnetmask6);
+	assertEquals("2781:db8:1234:8612:45ee:0:f05e:1/32768", network6.toString());
 
-        // Test IP V6 with subnet mask 128.
-        address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
-        subnetmask6 = 128;
-        network6 = new Inet6Network(address, subnetmask6);
-        assertEquals("2781:db8:1234:8612:0:0:0:0/128", network6.toString());
+	// Test IP V6 with subnet mask 128.
+	address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
+	subnetmask6 = 128;
+	network6 = new Inet6Network(address, subnetmask6);
+	assertEquals("2781:db8:1234:8612:0:0:0:0/128", network6.toString());
 
-        // Test IP V6 with subnet mask 48.
-        address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
-        subnetmask6 = 48;
-        network6 = new Inet6Network(address, subnetmask6);
-        assertEquals("2781:db8:1234:0:0:0:0:0/48", network6.toString());
+	// Test IP V6 with subnet mask 48.
+	address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
+	subnetmask6 = 48;
+	network6 = new Inet6Network(address, subnetmask6);
+	assertEquals("2781:db8:1234:0:0:0:0:0/48", network6.toString());
 
-        // Test IP V6 with subnet mask 16.
-        address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
-        subnetmask6 = 16;
-        network6 = new Inet6Network(address, subnetmask6);
-        assertEquals("2781:db8:1200:0:0:0:0:0/16", network6.toString());
+	// Test IP V6 with subnet mask 16.
+	address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
+	subnetmask6 = 16;
+	network6 = new Inet6Network(address, subnetmask6);
+	assertEquals("2781:db8:1200:0:0:0:0:0/16", network6.toString());
 
-        // Test IP V6 with subnet mask 2.
-        address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
-        subnetmask6 = 2;
-        network6 = new Inet6Network(address, subnetmask6);
-        assertEquals("2781:0:0:0:0:0:0:0/2", network6.toString());
+	// Test IP V6 with subnet mask 2.
+	address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
+	subnetmask6 = 2;
+	network6 = new Inet6Network(address, subnetmask6);
+	assertEquals("2781:0:0:0:0:0:0:0/2", network6.toString());
 
-        // Test IP V6 with subnet mask 1.
-        address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
-        subnetmask6 = 1;
-        network6 = new Inet6Network(address, subnetmask6);
-        assertEquals("2700:0:0:0:0:0:0:0/1", network6.toString());
+	// Test IP V6 with subnet mask 1.
+	address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
+	subnetmask6 = 1;
+	network6 = new Inet6Network(address, subnetmask6);
+	assertEquals("2700:0:0:0:0:0:0:0/1", network6.toString());
 
-        // Test IP V6 with subnet mask 0.
-        address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
-        subnetmask6 = 0;
-        network6 = new Inet6Network(address, subnetmask6);
-        assertEquals("0:0:0:0:0:0:0:0/0", network6.toString());
-
+	// Test IP V6 with subnet mask 0.
+	address = InetAddress.getByAddress(getBytesFromAddress("2781:0db8:1234:8612:45ee:0000:f05e:0001"));
+	subnetmask6 = 0;
+	network6 = new Inet6Network(address, subnetmask6);
+	assertEquals("0:0:0:0:0:0:0:0/0", network6.toString());
     }
 
     /**
@@ -231,34 +229,31 @@ public class InetNetworkTest extends TestCase {
      */
     private byte[] getBytesFromAddress(String address) {
 
-        if (address.contains(".")) {
-            StringTokenizer st = new StringTokenizer(address, ".");
-            byte[] bytes = new byte[st.countTokens()];
-            int i = 0;
-            while (st.hasMoreTokens()) {
-                Integer inb = Integer.parseInt(st.nextToken());
-                bytes[i] = inb.byteValue();
-                i++;
-            }
-            return bytes;
-        }
+	if (address.contains(".")) {
+	    StringTokenizer st = new StringTokenizer(address, ".");
+	    byte[] bytes = new byte[st.countTokens()];
+	    int i = 0;
+	    while (st.hasMoreTokens()) {
+		Integer inb = Integer.parseInt(st.nextToken());
+		bytes[i] = inb.byteValue();
+		i++;
+	    }
+	    return bytes;
+	} else if (address.contains(":")) {
+	    StringTokenizer st = new StringTokenizer(address, ":");
+	    byte[] bytes = new byte[st.countTokens() * 2];
+	    int i = 0;
+	    while (st.hasMoreTokens()) {
+		String token = st.nextToken();
+		bytes[i] = (byte) Integer.parseInt(token.substring(0, 2), 16);
+		i++;
+		bytes[i] = (byte) Integer.parseInt(token.substring(2, 4), 16);
+		i++;
+	    }
+	    return bytes;
+	}
 
-        else if (address.contains(":")) {
-            StringTokenizer st = new StringTokenizer(address, ":");
-            byte[] bytes = new byte[st.countTokens() * 2];
-            int i = 0;
-            while (st.hasMoreTokens()) {
-                String token = st.nextToken();
-                bytes[i] = (byte) Integer.parseInt(token.substring(0, 2), 16);
-                i++;
-                bytes[i] = (byte) Integer.parseInt(token.substring(2, 4), 16);
-                i++;
-            }
-            return bytes;
-        }
-
-        throw new IllegalArgumentException("The address [" + address + "] is not of the correct format. It should at least contain a . or a :");
-
+	throw new IllegalArgumentException(
+		"The address [" + address + "] is not of the correct format. It should at least contain a . or a :");
     }
-
 }
