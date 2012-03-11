@@ -33,6 +33,7 @@ import org.apache.james.lifecycle.api.LifecycleUtil;
 import org.apache.james.user.api.UsersRepository;
 import org.apache.james.user.api.UsersRepositoryException;
 import org.apache.james.user.lib.AbstractUsersRepositoryTest;
+import org.junit.Before;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -45,7 +46,9 @@ public class UsersFileRepositoryTest extends AbstractUsersRepositoryTest {
     /**
      * @see junit.framework.TestCase#setUp()
      */
-    protected void setUp() throws Exception {
+    @Before
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
         File targetRepositoryFolder = new File(TARGET_REPOSITORY_FOLDER);
         if (targetRepositoryFolder.exists()) {
@@ -60,17 +63,21 @@ public class UsersFileRepositoryTest extends AbstractUsersRepositoryTest {
      * @return the user repository
      * @throws Exception
      */
+    @Override
     protected UsersRepository getUsersRepository() throws Exception {
         FileSystem fs = new FileSystem() {
 
+	    @Override
             public File getBasedir() throws FileNotFoundException {
                 return new File(".");
             }
 
+	    @Override
             public InputStream getResource(String url) throws IOException {
                 return new FileInputStream(getFile(url));
             }
 
+	    @Override
             public File getFile(String fileURL) throws FileNotFoundException {
                 return new File(fileURL.substring(FileSystem.FILE_PROTOCOL.length()));
             }

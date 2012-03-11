@@ -16,99 +16,104 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.domainlist.xml;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.james.dnsservice.api.DNSService;
 import org.apache.james.dnsservice.api.mock.MockDNSService;
-import org.apache.james.domainlist.xml.XMLDomainList;
+import static org.junit.Assert.*;
+import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
-import junit.framework.TestCase;
-
-public class XMLDomainListTest extends TestCase {
+public class XMLDomainListTest {
 
     private HierarchicalConfiguration setUpConfiguration(boolean auto, boolean autoIP, List<String> names) {
-        DefaultConfigurationBuilder configuration = new DefaultConfigurationBuilder();
+	DefaultConfigurationBuilder configuration = new DefaultConfigurationBuilder();
 
-        configuration.addProperty("autodetect", auto);
-        configuration.addProperty("autodetectIP", autoIP);
-        for (int i = 0; i < names.size(); i++) {
-            configuration.addProperty("domainnames.domainname", names.get(i).toString());
-        }
-        return configuration;
+	configuration.addProperty("autodetect", auto);
+	configuration.addProperty("autodetectIP", autoIP);
+	for (int i = 0; i < names.size(); i++) {
+	    configuration.addProperty("domainnames.domainname", names.get(i).toString());
+	}
+	return configuration;
     }
 
     private DNSService setUpDNSServer(final String hostName) {
-        DNSService dns = new MockDNSService() {
-            public String getHostName(InetAddress inet) {
-                return hostName;
-            }
+	DNSService dns = new MockDNSService() {
 
-            public InetAddress[] getAllByName(String name) throws UnknownHostException {
-                return new InetAddress[] { InetAddress.getByName("127.0.0.1") };
-            }
+	    @Override
+	    public String getHostName(InetAddress inet) {
+		return hostName;
+	    }
 
-            public InetAddress getLocalHost() throws UnknownHostException {
-                return InetAddress.getLocalHost();
-            }
-        };
-        return dns;
+	    @Override
+	    public InetAddress[] getAllByName(String name) throws UnknownHostException {
+		return new InetAddress[]{InetAddress.getByName("127.0.0.1")};
+	    }
+
+	    @Override
+	    public InetAddress getLocalHost() throws UnknownHostException {
+		return InetAddress.getLocalHost();
+	    }
+	};
+	return dns;
     }
 
     // See https://issues.apache.org/jira/browse/JAMES-998
+    @Test
     public void testNoConfiguredDomains() throws Exception {
-        List<String> domains = new ArrayList<String>();
-        XMLDomainList dom = new XMLDomainList();
-        dom.setLog(LoggerFactory.getLogger("MockLog"));
-        dom.configure(setUpConfiguration(false, false, domains));
-        dom.setDNSService(setUpDNSServer("localhost"));
+	List<String> domains = new ArrayList<String>();
+	XMLDomainList dom = new XMLDomainList();
+	dom.setLog(LoggerFactory.getLogger("MockLog"));
+	dom.configure(setUpConfiguration(false, false, domains));
+	dom.setDNSService(setUpDNSServer("localhost"));
 
-        assertNull("No domain found", dom.getDomains());
+	assertNull("No domain found", dom.getDomains());
     }
 
+    @Test
     public void testGetDomains() throws Exception {
-        List<String> domains = new ArrayList<String>();
-        domains.add("domain1.");
-        domains.add("domain2.");
+	List<String> domains = new ArrayList<String>();
+	domains.add("domain1.");
+	domains.add("domain2.");
 
-        XMLDomainList dom = new XMLDomainList();
-        dom.setLog(LoggerFactory.getLogger("MockLog"));
-        dom.configure(setUpConfiguration(false, false, domains));
-        dom.setDNSService(setUpDNSServer("localhost"));
+	XMLDomainList dom = new XMLDomainList();
+	dom.setLog(LoggerFactory.getLogger("MockLog"));
+	dom.configure(setUpConfiguration(false, false, domains));
+	dom.setDNSService(setUpDNSServer("localhost"));
 
-        assertTrue("Two domain found", dom.getDomains().length == 2);
+	assertTrue("Two domain found", dom.getDomains().length == 2);
     }
 
+    @Test
     public void testGetDomainsAutoDetectNotLocalHost() throws Exception {
-        List<String> domains = new ArrayList<String>();
-        domains.add("domain1.");
+	List<String> domains = new ArrayList<String>();
+	domains.add("domain1.");
 
-        XMLDomainList dom = new XMLDomainList();
-        dom.setLog(LoggerFactory.getLogger("MockLog"));
-        dom.configure(setUpConfiguration(true, false, domains));
+	XMLDomainList dom = new XMLDomainList();
+	dom.setLog(LoggerFactory.getLogger("MockLog"));
+	dom.configure(setUpConfiguration(true, false, domains));
 
-        dom.setDNSService(setUpDNSServer("local"));
-        assertEquals("Two domains found", dom.getDomains().length, 2);
+	dom.setDNSService(setUpDNSServer("local"));
+	assertEquals("Two domains found", dom.getDomains().length, 2);
     }
 
+    @Test
     public void testGetDomainsAutoDetectLocalHost() throws Exception {
-        List<String> domains = new ArrayList<String>();
-        domains.add("domain1.");
+	List<String> domains = new ArrayList<String>();
+	domains.add("domain1.");
 
-        XMLDomainList dom = new XMLDomainList();
-        dom.setLog(LoggerFactory.getLogger("MockLog"));
-        dom.configure(setUpConfiguration(true, false, domains));
+	XMLDomainList dom = new XMLDomainList();
+	dom.setLog(LoggerFactory.getLogger("MockLog"));
+	dom.configure(setUpConfiguration(true, false, domains));
 
-        dom.setDNSService(setUpDNSServer("localhost"));
+	dom.setDNSService(setUpDNSServer("localhost"));
 
-        assertEquals("One domain found", dom.getDomains().length, 1);
+	assertEquals("One domain found", dom.getDomains().length, 1);
     }
 }

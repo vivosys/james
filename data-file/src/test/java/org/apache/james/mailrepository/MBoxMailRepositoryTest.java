@@ -16,18 +16,17 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.mailrepository;
 
 import java.io.File;
 import java.util.Iterator;
-
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
 import org.apache.james.filesystem.api.mock.MockFileSystem;
 import org.apache.james.mailrepository.api.MailRepository;
 import org.apache.james.mailrepository.file.MBoxMailRepository;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -37,39 +36,39 @@ import org.slf4j.LoggerFactory;
  * NOTE this previously extended AbstractMailRepositoryTest to run all of the
  * common mail repository tests on the MBox implementation.
  */
-public class MBoxMailRepositoryTest extends TestCase {
+public class MBoxMailRepositoryTest {
 
     protected MailRepository getMailRepository() throws Exception {
-        MBoxMailRepository mr = new MBoxMailRepository();
+	MBoxMailRepository mr = new MBoxMailRepository();
 
-        DefaultConfigurationBuilder defaultConfiguration = new DefaultConfigurationBuilder();
+	DefaultConfigurationBuilder defaultConfiguration = new DefaultConfigurationBuilder();
 
-        File fInbox = new MockFileSystem().getFile("file://conf/org/apache/james/mailrepository/testdata/Inbox");
-        String mboxPath = "mbox://" + fInbox.toURI().toString().substring(new File("").toURI().toString().length());
+	File fInbox = new MockFileSystem().getFile("file://conf/org/apache/james/mailrepository/testdata/Inbox");
+	String mboxPath = "mbox://" + fInbox.toURI().toString().substring(new File("").toURI().toString().length());
 
-        defaultConfiguration.addProperty("[@destinationURL]", mboxPath);
-        defaultConfiguration.addProperty("[@type]", "MAIL");
-        mr.setLog(LoggerFactory.getLogger("MockLog"));
-        ;
-        mr.configure(defaultConfiguration);
+	defaultConfiguration.addProperty("[@destinationURL]", mboxPath);
+	defaultConfiguration.addProperty("[@type]", "MAIL");
+	mr.setLog(LoggerFactory.getLogger("MockLog"));
+	mr.configure(defaultConfiguration);
 
-        return mr;
+	return mr;
     }
 
     // Try to write a unit test for JAMES-744. At the moment it seems that we
     // cannot reproduce it.
+    @Test
     public void testReadMboxrdFile() throws Exception {
-        MailRepository mr = getMailRepository();
+	MailRepository mr = getMailRepository();
 
-        Iterator<String> keys = mr.list();
+	Iterator<String> keys = mr.list();
 
-        assertTrue("Two messages in list", keys.hasNext());
-        keys.next();
+	assertTrue("Two messages in list", keys.hasNext());
+	keys.next();
 
-        assertTrue("One messages in list", keys.hasNext());
-        keys.next();
+	assertTrue("One messages in list", keys.hasNext());
+	keys.next();
 
-        assertFalse("No messages", keys.hasNext());
+	assertFalse("No messages", keys.hasNext());
     }
 
     /*
@@ -77,5 +76,4 @@ public class MBoxMailRepositoryTest extends TestCase {
      * System.err.println("TEST DISABLED!"); // Decomment this or remove this
      * method to re-enable the MBoxRepository testing // super.runBare(); }
      */
-
 }

@@ -33,6 +33,7 @@ public class FileMailRepositoryTest extends AbstractMailRepositoryTest {
      * @throws ConfigurationException
      * @throws Exception
      */
+    @Override
     protected MailRepository getMailRepository() throws Exception {
         MockFileSystem fs = new MockFileSystem();
         FileMailRepository mr = new FileMailRepository();
