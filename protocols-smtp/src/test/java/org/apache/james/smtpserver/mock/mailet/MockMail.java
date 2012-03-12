@@ -16,141 +16,146 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.smtpserver.mock.mailet;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-
+import java.util.*;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
 import org.apache.mailet.Mail;
 import org.apache.mailet.MailAddress;
 
 public class MockMail implements Mail {
 
     private MimeMessage msg = null;
-
     private Collection recipients = new ArrayList();
-
     private String name = null;
-
     private MailAddress sender = null;
-
     private String state = null;
-
     private String errorMessage;
-
     private Date lastUpdated;
-
     private HashMap attributes = new HashMap();
-
     private static final long serialVersionUID = 1L;
-
     private long size = 0;
-
     private String remoteAddr = "127.0.0.1";
 
+    @Override
     public String getName() {
-        return name;
+	return name;
     }
 
+    @Override
     public void setName(String newName) {
-        this.name = newName;
+	this.name = newName;
     }
 
+    @Override
     public MimeMessage getMessage() throws MessagingException {
-        return msg;
+	return msg;
     }
 
+    @Override
     public Collection getRecipients() {
-        return recipients;
+	return recipients;
     }
 
+    @Override
     public void setRecipients(Collection recipients) {
-        this.recipients = recipients;
+	this.recipients = recipients;
     }
 
+    @Override
     public MailAddress getSender() {
-        return sender;
+	return sender;
     }
 
+    @Override
     public String getState() {
-        return state;
+	return state;
     }
 
+    @Override
     public String getRemoteHost() {
-        return "111.222.333.444";
+	return "111.222.333.444";
     }
 
+    @Override
     public String getRemoteAddr() {
-        return remoteAddr;
+	return remoteAddr;
     }
 
+    @Override
     public String getErrorMessage() {
-        return errorMessage;
+	return errorMessage;
     }
 
+    @Override
     public void setErrorMessage(String msg) {
-        this.errorMessage = msg;
+	this.errorMessage = msg;
     }
 
+    @Override
     public void setMessage(MimeMessage message) {
-        this.msg = message;
+	this.msg = message;
     }
 
+    @Override
     public void setState(String state) {
-        this.state = state;
+	this.state = state;
     }
 
+    @Override
     public Serializable getAttribute(String name) {
-        return (Serializable) attributes.get(name);
+	return (Serializable) attributes.get(name);
     }
 
+    @Override
     public Iterator getAttributeNames() {
-        return attributes.keySet().iterator();
+	return attributes.keySet().iterator();
     }
 
+    @Override
     public boolean hasAttributes() {
-        return !attributes.isEmpty();
+	return !attributes.isEmpty();
     }
 
+    @Override
     public Serializable removeAttribute(String name) {
-        return (Serializable) attributes.remove(name);
+	return (Serializable) attributes.remove(name);
 
     }
 
+    @Override
     public void removeAllAttributes() {
-        attributes.clear();
+	attributes.clear();
     }
 
+    @Override
     public Serializable setAttribute(String name, Serializable object) {
 
-        return (Serializable) attributes.put(name, object);
+	return (Serializable) attributes.put(name, object);
     }
 
+    @Override
     public long getMessageSize() throws MessagingException {
-        return size;
+	return size;
     }
 
+    @Override
     public Date getLastUpdated() {
-        return lastUpdated;
+	return lastUpdated;
     }
 
+    @Override
     public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
+	this.lastUpdated = lastUpdated;
     }
 
     public void setMessageSize(long size) {
-        this.size = size;
+	this.size = size;
     }
 
     public void setRemoteAddr(String remoteAddr) {
-        this.remoteAddr = remoteAddr;
+	this.remoteAddr = remoteAddr;
     }
 }

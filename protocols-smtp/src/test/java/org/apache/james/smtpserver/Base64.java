@@ -16,16 +16,11 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.smtpserver;
 
+import java.io.*;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * Performs simple Base64 encoding and decode suitable for authentication. Note
@@ -44,7 +39,8 @@ public class Base64 {
      *             the String
      */
     public static BufferedReader decode(String b64string) throws MessagingException {
-        return new BufferedReader(new InputStreamReader(MimeUtility.decode(new ByteArrayInputStream(b64string.getBytes()), "base64")));
+	return new BufferedReader(new InputStreamReader(MimeUtility.decode(
+		new ByteArrayInputStream(b64string.getBytes()), "base64")));
     }
 
     /**
@@ -60,14 +56,14 @@ public class Base64 {
      *             get thrown when I/O error was detected
      */
     public static String decodeAsString(String b64string) throws IOException, MessagingException {
-        if (b64string == null) {
-            return b64string;
-        }
-        String returnString = decode(b64string).readLine();
-        if (returnString == null) {
-            return returnString;
-        }
-        return returnString.trim();
+	if (b64string == null) {
+	    return b64string;
+	}
+	String returnString = decode(b64string).readLine();
+	if (returnString == null) {
+	    return returnString;
+	}
+	return returnString.trim();
     }
 
     /**
@@ -83,19 +79,19 @@ public class Base64 {
      *             the String
      */
     public static ByteArrayOutputStream encode(String plaintext) throws IOException, MessagingException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] in = plaintext.getBytes();
-        ByteArrayOutputStream inStream = new ByteArrayOutputStream();
-        inStream.write(in, 0, in.length);
-        // pad
-        if ((in.length % 3) == 1) {
-            inStream.write(0);
-            inStream.write(0);
-        } else if ((in.length % 3) == 2) {
-            inStream.write(0);
-        }
-        inStream.writeTo(MimeUtility.encode(out, "base64"));
-        return out;
+	ByteArrayOutputStream out = new ByteArrayOutputStream();
+	byte[] in = plaintext.getBytes();
+	ByteArrayOutputStream inStream = new ByteArrayOutputStream();
+	inStream.write(in, 0, in.length);
+	// pad
+	if ((in.length % 3) == 1) {
+	    inStream.write(0);
+	    inStream.write(0);
+	} else if ((in.length % 3) == 2) {
+	    inStream.write(0);
+	}
+	inStream.writeTo(MimeUtility.encode(out, "base64"));
+	return out;
     }
 
     /**
@@ -111,7 +107,6 @@ public class Base64 {
      *             the String
      */
     public static String encodeAsString(String plaintext) throws IOException, MessagingException {
-        return encode(plaintext).toString();
+	return encode(plaintext).toString();
     }
-
 }

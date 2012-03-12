@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.smtpserver.mock.mailet;
 
 import org.apache.mailet.MailetContext;
@@ -28,33 +27,34 @@ import org.apache.mailet.MatcherConfig;
 public class MockMatcherConfig implements MatcherConfig {
 
     private String matcherName;
-
     private MailetContext mc;
 
     public MockMatcherConfig(String matcherName, MailetContext mc) {
-        super();
-        this.matcherName = matcherName;
-        this.mc = mc;
+	super();
+	this.matcherName = matcherName;
+	this.mc = mc;
     }
 
+    @Override
     public String getCondition() {
-        if (matcherName.indexOf("=") >= 0) {
-            return matcherName.substring(getMatcherName().length() + 1);
-        } else {
-            return null;
-        }
+	if (matcherName.indexOf("=") >= 0) {
+	    return matcherName.substring(getMatcherName().length() + 1);
+	} else {
+	    return null;
+	}
     }
 
+    @Override
     public MailetContext getMailetContext() {
-        return mc;
+	return mc;
     }
 
+    @Override
     public String getMatcherName() {
-        if (matcherName.indexOf("=") >= 0) {
-            return matcherName.split("=")[0];
-        } else {
-            return matcherName;
-        }
+	if (matcherName.indexOf("=") >= 0) {
+	    return matcherName.split("=")[0];
+	} else {
+	    return matcherName;
+	}
     }
-
 }

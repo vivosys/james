@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.smtpserver.mock.util;
 
 import java.io.BufferedReader;
@@ -35,69 +34,64 @@ public class MockSpamd implements Runnable {
      * Mailcontent which is 100% spam
      */
     public final static String GTUBE = "-SPAM-";
-
     public final static String NOT_SPAM = "Spam: False ; 3 / 5";
-
     public final static String SPAM = "Spam: True ; 1000 / 5";
-
     BufferedReader in;
-
     OutputStream out;
-
     Socket spamd;
-
     ServerSocket socket;
 
     /**
      * Init the mocked SPAMD daemon
-     * 
+     *
      * @param port
      *            The port on which the mocked SPAMD daemon will be bind
      * @throws IOException
      */
     public MockSpamd(int port) throws IOException {
-        socket = new ServerSocket(port);
+	socket = new ServerSocket(port);
     }
 
     /**
      * @see java.lang.Runnable#run()
      */
+    @Override
     public void run() {
-        boolean spam = false;
+	boolean spam = false;
 
-        try {
+	try {
 
-            // Accept connections
-            spamd = socket.accept();
+	    // Accept connections
+	    spamd = socket.accept();
 
-            in = new BufferedReader(new InputStreamReader(spamd.getInputStream()));
-            out = spamd.getOutputStream();
+	    in = new BufferedReader(new InputStreamReader(spamd.getInputStream()));
+	    out = spamd.getOutputStream();
 
-            String line = null;
+	    String line = null;
 
-            // Parse the message
-            while ((line = in.readLine()) != null) {
-                if (line.indexOf(GTUBE) >= 0) {
-                    spam = true;
-                }
-            }
-            if (spam) {
-                out.write(SPAM.getBytes());
-                out.flush();
-            } else {
-                out.write(NOT_SPAM.getBytes());
-                out.flush();
-            }
+	    // Parse the message
+	    while ((line = in.readLine()) != null) {
+		if (line.indexOf(GTUBE) >= 0) {
+		    spam = true;
+		}
+	    }
+	    if (spam) {
+		out.write(SPAM.getBytes());
+		out.flush();
+	    } else {
+		out.write(NOT_SPAM.getBytes());
+		out.flush();
+	    }
 
-            in.close();
-            out.close();
-            spamd.close();
-            socket.close();
+	    in.close();
+	    out.close();
+	    spamd.close();
+	    socket.close();
 
-        } catch (IOException e) {
-            // Should not happen
-            e.printStackTrace();
-        }
+	} catch (IOException e) {
+	    // Should not happen
+	    e.printStackTrace();
+	}
 
     }
 }

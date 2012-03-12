@@ -21,12 +21,7 @@ package org.apache.james.smtpserver;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
-import org.apache.james.smtpserver.CoreCmdHandlerLoader;
-import org.apache.james.smtpserver.fastfail.DNSRBLHandler;
-import org.apache.james.smtpserver.fastfail.MaxRcptHandler;
-import org.apache.james.smtpserver.fastfail.ResolvableEhloHeloHandler;
-import org.apache.james.smtpserver.fastfail.ReverseEqualsEhloHeloHandler;
-import org.apache.james.smtpserver.fastfail.ValidSenderDomainHandler;
+import org.apache.james.smtpserver.fastfail.*;
 
 @SuppressWarnings("serial")
 public class SMTPTestConfiguration extends DefaultConfigurationBuilder {
