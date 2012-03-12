@@ -16,56 +16,55 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.transport.matchers;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Collection;
-
 import javax.mail.MessagingException;
-
 import org.apache.mailet.MailAddress;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class RemoteAddrNotInNetworkTest extends AbstractRemoteAddrInNetworkTest {
 
     private final String ALLOWED_NETWORK = "192.168.200.0/24";
 
-    public RemoteAddrNotInNetworkTest(String arg0) throws UnsupportedEncodingException {
-        super(arg0);
-    }
-
     // test if the recipients get returned as matched
+    @Test
     public void testRemoteAddrNotInNetworkMatched() throws MessagingException {
-        setRemoteAddr("192.168.0.1");
+	setRemoteAddr("192.168.0.1");
 
-        setupAll();
+	setupAll();
 
-        Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
+	Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
 
-        assertNotNull(matchedRecipients);
-        assertEquals(matchedRecipients.size(), mockedMail.getRecipients().size());
+	assertNotNull(matchedRecipients);
+	assertEquals(matchedRecipients.size(), mockedMail.getRecipients().size());
     }
 
     // test if no recipient get returned cause it not match
+    @Test
     public void testRemoteAddrNotInNetworkNotMatch() throws MessagingException {
-        setRemoteAddr("192.168.200.1");
+	setRemoteAddr("192.168.200.1");
 
-        setupAll();
+	setupAll();
 
-        Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
+	Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
 
-        assertNull(matchedRecipients);
+	assertNull(matchedRecipients);
     }
 
+    @Override
     protected AbstractNetworkMatcher createMatcher() {
-        return new RemoteAddrNotInNetwork();
+	return new RemoteAddrNotInNetwork();
     }
 
+    @Override
     protected String getConfigOption() {
-        return "AllowedNetworkIs=";
+	return "AllowedNetworkIs=";
     }
 
+    @Override
     protected String getAllowedNetworks() {
-        return ALLOWED_NETWORK;
+	return ALLOWED_NETWORK;
     }
 }

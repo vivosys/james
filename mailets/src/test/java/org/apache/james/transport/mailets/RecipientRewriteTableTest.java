@@ -16,20 +16,10 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.transport.mailets;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-
+import java.util.*;
 import javax.mail.MessagingException;
-
-import junit.framework.TestCase;
-
 import org.apache.james.rrt.api.RecipientRewriteTableException;
 import org.apache.mailet.Mail;
 import org.apache.mailet.MailAddress;
@@ -37,115 +27,140 @@ import org.apache.mailet.base.test.FakeMail;
 import org.apache.mailet.base.test.FakeMailContext;
 import org.apache.mailet.base.test.FakeMailetConfig;
 import org.apache.mailet.base.test.FakeMimeMessage;
+import org.junit.After;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
-public class RecipientRewriteTableTest extends TestCase {
+public class RecipientRewriteTableTest {
 
     private org.apache.james.transport.mailets.RecipientRewriteTable table;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
 
-        table = new org.apache.james.transport.mailets.RecipientRewriteTable();
-        final FakeMailContext mockMailetContext = new FakeMailContext() {
+	table = new org.apache.james.transport.mailets.RecipientRewriteTable();
+	final FakeMailContext mockMailetContext = new FakeMailContext() {
 
-            @Override
-            public boolean isLocalServer(String serverName) {
-                if (serverName.equals("localhost")) {
-                    return true;
-                }
+	    @Override
+	    public boolean isLocalServer(String serverName) {
+		if (serverName.equals("localhost")) {
+		    return true;
+		}
 
-                return false;
-            }
+		return false;
+	    }
+	};
+	FakeMailetConfig mockMailetConfig = new FakeMailetConfig("vut", mockMailetContext, new Properties());
+	// mockMailetConfig.put("recipientrewritetable", "vut");
 
-        };
-        FakeMailetConfig mockMailetConfig = new FakeMailetConfig("vut", mockMailetContext, new Properties());
-        // mockMailetConfig.put("recipientrewritetable", "vut");
+	table.setRecipientRewriteTable(new org.apache.james.rrt.api.RecipientRewriteTable() {
 
-        table.setRecipientRewriteTable(new org.apache.james.rrt.api.RecipientRewriteTable() {
-            public Collection<String> getMappings(String user, String domain) throws ErrorMappingException, RecipientRewriteTableException {
-                if (user.equals("test") && domain.equals("localhost"))
-                    return Arrays.asList(new String[] { "whatever@localhost", "blah@localhost" });
-                return null;
-            }
+	    @Override
+	    public Collection<String> getMappings(String user, String domain) throws ErrorMappingException,
+		    RecipientRewriteTableException {
+		if (user.equals("test") && domain.equals("localhost")) {
+		    return Arrays.asList(new String[]{"whatever@localhost", "blah@localhost"});
+		}
+		return null;
+	    }
 
-            public void addRegexMapping(String user, String domain, String regex) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
-            }
+	    @Override
+	    public void addRegexMapping(String user, String domain, String regex) throws RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
+	    }
 
-            public void removeRegexMapping(String user, String domain, String regex) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
+	    @Override
+	    public void removeRegexMapping(String user, String domain, String regex) throws
+		    RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
 
-            }
+	    }
 
-            public void addAddressMapping(String user, String domain, String address) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
+	    @Override
+	    public void addAddressMapping(String user, String domain, String address) throws
+		    RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
 
-            }
+	    }
 
-            public void removeAddressMapping(String user, String domain, String address) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
+	    @Override
+	    public void removeAddressMapping(String user, String domain, String address) throws
+		    RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
 
-            }
+	    }
 
-            public void addErrorMapping(String user, String domain, String error) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
+	    @Override
+	    public void addErrorMapping(String user, String domain, String error) throws RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
 
-            }
+	    }
 
-            public void removeErrorMapping(String user, String domain, String error) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
+	    @Override
+	    public void removeErrorMapping(String user, String domain, String error) throws
+		    RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
 
-            }
+	    }
 
-            public Collection<String> getUserDomainMappings(String user, String domain) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
-            }
+	    @Override
+	    public Collection<String> getUserDomainMappings(String user, String domain) throws
+		    RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
+	    }
 
-            public void addMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
+	    @Override
+	    public void addMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
 
-            }
+	    }
 
-            public void removeMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
+	    @Override
+	    public void removeMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
 
-            }
+	    }
 
-            public Map<String, Collection<String>> getAllMappings() throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
-            }
+	    @Override
+	    public Map<String, Collection<String>> getAllMappings() throws RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
+	    }
 
-            public void addAliasDomainMapping(String aliasDomain, String realDomain) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
+	    @Override
+	    public void addAliasDomainMapping(String aliasDomain, String realDomain) throws
+		    RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
 
-            }
+	    }
 
-            public void removeAliasDomainMapping(String aliasDomain, String realDomain) throws RecipientRewriteTableException {
-                throw new UnsupportedOperationException("Not implemented");
+	    @Override
+	    public void removeAliasDomainMapping(String aliasDomain, String realDomain) throws
+		    RecipientRewriteTableException {
+		throw new UnsupportedOperationException("Not implemented");
 
-            }
+	    }
+	});
 
-        });
-
-        table.init(mockMailetConfig);
+	table.init(mockMailetConfig);
 
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        table = null;
-
+    @After
+    public void tearDown() throws Exception {
+	table = null;
     }
 
+    @Test
     public void testAddressMapping() throws Exception {
-        Mail mail = createMail(new String[] { "test@localhost", "apache@localhost" });
-        table.service(mail);
+	Mail mail = createMail(new String[]{"test@localhost", "apache@localhost"});
+	table.service(mail);
 
-        assertEquals(3, mail.getRecipients().size());
-        Iterator<MailAddress> it = mail.getRecipients().iterator();
-        assertEquals("whatever@localhost", ((MailAddress) it.next()).toString());
-        assertEquals("blah@localhost", ((MailAddress) it.next()).toString());
-        assertEquals("apache@localhost", ((MailAddress) it.next()).toString());
+	assertEquals(3, mail.getRecipients().size());
+	Iterator<MailAddress> it = mail.getRecipients().iterator();
+	assertEquals("whatever@localhost", ((MailAddress) it.next()).toString());
+	assertEquals("blah@localhost", ((MailAddress) it.next()).toString());
+	assertEquals("apache@localhost", ((MailAddress) it.next()).toString());
 
     }
 
@@ -154,13 +169,13 @@ public class RecipientRewriteTableTest extends TestCase {
      * @throws MessagingException
      */
     private Mail createMail(String[] recipients) throws MessagingException {
-        Mail mail = new FakeMail();
-        ArrayList<MailAddress> a = new ArrayList<MailAddress>(recipients.length);
-        for (int i = 0; i < recipients.length; i++) {
-            a.add(new MailAddress(recipients[i]));
-        }
-        mail.setRecipients(a);
-        mail.setMessage(new FakeMimeMessage());
-        return mail;
+	Mail mail = new FakeMail();
+	ArrayList<MailAddress> a = new ArrayList<MailAddress>(recipients.length);
+	for (int i = 0; i < recipients.length; i++) {
+	    a.add(new MailAddress(recipients[i]));
+	}
+	mail.setRecipients(a);
+	mail.setMessage(new FakeMimeMessage());
+	return mail;
     }
 }
