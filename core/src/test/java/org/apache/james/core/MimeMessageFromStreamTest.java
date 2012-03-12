@@ -31,22 +31,27 @@ public class MimeMessageFromStreamTest extends MimeMessageTest {
         return new MimeMessage(Session.getDefaultInstance(new Properties()), new ByteArrayInputStream(sources.getBytes()));
     }
 
+    @Override
     protected MimeMessage getMultipartMessage() throws Exception {
         return getMessageFromSources(getMultipartMessageSource());
     }
 
+    @Override
     protected MimeMessage getSimpleMessage() throws Exception {
         return getMessageFromSources(getSimpleMessageCleanedSource());
     }
 
+    @Override
     protected MimeMessage getMessageWithBadReturnPath() throws Exception {
         return getMessageFromSources(getMessageWithBadReturnPathSource());
     }
 
+    @Override
     protected MimeMessage getMissingEncodingAddHeaderMessage() throws Exception {
         return getMessageFromSources(getMissingEncodingAddHeaderSource());
     }
 
+    @Override
     protected MimeMessage getMissingEncodingMessage() throws Exception {
         return getMessageFromSources(getMissingEncodingMessageSource());
     }

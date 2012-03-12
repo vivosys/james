@@ -27,11 +27,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+public class MimeMessageUtilTest {
 
-public class MimeMessageUtilTest extends TestCase {
-
+    @Test
     public void testWriteMimeMessageMultipartWithMessageID() throws MessagingException, IOException {
         String message = "Received: from localhost.localdomain ([127.0.0.1])\r\n" +
         "          by athlon14 (JAMES SMTP Server 2.3-dev) with SMTP ID 694\r\n" +

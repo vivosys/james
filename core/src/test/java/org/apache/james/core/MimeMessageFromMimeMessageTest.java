@@ -23,6 +23,7 @@ import javax.mail.internet.MimeMessage;
 
 public class MimeMessageFromMimeMessageTest extends MimeMessageFromStreamTest {
 
+    @Override
     protected MimeMessage getMessageFromSources(String sources) throws Exception {
         return new MimeMessage(super.getMessageFromSources(sources));
     }

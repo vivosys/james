@@ -28,6 +28,7 @@ import java.util.Properties;
 
 public class MimeMessageFromSharedStreamTest extends MimeMessageFromStreamTest {
 
+    @Override
     protected MimeMessage getMessageFromSources(String sources) throws Exception {
         return new MimeMessage(Session.getDefaultInstance(new Properties()), new SharedByteArrayInputStream(sources.getBytes()));
     }

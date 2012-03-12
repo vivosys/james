@@ -16,28 +16,27 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.core;
-
-import org.apache.mailet.base.RFC2822Headers;
-
-import javax.mail.MessagingException;
 
 import java.io.ByteArrayInputStream;
 import java.util.Enumeration;
+import javax.mail.MessagingException;
+import org.apache.mailet.base.RFC2822Headers;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+public class MailHeadersTest {
 
-public class MailHeadersTest extends TestCase {
-
+    @Test
     public void testHeadersOrder() throws MessagingException {
-        MailHeaders header = new MailHeaders(new ByteArrayInputStream((RFC2822Headers.SUBJECT + ": testsubject\r\n").getBytes()));
-        header.setHeader(RFC2822Headers.RETURN_PATH, "<test@test>");
-        header.setHeader(RFC2822Headers.FROM, "<test2@test.de>");
-        Enumeration h = header.getAllHeaderLines();
+	MailHeaders header = new MailHeaders(new ByteArrayInputStream((RFC2822Headers.SUBJECT + ": testsubject\r\n").
+		getBytes()));
+	header.setHeader(RFC2822Headers.RETURN_PATH, "<test@test>");
+	header.setHeader(RFC2822Headers.FROM, "<test2@test.de>");
+	Enumeration h = header.getAllHeaderLines();
 
-        assertEquals(h.nextElement(), "Return-Path: <test@test>");
-        assertEquals(h.nextElement(), "From: <test2@test.de>");
-        assertEquals(h.nextElement(), "Subject: testsubject");
+	assertEquals(h.nextElement(), "Return-Path: <test@test>");
+	assertEquals(h.nextElement(), "From: <test2@test.de>");
+	assertEquals(h.nextElement(), "Subject: testsubject");
     }
 }
