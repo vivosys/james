@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.queue.api.mock;
 
 import java.util.HashMap;
@@ -26,19 +25,21 @@ import org.apache.james.queue.api.MailQueue;
 import org.apache.james.queue.api.MailQueueFactory;
 
 public class MockMailQueueFactory implements MailQueueFactory {
+
     private final Map<String, MailQueue> queues = new HashMap<String, MailQueue>();
 
+    @Override
     public synchronized MailQueue getQueue(String name) {
-        MailQueue queue = queues.get(name);
-        if (queue == null) {
-            queue = new MockMailQueue();
-            queues.put(name, queue);
-        }
+	MailQueue queue = queues.get(name);
+	if (queue == null) {
+	    queue = new MockMailQueue();
+	    queues.put(name, queue);
+	}
 
-        return queue;
+	return queue;
     }
 
     public void clear() {
-        queues.clear();
+	queues.clear();
     }
 }

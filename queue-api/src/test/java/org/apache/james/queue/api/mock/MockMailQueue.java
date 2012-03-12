@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.queue.api.mock;
 
 import java.util.concurrent.Executors;
@@ -38,73 +37,78 @@ public class MockMailQueue implements MailQueue {
      * Throw an {@link MailQueueException} on next operation
      */
     public void throwExceptionOnNextOperation() {
-        this.throwException = true;
+	this.throwException = true;
     }
 
+    @Override
     public MailQueueItem deQueue() throws MailQueueException {
-        if (throwException) {
-            throwException = false;
-            throw new MailQueueException("Mock");
-        }
-        try {
-            final Mail mail = queue.take();
-            if (queue.isEmpty())
-                lastMail = null;
-            return new MailQueueItem() {
+	if (throwException) {
+	    throwException = false;
+	    throw new MailQueueException("Mock");
+	}
+	try {
+	    final Mail mail = queue.take();
+	    if (queue.isEmpty()) {
+		lastMail = null;
+	    }
+	    return new MailQueueItem() {
 
-                public Mail getMail() {
-                    return mail;
-                }
+		@Override
+		public Mail getMail() {
+		    return mail;
+		}
 
-                public void done(boolean success) throws MailQueueException {
-                    // do nothing here
+		@Override
+		public void done(boolean success) throws MailQueueException {
+		    // do nothing here
+		}
+	    };
 
-                }
-            };
-
-        } catch (InterruptedException e) {
-            throw new MailQueueException("Mock", e);
-        }
+	} catch (InterruptedException e) {
+	    throw new MailQueueException("Mock", e);
+	}
     }
 
+    @Override
     public void enQueue(final Mail mail, long delay, TimeUnit unit) throws MailQueueException {
-        if (throwException) {
-            throwException = false;
-            throw new MailQueueException("Mock");
-        }
+	if (throwException) {
+	    throwException = false;
+	    throw new MailQueueException("Mock");
+	}
 
-        scheduler.schedule(new Runnable() {
+	scheduler.schedule(new Runnable() {
 
-            public void run() {
-                try {
-                    queue.put(mail);
-                    lastMail = mail;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }, delay, unit);
+	    @Override
+	    public void run() {
+		try {
+		    queue.put(mail);
+		    lastMail = mail;
+		} catch (InterruptedException e) {
+		    e.printStackTrace();
+		}
+	    }
+	}, delay, unit);
     }
 
+    @Override
     public void enQueue(Mail mail) throws MailQueueException {
-        if (throwException) {
-            throwException = false;
-            throw new MailQueueException("Mock");
-        }
-        try {
-            queue.put(mail);
-            lastMail = mail;
-        } catch (InterruptedException e) {
-            throw new MailQueueException("Mock", e);
-        }
+	if (throwException) {
+	    throwException = false;
+	    throw new MailQueueException("Mock");
+	}
+	try {
+	    queue.put(mail);
+	    lastMail = mail;
+	} catch (InterruptedException e) {
+	    throw new MailQueueException("Mock", e);
+	}
     }
 
     public Mail getLastMail() {
-        return lastMail;
+	return lastMail;
     }
 
     public void clear() {
-        queue.clear();
+	queue.clear();
     }
 }
