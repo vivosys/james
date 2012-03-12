@@ -19,34 +19,25 @@
 
 package org.apache.james.mailetcontainer.impl.matchers;
 
-import org.apache.james.mailetcontainer.impl.matchers.CompositeMatcher;
-import org.apache.james.mailetcontainer.impl.matchers.Or;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import javax.mail.MessagingException;
+import javax.mail.internet.ParseException;
 import org.apache.james.transport.matchers.RecipientIs;
 import org.apache.mailet.MailAddress;
 import org.apache.mailet.Matcher;
 import org.apache.mailet.base.test.FakeMail;
 import org.apache.mailet.base.test.FakeMailContext;
 import org.apache.mailet.base.test.FakeMatcherConfig;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.ParseException;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-
-import junit.framework.TestCase;
-
-public class OrTest extends TestCase {
+public class OrTest {
 
     private FakeMail mockedMail;
 
     private CompositeMatcher matcher;
-
-    public OrTest(String arg0) throws UnsupportedEncodingException {
-        super(arg0);
-    }
 
     private void setupMockedMail() throws ParseException {
         mockedMail = new FakeMail();
@@ -78,6 +69,7 @@ public class OrTest extends TestCase {
     }
 
     // test if all recipients was returned
+    @Test
     public void testAllRecipientsReturned() throws MessagingException {
         setupMockedMail();
         setupMatcher();

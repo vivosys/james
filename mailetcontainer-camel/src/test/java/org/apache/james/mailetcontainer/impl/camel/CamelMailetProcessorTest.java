@@ -25,7 +25,6 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.james.mailetcontainer.api.mock.MockMailetContext;
 import org.apache.james.mailetcontainer.api.mock.MockMailetLoader;
 import org.apache.james.mailetcontainer.api.mock.MockMatcherLoader;
-import org.apache.james.mailetcontainer.impl.camel.CamelMailetProcessor;
 import org.apache.james.mailetcontainer.lib.AbstractStateMailetProcessor;
 import org.apache.james.mailetcontainer.lib.AbstractStateMailetProcessorTest;
 import org.slf4j.Logger;
