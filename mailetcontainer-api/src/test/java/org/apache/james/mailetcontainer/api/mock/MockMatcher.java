@@ -16,16 +16,13 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.mailetcontainer.api.mock;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.mail.MessagingException;
-
 import org.apache.mailet.Mail;
 import org.apache.mailet.MailAddress;
 import org.apache.mailet.Matcher;
@@ -34,39 +31,41 @@ import org.apache.mailet.MatcherConfig;
 public class MockMatcher implements Matcher {
 
     private int matchCount = 0;
-
     private MatcherConfig config;
 
+    @Override
     public void destroy() {
-
     }
 
+    @Override
     public MatcherConfig getMatcherConfig() {
-        return config;
+	return config;
     }
 
+    @Override
     public String getMatcherInfo() {
-        return getClass().getName();
+	return getClass().getName();
     }
 
+    @Override
     public void init(MatcherConfig config) throws MessagingException {
-        this.config = config;
-        matchCount = Integer.parseInt(config.getCondition());
+	this.config = config;
+	matchCount = Integer.parseInt(config.getCondition());
     }
 
+    @Override
     public Collection match(Mail mail) throws MessagingException {
-        List<MailAddress> match = new ArrayList<MailAddress>();
+	List<MailAddress> match = new ArrayList<MailAddress>();
 
-        Iterator<MailAddress> rcpts = mail.getRecipients().iterator();
-        while (rcpts.hasNext() && match.size() < matchCount) {
-            MailAddress addr = rcpts.next();
-            match.add(addr);
+	Iterator<MailAddress> rcpts = mail.getRecipients().iterator();
+	while (rcpts.hasNext() && match.size() < matchCount) {
+	    MailAddress addr = rcpts.next();
+	    match.add(addr);
 
-        }
-        if (match.isEmpty()) {
-            return null;
-        }
-        return match;
+	}
+	if (match.isEmpty()) {
+	    return null;
+	}
+	return match;
     }
-
 }

@@ -16,13 +16,10 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.mailetcontainer.api.mock;
 
 import java.util.Collection;
-
 import javax.mail.MessagingException;
-
 import org.apache.mailet.Mail;
 import org.apache.mailet.Matcher;
 import org.apache.mailet.MatcherConfig;
@@ -31,23 +28,27 @@ public class ExceptionThrowingMatcher implements Matcher {
 
     private MatcherConfig config;
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public MatcherConfig getMatcherConfig() {
-        return config;
+	return config;
     }
 
+    @Override
     public String getMatcherInfo() {
-        return getClass().getName();
+	return getClass().getName();
     }
 
+    @Override
     public void init(MatcherConfig config) throws MessagingException {
-        this.config = config;
+	this.config = config;
     }
 
+    @Override
     public Collection match(Mail arg0) throws MessagingException {
-        throw new MessagingException();
+	throw new MessagingException();
     }
-
 }

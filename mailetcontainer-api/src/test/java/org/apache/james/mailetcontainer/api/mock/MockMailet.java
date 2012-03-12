@@ -16,11 +16,9 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.mailetcontainer.api.mock;
 
 import javax.mail.MessagingException;
-
 import org.apache.mailet.Mail;
 import org.apache.mailet.Mailet;
 import org.apache.mailet.MailetConfig;
@@ -29,24 +27,28 @@ public class MockMailet implements Mailet {
 
     private MailetConfig config;
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public MailetConfig getMailetConfig() {
-        return config;
+	return config;
     }
 
+    @Override
     public String getMailetInfo() {
-        return "";
+	return "";
     }
 
+    @Override
     public void init(MailetConfig config) throws MessagingException {
-        this.config = config;
+	this.config = config;
     }
 
+    @Override
     public void service(Mail mail) throws MessagingException {
-        String state = config.getInitParameter("state");
-        mail.setState(state);
+	String state = config.getInitParameter("state");
+	mail.setState(state);
     }
-
 }
