@@ -21,7 +21,6 @@ package org.apache.james.user.lib;
 import java.util.ArrayList;
 import java.util.Iterator;
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import org.apache.james.lifecycle.api.LifecycleUtil;
 import org.apache.james.user.api.UsersRepository;
 import org.apache.james.user.api.UsersRepositoryException;
@@ -43,7 +42,7 @@ public abstract class AbstractUsersRepositoryTest {
 
     /**
      * Create the repository to be tested.
-     * 
+     *
      * @return the user repository
      * @throws Exception
      */
@@ -198,7 +197,7 @@ public abstract class AbstractUsersRepositoryTest {
 
     /**
      * Dispose the repository
-     * 
+     *
      * @throws UsersRepositoryException
      */
     private void disposeUsersRepository() throws UsersRepositoryException {
