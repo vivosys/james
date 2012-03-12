@@ -16,120 +16,128 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package org.apache.james.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
-public class TimeConverterTest extends TestCase {
+public class TimeConverterTest {
 
     private final long AMOUNT = 2;
 
-    public TimeConverterTest(String arg0) {
-        super(arg0);
-    }
-
+    @Test
     public void testGetMilliSecondsMsec() {
-        long time = 2;
-        String unit = "msec";
+	long time = 2;
+	String unit = "msec";
 
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
     }
 
+    @Test
     public void testGetMilliSecondsMsecs() {
-        long time = 2;
-        String unit = "msecs";
+	long time = 2;
+	String unit = "msecs";
 
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
     }
 
+    @Test
     public void testGetMilliSecondsSec() {
-        long time = 2000;
-        String unit = "sec";
+	long time = 2000;
+	String unit = "sec";
 
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
     }
 
+    @Test
     public void testGetMilliSecondsSecs() {
-        long time = 2000;
-        String unit = "secs";
+	long time = 2000;
+	String unit = "secs";
 
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
     }
 
+    @Test
     public void testGetMilliSecondsMinute() {
-        long time = 120000;
-        String unit = "minute";
+	long time = 120000;
+	String unit = "minute";
 
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
     }
 
+    @Test
     public void testGetMilliSecondsMinutes() {
-        long time = 120000;
-        String unit = "minutes";
+	long time = 120000;
+	String unit = "minutes";
 
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
     }
 
+    @Test
     public void testGetMilliSecondsHour() {
-        long time = 7200000;
-        String unit = "hour";
+	long time = 7200000;
+	String unit = "hour";
 
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
     }
 
+    @Test
     public void testGetMilliSecondsHours() {
-        long time = 7200000;
-        String unit = "hours";
+	long time = 7200000;
+	String unit = "hours";
 
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
     }
 
+    @Test
     public void testGetMilliSecondsDay() {
-        long time = 172800000;
-        String unit = "day";
+	long time = 172800000;
+	String unit = "day";
 
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
     }
 
+    @Test
     public void testGetMilliSecondsDays() {
-        long time = 172800000;
-        String unit = "days";
+	long time = 172800000;
+	String unit = "days";
 
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
-        assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT, unit), time);
+	assertEquals(TimeConverter.getMilliSeconds(AMOUNT + " " + unit), time);
     }
 
+    @Test
     public void testIllegalUnit() {
-        boolean exceptionThrown = false;
-        try {
-            TimeConverter.getMilliSeconds(2, "week");
-            TimeConverter.getMilliSeconds(2 + " week");
-        } catch (NumberFormatException e) {
-            exceptionThrown = true;
-        }
+	boolean exceptionThrown = false;
+	try {
+	    TimeConverter.getMilliSeconds(2, "week");
+	    TimeConverter.getMilliSeconds(2 + " week");
+	} catch (NumberFormatException e) {
+	    exceptionThrown = true;
+	}
 
-        assertTrue(exceptionThrown);
+	assertTrue(exceptionThrown);
     }
 
+    @Test
     public void testIllegalPattern() {
-        boolean exceptionThrown = false;
-        try {
-            TimeConverter.getMilliSeconds("illegal pattern");
-        } catch (NumberFormatException e) {
-            exceptionThrown = true;
-        }
+	boolean exceptionThrown = false;
+	try {
+	    TimeConverter.getMilliSeconds("illegal pattern");
+	} catch (NumberFormatException e) {
+	    exceptionThrown = true;
+	}
 
-        assertTrue(exceptionThrown);
+	assertTrue(exceptionThrown);
     }
-
 }

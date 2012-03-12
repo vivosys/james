@@ -18,72 +18,75 @@
  ****************************************************************/
 package org.apache.james.cli.type;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 /**
  * Test class for the CmdType enum.
  */
-public class CmdTypeTest extends TestCase {
-    
+public class CmdTypeTest {
+
     /**
      * Test the hasCorrectArguments method.
      */
+    @Test
     public void testHasCorrectArguments() {
-        CmdType cmd;
-        boolean result;
+	CmdType cmd;
+	boolean result;
 
-        cmd = CmdType.ADDDOMAIN;
+	cmd = CmdType.ADDDOMAIN;
 
-        // Test bogus number
-        result = cmd.hasCorrectArguments(-1);
-        assertEquals(false, result);
+	// Test bogus number
+	result = cmd.hasCorrectArguments(-1);
+	assertEquals(false, result);
 
-        // Test actual number
-        result = cmd.hasCorrectArguments(cmd.getArguments());
-        assertEquals(true, result);
+	// Test actual number
+	result = cmd.hasCorrectArguments(cmd.getArguments());
+	assertEquals(true, result);
 
-        // Test known bad number
-        result = cmd.hasCorrectArguments(cmd.getArguments() - 1);
-        assertEquals(false, result);
+	// Test known bad number
+	result = cmd.hasCorrectArguments(cmd.getArguments() - 1);
+	assertEquals(false, result);
     }
 
     /**
      * Test the lookup method.
      */
+    @Test
     public void testLookup() {
-        CmdType result;
+	CmdType result;
 
-        // Test happy path
-        result = CmdType.lookup(CmdType.ADDUSER.getCommand());
-        assertEquals(CmdType.ADDUSER, result);
+	// Test happy path
+	result = CmdType.lookup(CmdType.ADDUSER.getCommand());
+	assertEquals(CmdType.ADDUSER, result);
 
-        result = CmdType.lookup(CmdType.REMOVEUSER.getCommand());
-        assertEquals(CmdType.REMOVEUSER, result);
+	result = CmdType.lookup(CmdType.REMOVEUSER.getCommand());
+	assertEquals(CmdType.REMOVEUSER, result);
 
-        result = CmdType.lookup(CmdType.LISTUSERS.getCommand());
-        assertEquals(CmdType.LISTUSERS, result);
+	result = CmdType.lookup(CmdType.LISTUSERS.getCommand());
+	assertEquals(CmdType.LISTUSERS, result);
 
-        result = CmdType.lookup(CmdType.ADDDOMAIN.getCommand());
-        assertEquals(CmdType.ADDDOMAIN, result);
+	result = CmdType.lookup(CmdType.ADDDOMAIN.getCommand());
+	assertEquals(CmdType.ADDDOMAIN, result);
 
-        result = CmdType.lookup(CmdType.REMOVEDOMAIN.getCommand());
-        assertEquals(CmdType.REMOVEDOMAIN, result);
+	result = CmdType.lookup(CmdType.REMOVEDOMAIN.getCommand());
+	assertEquals(CmdType.REMOVEDOMAIN, result);
 
-        result = CmdType.lookup(CmdType.LISTDOMAINS.getCommand());
-        assertEquals(CmdType.LISTDOMAINS, result);
-        
-        result = CmdType.lookup(CmdType.SETPASSWORD.getCommand());
-        assertEquals(CmdType.SETPASSWORD, result);
+	result = CmdType.lookup(CmdType.LISTDOMAINS.getCommand());
+	assertEquals(CmdType.LISTDOMAINS, result);
 
-        // Test known bad value
-        result = CmdType.lookup("");
-        assertEquals(null, result);
+	result = CmdType.lookup(CmdType.SETPASSWORD.getCommand());
+	assertEquals(CmdType.SETPASSWORD, result);
 
-        result = CmdType.lookup("error");
-        assertEquals(null, result);
+	// Test known bad value
+	result = CmdType.lookup("");
+	assertEquals(null, result);
 
-        // Test null value
-        result = CmdType.lookup(null);
-        assertEquals(null, result);
+	result = CmdType.lookup("error");
+	assertEquals(null, result);
+
+	// Test null value
+	result = CmdType.lookup(null);
+	assertEquals(null, result);
     }
 }
