@@ -35,100 +35,100 @@ public class MXHostAddressIteratorTest {
      */
     @Test
     public void testIteratorContainMultipleMX() {
-	DNSService dns = new DNSService() {
+        DNSService dns = new DNSService() {
 
-	    @Override
-	    public InetAddress getLocalHost() throws UnknownHostException {
-		throw new UnsupportedOperationException();
-	    }
+            @Override
+            public InetAddress getLocalHost() throws UnknownHostException {
+                throw new UnsupportedOperationException();
+            }
 
-	    @Override
-	    public String getHostName(InetAddress addr) {
-		throw new UnsupportedOperationException();
-	    }
+            @Override
+            public String getHostName(InetAddress addr) {
+                throw new UnsupportedOperationException();
+            }
 
-	    @Override
-	    public InetAddress getByName(String host) throws UnknownHostException {
-		return InetAddress.getLocalHost();
-	    }
+            @Override
+            public InetAddress getByName(String host) throws UnknownHostException {
+                return InetAddress.getLocalHost();
+            }
 
-	    /**
-	     * Every time this method is called it will return two InetAddress instances
-	     */
-	    @Override
-	    public InetAddress[] getAllByName(String host) throws UnknownHostException {
-		InetAddress addr = InetAddress.getLocalHost();
-		return new InetAddress[]{addr, addr};
-	    }
+            /**
+             * Every time this method is called it will return two InetAddress instances
+             */
+            @Override
+            public InetAddress[] getAllByName(String host) throws UnknownHostException {
+                InetAddress addr = InetAddress.getLocalHost();
+                return new InetAddress[]{addr, addr};
+            }
 
-	    @Override
-	    public Collection<String> findTXTRecords(String hostname) {
-		throw new UnsupportedOperationException();
-	    }
+            @Override
+            public Collection<String> findTXTRecords(String hostname) {
+                throw new UnsupportedOperationException();
+            }
 
-	    @Override
-	    public Collection<String> findMXRecords(String hostname) throws TemporaryResolutionException {
-		throw new UnsupportedOperationException();
-	    }
-	};
-	MXHostAddressIterator it = new MXHostAddressIterator(Arrays.asList("localhost", "localhost2").iterator(), dns,
-		false, LoggerFactory.getLogger(this.getClass()));
-	for (int i = 0; i < 4; i++) {
-	    assertTrue(it.hasNext());
-	    assertNotNull(it.next());
-	}
-	assertFalse(it.hasNext());
+            @Override
+            public Collection<String> findMXRecords(String hostname) throws TemporaryResolutionException {
+                throw new UnsupportedOperationException();
+            }
+        };
+        MXHostAddressIterator it = new MXHostAddressIterator(Arrays.asList("localhost", "localhost2").iterator(), dns,
+                false, LoggerFactory.getLogger(this.getClass()));
+        for (int i = 0; i < 4; i++) {
+            assertTrue(it.hasNext());
+            assertNotNull(it.next());
+        }
+        assertFalse(it.hasNext());
 
-	it = new MXHostAddressIterator(Arrays.asList("localhost", "localhost2").iterator(), dns, true, LoggerFactory.
-		getLogger(this.getClass()));
-	for (int i = 0; i < 2; i++) {
-	    assertTrue(it.hasNext());
-	    assertNotNull(it.next());
-	}
-	assertFalse(it.hasNext());
+        it = new MXHostAddressIterator(Arrays.asList("localhost", "localhost2").iterator(), dns, true, LoggerFactory.
+                getLogger(this.getClass()));
+        for (int i = 0; i < 2; i++) {
+            assertTrue(it.hasNext());
+            assertNotNull(it.next());
+        }
+        assertFalse(it.hasNext());
     }
 
     @Test
     public void testIteratorWithInvalidMX() {
-	DNSService dns = new DNSService() {
+        DNSService dns = new DNSService() {
 
-	    @Override
-	    public InetAddress getLocalHost() throws UnknownHostException {
-		throw new UnsupportedOperationException();
-	    }
+            @Override
+            public InetAddress getLocalHost() throws UnknownHostException {
+                throw new UnsupportedOperationException();
+            }
 
-	    @Override
-	    public String getHostName(InetAddress addr) {
-		throw new UnsupportedOperationException();
-	    }
+            @Override
+            public String getHostName(InetAddress addr) {
+                throw new UnsupportedOperationException();
+            }
 
-	    @Override
-	    public InetAddress getByName(String host) throws UnknownHostException {
-		throw new UnknownHostException();
-	    }
+            @Override
+            public InetAddress getByName(String host) throws UnknownHostException {
+                throw new UnknownHostException();
+            }
 
-	    /**
-	     * Every time this method is called it will return two InetAddress instances
-	     */
-	    @Override
-	    public InetAddress[] getAllByName(String host) throws UnknownHostException {
-		throw new UnknownHostException();
-	    }
+            /**
+             * Every time this method is called it will return two InetAddress instances
+             */
+            @Override
+            public InetAddress[] getAllByName(String host) throws UnknownHostException {
+                throw new UnknownHostException();
+            }
 
-	    @Override
-	    public Collection<String> findTXTRecords(String hostname) {
-		throw new UnsupportedOperationException();
-	    }
+            @Override
+            public Collection<String> findTXTRecords(String hostname) {
+                throw new UnsupportedOperationException();
+            }
 
-	    @Override
-	    public Collection<String> findMXRecords(String hostname) throws TemporaryResolutionException {
-		throw new UnsupportedOperationException();
-	    }
-	};
+            @Override
+            public Collection<String> findMXRecords(String hostname) throws TemporaryResolutionException {
+                throw new UnsupportedOperationException();
+            }
+        };
 
-	// See JAMES-1271
-	MXHostAddressIterator it = new MXHostAddressIterator(Arrays.asList("localhost").iterator(), dns, false,
-		LoggerFactory.getLogger(this.getClass()));
-	assertFalse(it.hasNext());
+        // See JAMES-1271
+        MXHostAddressIterator it = new MXHostAddressIterator(Arrays.asList("localhost").iterator(), dns, false,
+                LoggerFactory.getLogger(this.getClass()));
+        assertFalse(it.hasNext());
     }
 }

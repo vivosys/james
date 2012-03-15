@@ -40,15 +40,15 @@ public class XMLRecipientRewriteTableTest extends AbstractRecipientRewriteTableT
     @Before
     @Override
     public void setUp() throws Exception {
-	defaultConfiguration.setDelimiterParsingDisabled(true);
-	super.setUp();
+        defaultConfiguration.setDelimiterParsingDisabled(true);
+        super.setUp();
     }
 
     @Override
     protected AbstractRecipientRewriteTable getRecipientRewriteTable() throws Exception {
-	XMLRecipientRewriteTable localVirtualUserTable = new XMLRecipientRewriteTable();
-	localVirtualUserTable.setLog(LoggerFactory.getLogger("MockLog"));
-	return localVirtualUserTable;
+        XMLRecipientRewriteTable localVirtualUserTable = new XMLRecipientRewriteTable();
+        localVirtualUserTable.setLog(LoggerFactory.getLogger("MockLog"));
+        return localVirtualUserTable;
     }
 
     /**
@@ -58,42 +58,42 @@ public class XMLRecipientRewriteTableTest extends AbstractRecipientRewriteTableT
      */
     @Override
     protected boolean addMapping(String user, String domain, String mapping, int type) throws
-	    RecipientRewriteTableException {
+            RecipientRewriteTableException {
 
-	Collection<String> mappings = virtualUserTable.getUserDomainMappings(user, domain);
+        Collection<String> mappings = virtualUserTable.getUserDomainMappings(user, domain);
 
-	if (mappings == null) {
-	    mappings = new ArrayList<String>();
-	} else {
-	    removeMappingsFromConfig(user, domain, mappings);
-	}
+        if (mappings == null) {
+            mappings = new ArrayList<String>();
+        } else {
+            removeMappingsFromConfig(user, domain, mappings);
+        }
 
-	if (type == ERROR_TYPE) {
-	    mappings.add(RecipientRewriteTable.ERROR_PREFIX + mapping);
-	} else if (type == REGEX_TYPE) {
-	    mappings.add(RecipientRewriteTable.REGEX_PREFIX + mapping);
-	} else if (type == ADDRESS_TYPE) {
-	    mappings.add(mapping);
-	} else if (type == ALIASDOMAIN_TYPE) {
-	    mappings.add(RecipientRewriteTable.ALIASDOMAIN_PREFIX + mapping);
-	}
+        if (type == ERROR_TYPE) {
+            mappings.add(RecipientRewriteTable.ERROR_PREFIX + mapping);
+        } else if (type == REGEX_TYPE) {
+            mappings.add(RecipientRewriteTable.REGEX_PREFIX + mapping);
+        } else if (type == ADDRESS_TYPE) {
+            mappings.add(mapping);
+        } else if (type == ALIASDOMAIN_TYPE) {
+            mappings.add(RecipientRewriteTable.ALIASDOMAIN_PREFIX + mapping);
+        }
 
-	if (mappings.size() > 0) {
-	    defaultConfiguration.addProperty("mapping", user + "@" + domain + "=" + RecipientRewriteTableUtil.
-		    CollectionToMapping(mappings));
-	}
+        if (mappings.size() > 0) {
+            defaultConfiguration.addProperty("mapping", user + "@" + domain + "=" + RecipientRewriteTableUtil.
+                    CollectionToMapping(mappings));
+        }
 
-	try {
-	    virtualUserTable.configure(defaultConfiguration);
-	} catch (Exception e) {
-	    if (mappings.size() > 0) {
-		return false;
-	    } else {
-		return true;
-	    }
-	}
+        try {
+            virtualUserTable.configure(defaultConfiguration);
+        } catch (Exception e) {
+            if (mappings.size() > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
 
-	return true;
+        return true;
 
     }
 
@@ -104,62 +104,62 @@ public class XMLRecipientRewriteTableTest extends AbstractRecipientRewriteTableT
      */
     @Override
     protected boolean removeMapping(String user, String domain, String mapping, int type) throws
-	    RecipientRewriteTableException {
+            RecipientRewriteTableException {
 
-	Collection<String> mappings = virtualUserTable.getUserDomainMappings(user, domain);
+        Collection<String> mappings = virtualUserTable.getUserDomainMappings(user, domain);
 
-	if (mappings == null) {
-	    return false;
-	}
+        if (mappings == null) {
+            return false;
+        }
 
-	removeMappingsFromConfig(user, domain, mappings);
+        removeMappingsFromConfig(user, domain, mappings);
 
-	if (type == ERROR_TYPE) {
-	    mappings.remove(RecipientRewriteTable.ERROR_PREFIX + mapping);
-	} else if (type == REGEX_TYPE) {
-	    mappings.remove(RecipientRewriteTable.REGEX_PREFIX + mapping);
-	} else if (type == ADDRESS_TYPE) {
-	    mappings.remove(mapping);
-	} else if (type == ALIASDOMAIN_TYPE) {
-	    mappings.remove(RecipientRewriteTable.ALIASDOMAIN_PREFIX + mapping);
-	}
+        if (type == ERROR_TYPE) {
+            mappings.remove(RecipientRewriteTable.ERROR_PREFIX + mapping);
+        } else if (type == REGEX_TYPE) {
+            mappings.remove(RecipientRewriteTable.REGEX_PREFIX + mapping);
+        } else if (type == ADDRESS_TYPE) {
+            mappings.remove(mapping);
+        } else if (type == ALIASDOMAIN_TYPE) {
+            mappings.remove(RecipientRewriteTable.ALIASDOMAIN_PREFIX + mapping);
+        }
 
-	if (mappings.size() > 0) {
-	    defaultConfiguration.addProperty("mapping", user + "@" + domain + "=" + RecipientRewriteTableUtil.
-		    CollectionToMapping(mappings));
-	}
+        if (mappings.size() > 0) {
+            defaultConfiguration.addProperty("mapping", user + "@" + domain + "=" + RecipientRewriteTableUtil.
+                    CollectionToMapping(mappings));
+        }
 
-	try {
-	    virtualUserTable.configure(defaultConfiguration);
-	} catch (Exception e) {
-	    if (mappings.size() > 0) {
-		return false;
-	    } else {
-		return true;
-	    }
-	}
+        try {
+            virtualUserTable.configure(defaultConfiguration);
+        } catch (Exception e) {
+            if (mappings.size() > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
 
-	return true;
+        return true;
 
     }
 
     @SuppressWarnings("unchecked")
     private void removeMappingsFromConfig(String user, String domain, Collection<String> mappings) {
-	List<String> confs = defaultConfiguration.getList("mapping");
-	List<String> stored = new ArrayList<String>();
-	for (int i = 0; i < confs.size(); i++) {
-	    String c = confs.get(i);
-	    String mapping = user + "@" + domain + "=" + RecipientRewriteTableUtil.CollectionToMapping(mappings);
+        List<String> confs = defaultConfiguration.getList("mapping");
+        List<String> stored = new ArrayList<String>();
+        for (int i = 0; i < confs.size(); i++) {
+            String c = confs.get(i);
+            String mapping = user + "@" + domain + "=" + RecipientRewriteTableUtil.CollectionToMapping(mappings);
 
-	    if (!c.equalsIgnoreCase(mapping)) {
-		stored.add(c);
-	    }
-	}
-	// clear old values
-	defaultConfiguration.clear();
-	// add stored mappings
-	for (int i = 0; i < stored.size(); i++) {
-	    defaultConfiguration.addProperty("mapping", stored.get(i));
-	}
+            if (!c.equalsIgnoreCase(mapping)) {
+                stored.add(c);
+            }
+        }
+        // clear old values
+        defaultConfiguration.clear();
+        // add stored mappings
+        for (int i = 0; i < stored.size(); i++) {
+            defaultConfiguration.addProperty("mapping", stored.get(i));
+        }
     }
 }

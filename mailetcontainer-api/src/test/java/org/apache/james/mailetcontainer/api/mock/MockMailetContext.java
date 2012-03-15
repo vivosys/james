@@ -34,24 +34,24 @@ public class MockMailetContext implements MailetContext {
 
     @Override
     public void bounce(Mail arg0, String arg1) throws MessagingException {
-	throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
 
     }
 
     @Override
     public void bounce(Mail arg0, String arg1, MailAddress arg2) throws MessagingException {
-	throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
 
     }
 
     @Override
     public Object getAttribute(String arg0) {
-	return attributes.get(arg0);
+        return attributes.get(arg0);
     }
 
     @Override
     public Iterator getAttributeNames() {
-	return attributes.keySet().iterator();
+        return attributes.keySet().iterator();
     }
 
     /**
@@ -60,41 +60,41 @@ public class MockMailetContext implements MailetContext {
      */
     @Override
     public Collection getMailServers(String host) {
-	List<String> servers = new ArrayList<String>();
-	if ("localhost".equalsIgnoreCase(host)) {
-	    servers.add("mx.localhost");
-	}
-	return servers;
+        List<String> servers = new ArrayList<String>();
+        if ("localhost".equalsIgnoreCase(host)) {
+            servers.add("mx.localhost");
+        }
+        return servers;
     }
 
     @Override
     public int getMajorVersion() {
-	return 0;
+        return 0;
     }
 
     @Override
     public int getMinorVersion() {
-	return 0;
+        return 0;
     }
 
     @Override
     public MailAddress getPostmaster() {
-	try {
-	    return new MailAddress("postmaster@localhost");
-	} catch (AddressException e) {
-	    // will never happen
-	    return null;
-	}
+        try {
+            return new MailAddress("postmaster@localhost");
+        } catch (AddressException e) {
+            // will never happen
+            return null;
+        }
     }
 
     @Override
     public Iterator getSMTPHostAddresses(String arg0) {
-	return new ArrayList<HostAddress>().iterator();
+        return new ArrayList<HostAddress>().iterator();
     }
 
     @Override
     public String getServerInfo() {
-	return "Mock Server";
+        return "Mock Server";
     }
 
     /**
@@ -102,7 +102,7 @@ public class MockMailetContext implements MailetContext {
      */
     @Override
     public boolean isLocalEmail(MailAddress arg0) {
-	return isLocalUser(arg0.toString());
+        return isLocalUser(arg0.toString());
     }
 
     /**
@@ -110,7 +110,7 @@ public class MockMailetContext implements MailetContext {
      */
     @Override
     public boolean isLocalServer(String server) {
-	return "localhost".equalsIgnoreCase(server);
+        return "localhost".equalsIgnoreCase(server);
     }
 
     /**
@@ -118,59 +118,59 @@ public class MockMailetContext implements MailetContext {
      */
     @Override
     public boolean isLocalUser(String user) {
-	return "localuser@localhost".equalsIgnoreCase(user);
+        return "localuser@localhost".equalsIgnoreCase(user);
     }
 
     @Override
     public void log(String msg) {
-	System.out.println(msg);
+        System.out.println(msg);
     }
 
     @Override
     public void log(String arg0, Throwable arg1) {
-	System.out.println(arg0);
-	arg1.printStackTrace();
+        System.out.println(arg0);
+        arg1.printStackTrace();
     }
 
     @Override
     public void removeAttribute(String arg0) {
-	attributes.remove(arg0);
+        attributes.remove(arg0);
     }
 
     @Override
     public void sendMail(MimeMessage arg0) throws MessagingException {
-	throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
 
     }
 
     @Override
     public void sendMail(Mail mail) throws MessagingException {
-	mails.add(mail);
+        mails.add(mail);
     }
 
     @Override
     public void sendMail(MailAddress arg0, Collection arg1, MimeMessage arg2) throws MessagingException {
-	throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
 
     }
 
     @Override
     public void sendMail(MailAddress arg0, Collection arg1, MimeMessage arg2, String arg3) throws MessagingException {
-	throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
 
     }
 
     @Override
     public void setAttribute(String arg0, Object arg1) {
-	attributes.put(arg0, arg1);
+        attributes.put(arg0, arg1);
     }
 
     @Override
     public void storeMail(MailAddress arg0, MailAddress arg1, MimeMessage arg2) throws MessagingException {
-	throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     public List<Mail> getSentMails() {
-	return mails;
+        return mails;
     }
 }

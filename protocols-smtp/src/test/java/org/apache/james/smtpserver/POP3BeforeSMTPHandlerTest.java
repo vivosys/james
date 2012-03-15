@@ -31,91 +31,91 @@ public class POP3BeforeSMTPHandlerTest {
     private SMTPSession mockedSession;
 
     private void setupMockedSMTPSession() {
-	mockedSession = new BaseFakeSMTPSession() {
+        mockedSession = new BaseFakeSMTPSession() {
 
-	    private boolean relayingAllowed = false;
+            private boolean relayingAllowed = false;
 
-	    @Override
-	    public InetSocketAddress getRemoteAddress() {
-		return new InetSocketAddress(getRemoteIPAddress(), 0);
-	    }
+            @Override
+            public InetSocketAddress getRemoteAddress() {
+                return new InetSocketAddress(getRemoteIPAddress(), 0);
+            }
 
-	    public String getRemoteIPAddress() {
-		return "192.168.200.1";
-	    }
+            public String getRemoteIPAddress() {
+                return "192.168.200.1";
+            }
 
-	    @Override
-	    public boolean isRelayingAllowed() {
-		return relayingAllowed;
-	    }
+            @Override
+            public boolean isRelayingAllowed() {
+                return relayingAllowed;
+            }
 
-	    @Override
-	    public void setRelayingAllowed(boolean relayingAllowed) {
-		this.relayingAllowed = relayingAllowed;
-	    }
-	};
+            @Override
+            public void setRelayingAllowed(boolean relayingAllowed) {
+                this.relayingAllowed = relayingAllowed;
+            }
+        };
     }
 
     @Test
     public void testAuthWorks() {
 
-	POP3BeforeSMTPHandler handler = new POP3BeforeSMTPHandler();
+        POP3BeforeSMTPHandler handler = new POP3BeforeSMTPHandler();
 
-	setupMockedSMTPSession();
-	POP3BeforeSMTPHelper.addIPAddress("192.168.200.1");
+        setupMockedSMTPSession();
+        POP3BeforeSMTPHelper.addIPAddress("192.168.200.1");
 
-	assertFalse(mockedSession.isRelayingAllowed());
-	handler.onConnect(mockedSession);
-	assertTrue(mockedSession.isRelayingAllowed());
+        assertFalse(mockedSession.isRelayingAllowed());
+        handler.onConnect(mockedSession);
+        assertTrue(mockedSession.isRelayingAllowed());
     }
 
     @Test
     public void testIPGetRemoved() {
-	long sleepTime = 100;
-	POP3BeforeSMTPHandler handler = new POP3BeforeSMTPHandler();
+        long sleepTime = 100;
+        POP3BeforeSMTPHandler handler = new POP3BeforeSMTPHandler();
 
-	setupMockedSMTPSession();
-	POP3BeforeSMTPHelper.addIPAddress("192.168.200.1");
-	assertFalse(mockedSession.isRelayingAllowed());
+        setupMockedSMTPSession();
+        POP3BeforeSMTPHelper.addIPAddress("192.168.200.1");
+        assertFalse(mockedSession.isRelayingAllowed());
 
-	try {
-	    Thread.sleep(sleepTime);
-	    POP3BeforeSMTPHelper.removeExpiredIP(10);
-	    handler.onConnect(mockedSession);
-	    assertFalse(mockedSession.isRelayingAllowed());
+        try {
+            Thread.sleep(sleepTime);
+            POP3BeforeSMTPHelper.removeExpiredIP(10);
+            handler.onConnect(mockedSession);
+            assertFalse(mockedSession.isRelayingAllowed());
 
-	} catch (InterruptedException e) {
-	    // ignore
-	}
+        } catch (InterruptedException e) {
+            // ignore
+        }
     }
 
     @Test
     public void testThrowExceptionOnIllegalExpireTime() {
-	boolean exception = false;
-	POP3BeforeSMTPHandler handler = new POP3BeforeSMTPHandler();
+        boolean exception = false;
+        POP3BeforeSMTPHandler handler = new POP3BeforeSMTPHandler();
 
-	setupMockedSMTPSession();
+        setupMockedSMTPSession();
 
-	try {
-	    handler.setExpireTime("1 unit");
-	} catch (NumberFormatException e) {
-	    exception = true;
-	}
-	assertTrue(exception);
+        try {
+            handler.setExpireTime("1 unit");
+        } catch (NumberFormatException e) {
+            exception = true;
+        }
+        assertTrue(exception);
     }
 
     @Test
     public void testValidExpireTime() {
-	boolean exception = false;
-	POP3BeforeSMTPHandler handler = new POP3BeforeSMTPHandler();
+        boolean exception = false;
+        POP3BeforeSMTPHandler handler = new POP3BeforeSMTPHandler();
 
-	setupMockedSMTPSession();
+        setupMockedSMTPSession();
 
-	try {
-	    handler.setExpireTime("1 hour");
-	} catch (NumberFormatException e) {
-	    exception = true;
-	}
-	assertFalse(exception);
+        try {
+            handler.setExpireTime("1 hour");
+        } catch (NumberFormatException e) {
+            exception = true;
+        }
+        assertFalse(exception);
     }
 }

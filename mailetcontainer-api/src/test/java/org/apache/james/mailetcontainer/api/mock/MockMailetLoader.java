@@ -28,15 +28,15 @@ public class MockMailetLoader implements MailetLoader {
     @SuppressWarnings("unchecked")
     @Override
     public Mailet getMailet(MailetConfig config) throws MessagingException {
-	try {
-	    Class<Mailet> clazz = (Class<Mailet>) Thread.currentThread().getContextClassLoader().loadClass(config.
-		    getMailetName());
-	    Mailet m = clazz.newInstance();
-	    m.init(config);
-	    return m;
-	} catch (Exception e) {
-	    throw new MessagingException("Unable to load mailet " + config.getMailetName());
-	}
+        try {
+            Class<Mailet> clazz = (Class<Mailet>) Thread.currentThread().getContextClassLoader().loadClass(config.
+                    getMailetName());
+            Mailet m = clazz.newInstance();
+            m.init(config);
+            return m;
+        } catch (Exception e) {
+            throw new MessagingException("Unable to load mailet " + config.getMailetName());
+        }
 
     }
 }

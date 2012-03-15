@@ -37,23 +37,23 @@ public class HelloWorldMailet implements Mailet {
 
     @Override
     public String getMailetInfo() {
-	return "Example mailet";
+        return "Example mailet";
     }
 
     @Override
     public MailetConfig getMailetConfig() {
-	return config;
+        return config;
     }
 
     @Override
     public void init(MailetConfig config) throws MessagingException {
-	this.config = config;
+        this.config = config;
     }
 
     @Override
     public void service(Mail mail) throws MessagingException {
-	MailetContext context = config.getMailetContext();
-	context.log("Hello, World!");
-	context.log("You have mail from " + mail.getSender().getLocalPart());
+        MailetContext context = config.getMailetContext();
+        context.log("Hello, World!");
+        context.log("You have mail from " + mail.getSender().getLocalPart());
     }
 }

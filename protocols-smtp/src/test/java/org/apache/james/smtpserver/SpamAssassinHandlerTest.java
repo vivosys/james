@@ -43,136 +43,136 @@ public class SpamAssassinHandlerTest {
     public final static String SPAMD_HOST = "localhost";
 
     private SMTPSession setupMockedSMTPSession(final Mail mail) {
-	mockedMail = mail;
-	mockedSMTPSession = new BaseFakeSMTPSession() {
+        mockedMail = mail;
+        mockedSMTPSession = new BaseFakeSMTPSession() {
 
-	    private HashMap<String, Object> sstate = new HashMap<String, Object>();
-	    private HashMap<String, Object> connectionState = new HashMap<String, Object>();
-	    private String ipAddress = "192.168.0.1";
-	    private String host = "localhost";
-	    private boolean relayingAllowed;
+            private HashMap<String, Object> sstate = new HashMap<String, Object>();
+            private HashMap<String, Object> connectionState = new HashMap<String, Object>();
+            private String ipAddress = "192.168.0.1";
+            private String host = "localhost";
+            private boolean relayingAllowed;
 
-	    public String getRemoteHost() {
-		return host;
-	    }
+            public String getRemoteHost() {
+                return host;
+            }
 
-	    public String getRemoteIPAddress() {
-		return ipAddress;
-	    }
+            public String getRemoteIPAddress() {
+                return ipAddress;
+            }
 
-	    @Override
-	    public Object setAttachment(String key, Object value, State state) {
-		if (state == State.Connection) {
-		    if (value == null) {
-			return connectionState.remove(key);
-		    }
-		    return connectionState.put(key, value);
-		} else {
-		    if (value == null) {
-			return sstate.remove(key);
-		    }
-		    return sstate.put(key, value);
-		}
-	    }
+            @Override
+            public Object setAttachment(String key, Object value, State state) {
+                if (state == State.Connection) {
+                    if (value == null) {
+                        return connectionState.remove(key);
+                    }
+                    return connectionState.put(key, value);
+                } else {
+                    if (value == null) {
+                        return sstate.remove(key);
+                    }
+                    return sstate.put(key, value);
+                }
+            }
 
-	    @Override
-	    public Object getAttachment(String key, State state) {
-		sstate.put(SMTPSession.SENDER, "sender@james.apache.org");
-		if (state == State.Connection) {
-		    return connectionState.get(key);
-		} else {
-		    return sstate.get(key);
-		}
-	    }
+            @Override
+            public Object getAttachment(String key, State state) {
+                sstate.put(SMTPSession.SENDER, "sender@james.apache.org");
+                if (state == State.Connection) {
+                    return connectionState.get(key);
+                } else {
+                    return sstate.get(key);
+                }
+            }
 
-	    @Override
-	    public boolean isRelayingAllowed() {
-		return relayingAllowed;
-	    }
+            @Override
+            public boolean isRelayingAllowed() {
+                return relayingAllowed;
+            }
 
-	    @Override
-	    public void setRelayingAllowed(boolean relayingAllowed) {
-		this.relayingAllowed = relayingAllowed;
-	    }
-	};
+            @Override
+            public void setRelayingAllowed(boolean relayingAllowed) {
+                this.relayingAllowed = relayingAllowed;
+            }
+        };
 
-	return mockedSMTPSession;
+        return mockedSMTPSession;
 
     }
 
     private Mail setupMockedMail(MimeMessage message) {
-	MockMail mail = new MockMail();
-	mail.setMessage(message);
-	return mail;
+        MockMail mail = new MockMail();
+        mail.setMessage(message);
+        return mail;
     }
 
     public MimeMessage setupMockedMimeMessage(String text) throws MessagingException {
-	MimeMessage message = new MimeMessage(new MockMimeMessage());
-	message.setText(text);
-	message.saveChanges();
+        MimeMessage message = new MimeMessage(new MockMimeMessage());
+        message.setText(text);
+        message.saveChanges();
 
-	return message;
+        return message;
     }
 
     @Test
     public void testNonSpam() throws IOException, MessagingException {
 
-	int port = PortUtil.getNonPrivilegedPort();
-	MockSpamd spamd = new MockSpamd(port);
-	new Thread(spamd).start();
+        int port = PortUtil.getNonPrivilegedPort();
+        MockSpamd spamd = new MockSpamd(port);
+        new Thread(spamd).start();
 
-	SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessage("test")));
+        SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessage("test")));
 
-	SpamAssassinHandler handler = new SpamAssassinHandler();
+        SpamAssassinHandler handler = new SpamAssassinHandler();
 
-	handler.setSpamdHost(SPAMD_HOST);
-	handler.setSpamdPort(port);
-	handler.setSpamdRejectionHits(200.0);
-	HookResult response = handler.onMessage(session, mockedMail);
+        handler.setSpamdHost(SPAMD_HOST);
+        handler.setSpamdPort(port);
+        handler.setSpamdRejectionHits(200.0);
+        HookResult response = handler.onMessage(session, mockedMail);
 
-	assertEquals("Email was not rejected", response.getResult(), HookReturnCode.DECLINED);
-	assertEquals("email was not spam", mockedMail.getAttribute(SpamAssassinInvoker.FLAG_MAIL_ATTRIBUTE_NAME), "NO");
-	assertNotNull("spam hits", mockedMail.getAttribute(SpamAssassinInvoker.STATUS_MAIL_ATTRIBUTE_NAME));
+        assertEquals("Email was not rejected", response.getResult(), HookReturnCode.DECLINED);
+        assertEquals("email was not spam", mockedMail.getAttribute(SpamAssassinInvoker.FLAG_MAIL_ATTRIBUTE_NAME), "NO");
+        assertNotNull("spam hits", mockedMail.getAttribute(SpamAssassinInvoker.STATUS_MAIL_ATTRIBUTE_NAME));
 
     }
 
     @Test
     public void testSpam() throws IOException, MessagingException {
 
-	int port = PortUtil.getNonPrivilegedPort();
-	new Thread(new MockSpamd(port)).start();
+        int port = PortUtil.getNonPrivilegedPort();
+        new Thread(new MockSpamd(port)).start();
 
-	SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessage(MockSpamd.GTUBE)));
+        SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessage(MockSpamd.GTUBE)));
 
-	SpamAssassinHandler handler = new SpamAssassinHandler();
+        SpamAssassinHandler handler = new SpamAssassinHandler();
 
-	handler.setSpamdHost(SPAMD_HOST);
-	handler.setSpamdPort(port);
-	handler.setSpamdRejectionHits(2000.0);
-	HookResult response = handler.onMessage(session, mockedMail);
+        handler.setSpamdHost(SPAMD_HOST);
+        handler.setSpamdPort(port);
+        handler.setSpamdRejectionHits(2000.0);
+        HookResult response = handler.onMessage(session, mockedMail);
 
-	assertEquals("Email was not rejected", response.getResult(), HookReturnCode.DECLINED);
-	assertEquals("email was spam", mockedMail.getAttribute(SpamAssassinInvoker.FLAG_MAIL_ATTRIBUTE_NAME), "YES");
-	assertNotNull("spam hits", mockedMail.getAttribute(SpamAssassinInvoker.STATUS_MAIL_ATTRIBUTE_NAME));
+        assertEquals("Email was not rejected", response.getResult(), HookReturnCode.DECLINED);
+        assertEquals("email was spam", mockedMail.getAttribute(SpamAssassinInvoker.FLAG_MAIL_ATTRIBUTE_NAME), "YES");
+        assertNotNull("spam hits", mockedMail.getAttribute(SpamAssassinInvoker.STATUS_MAIL_ATTRIBUTE_NAME));
     }
 
     @Test
     public void testSpamReject() throws IOException, MessagingException {
 
-	int port = PortUtil.getNonPrivilegedPort();
-	new Thread(new MockSpamd(port)).start();
+        int port = PortUtil.getNonPrivilegedPort();
+        new Thread(new MockSpamd(port)).start();
 
-	SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessage(MockSpamd.GTUBE)));
+        SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessage(MockSpamd.GTUBE)));
 
-	SpamAssassinHandler handler = new SpamAssassinHandler();
+        SpamAssassinHandler handler = new SpamAssassinHandler();
 
-	handler.setSpamdHost(SPAMD_HOST);
-	handler.setSpamdPort(port);
-	handler.setSpamdRejectionHits(200.0);
-	HookResult response = handler.onMessage(session, mockedMail);
+        handler.setSpamdHost(SPAMD_HOST);
+        handler.setSpamdPort(port);
+        handler.setSpamdRejectionHits(200.0);
+        HookResult response = handler.onMessage(session, mockedMail);
 
-	assertEquals("Email was rejected", response.getResult(), HookReturnCode.DENY);
-	assertEquals("email was spam", mockedMail.getAttribute(SpamAssassinInvoker.FLAG_MAIL_ATTRIBUTE_NAME), "YES");
-	assertNotNull("spam hits", mockedMail.getAttribute(SpamAssassinInvoker.STATUS_MAIL_ATTRIBUTE_NAME));
+        assertEquals("Email was rejected", response.getResult(), HookReturnCode.DENY);
+        assertEquals("email was spam", mockedMail.getAttribute(SpamAssassinInvoker.FLAG_MAIL_ATTRIBUTE_NAME), "YES");
+        assertNotNull("spam hits", mockedMail.getAttribute(SpamAssassinInvoker.STATUS_MAIL_ATTRIBUTE_NAME));
     }
 }

@@ -47,12 +47,11 @@ import org.slf4j.LoggerFactory;
  * Implementation of the UserRepository for a HBase persistence.
  */
 public class HBaseUsersRepository extends AbstractUsersRepository {
-    
+
     /**
      * The Logger.
      */
     private static Logger log = LoggerFactory.getLogger(HBaseUsersRepository.class.getName());
-
     /**
      * Hashing algorithm for the password.
      */
@@ -88,7 +87,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
         if (user == null) {
             throw new UsersRepositoryException("Please provide a non null user");
         }
-        if (! (user instanceof DefaultUser)) {
+        if (!(user instanceof DefaultUser)) {
             throw new UsersRepositoryException("Please provide a user instanceof DefaultUser");
         }
         User existingUser = getUserByName(user.getUserName());
@@ -227,7 +226,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
         user.setPassword(password);
         putUser(user, true);
     }
-    
+
     /**
      * Utility method to retrieve a HBase KeyValue for a given username.
      * 
@@ -256,7 +255,7 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
             }
         }
     }
-    
+
     /**
      * Utility method to put a User in HBase.
      * 
@@ -275,7 +274,8 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
         try {
             table = TablePool.getInstance().getUsersRepositoryTable();
             Put put = new Put(Bytes.toBytes(username));
-            put.add(HUsersRepository.COLUMN_FAMILY_NAME, HUsersRepository.COLUMN.PWD, Bytes.toBytes(user.getHashedPassword()));
+            put.add(HUsersRepository.COLUMN_FAMILY_NAME, HUsersRepository.COLUMN.PWD, Bytes.toBytes(user.
+                    getHashedPassword()));
             table.put(put);
             table.flushCommits();
         } catch (IOException e) {
@@ -291,5 +291,4 @@ public class HBaseUsersRepository extends AbstractUsersRepository {
             }
         }
     }
-
 }

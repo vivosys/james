@@ -49,7 +49,7 @@ public class MockSpamd implements Runnable {
      * @throws IOException
      */
     public MockSpamd(int port) throws IOException {
-	socket = new ServerSocket(port);
+        socket = new ServerSocket(port);
     }
 
     /**
@@ -57,41 +57,41 @@ public class MockSpamd implements Runnable {
      */
     @Override
     public void run() {
-	boolean spam = false;
+        boolean spam = false;
 
-	try {
+        try {
 
-	    // Accept connections
-	    spamd = socket.accept();
+            // Accept connections
+            spamd = socket.accept();
 
-	    in = new BufferedReader(new InputStreamReader(spamd.getInputStream()));
-	    out = spamd.getOutputStream();
+            in = new BufferedReader(new InputStreamReader(spamd.getInputStream()));
+            out = spamd.getOutputStream();
 
-	    String line = null;
+            String line = null;
 
-	    // Parse the message
-	    while ((line = in.readLine()) != null) {
-		if (line.indexOf(GTUBE) >= 0) {
-		    spam = true;
-		}
-	    }
-	    if (spam) {
-		out.write(SPAM.getBytes());
-		out.flush();
-	    } else {
-		out.write(NOT_SPAM.getBytes());
-		out.flush();
-	    }
+            // Parse the message
+            while ((line = in.readLine()) != null) {
+                if (line.indexOf(GTUBE) >= 0) {
+                    spam = true;
+                }
+            }
+            if (spam) {
+                out.write(SPAM.getBytes());
+                out.flush();
+            } else {
+                out.write(NOT_SPAM.getBytes());
+                out.flush();
+            }
 
-	    in.close();
-	    out.close();
-	    spamd.close();
-	    socket.close();
+            in.close();
+            out.close();
+            spamd.close();
+            socket.close();
 
-	} catch (IOException e) {
-	    // Should not happen
-	    e.printStackTrace();
-	}
+        } catch (IOException e) {
+            // Should not happen
+            e.printStackTrace();
+        }
 
     }
 }

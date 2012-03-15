@@ -39,64 +39,64 @@ public class SetMimeHeaderHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-	setupMockedSMTPSession();
+        setupMockedSMTPSession();
     }
 
     private void setHeaderName(String headerName) {
-	this.headerName = headerName;
+        this.headerName = headerName;
     }
 
     private void setHeaderValue(String headerValue) {
-	this.headerValue = headerValue;
+        this.headerValue = headerValue;
     }
 
     private void setupMockedMimeMessage() throws MessagingException {
-	mockedMimeMessage = Util.createMimeMessage(headerName, headerValue);
+        mockedMimeMessage = Util.createMimeMessage(headerName, headerValue);
     }
 
     private void setupMockedSMTPSession() {
-	mockedSMTPSession = new BaseFakeSMTPSession() {
+        mockedSMTPSession = new BaseFakeSMTPSession() {
 
-	    @Override
-	    public int getRcptCount() {
-		return 0;
-	    }
-	};
+            @Override
+            public int getRcptCount() {
+                return 0;
+            }
+        };
     }
 
     // test if the Header was add
     @Test
     public void testHeaderIsPresent() throws MessagingException {
-	setHeaderName(HEADER_NAME);
-	setHeaderValue(HEADER_VALUE);
+        setHeaderName(HEADER_NAME);
+        setHeaderValue(HEADER_VALUE);
 
-	setupMockedMimeMessage();
-	mockedMail = Util.createMockMail2Recipients(mockedMimeMessage);
+        setupMockedMimeMessage();
+        mockedMail = Util.createMockMail2Recipients(mockedMimeMessage);
 
-	SetMimeHeaderHandler header = new SetMimeHeaderHandler();
+        SetMimeHeaderHandler header = new SetMimeHeaderHandler();
 
-	header.setHeaderName(HEADER_NAME);
-	header.setHeaderValue(HEADER_VALUE);
-	header.onMessage(mockedSMTPSession, mockedMail);
+        header.setHeaderName(HEADER_NAME);
+        header.setHeaderValue(HEADER_VALUE);
+        header.onMessage(mockedSMTPSession, mockedMail);
 
-	assertEquals(HEADER_VALUE, mockedMail.getMessage().getHeader(HEADER_NAME)[0]);
+        assertEquals(HEADER_VALUE, mockedMail.getMessage().getHeader(HEADER_NAME)[0]);
     }
 
     // test if the Header was replaced
     @Test
     public void testHeaderIsReplaced() throws MessagingException {
-	setHeaderName(HEADER_NAME);
-	setHeaderValue(headerValue);
+        setHeaderName(HEADER_NAME);
+        setHeaderValue(headerValue);
 
-	setupMockedMimeMessage();
-	mockedMail = Util.createMockMail2Recipients(mockedMimeMessage);
+        setupMockedMimeMessage();
+        mockedMail = Util.createMockMail2Recipients(mockedMimeMessage);
 
-	SetMimeHeaderHandler header = new SetMimeHeaderHandler();
+        SetMimeHeaderHandler header = new SetMimeHeaderHandler();
 
-	header.setHeaderName(HEADER_NAME);
-	header.setHeaderValue(HEADER_VALUE);
-	header.onMessage(mockedSMTPSession, mockedMail);
+        header.setHeaderName(HEADER_NAME);
+        header.setHeaderValue(HEADER_VALUE);
+        header.onMessage(mockedSMTPSession, mockedMail);
 
-	assertEquals(HEADER_VALUE, mockedMail.getMessage().getHeader(HEADER_NAME)[0]);
+        assertEquals(HEADER_VALUE, mockedMail.getMessage().getHeader(HEADER_NAME)[0]);
     }
 }

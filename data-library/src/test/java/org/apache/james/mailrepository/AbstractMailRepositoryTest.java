@@ -47,77 +47,77 @@ public abstract class AbstractMailRepositoryTest {
     protected MimeMessage mimeMessage;
 
     public AbstractMailRepositoryTest() {
-	super();
+        super();
     }
 
     @Before
     public void setUp() throws Exception {
 
-	mailRepository = getMailRepository();
-	MimeMessageInputStreamSource mmis = null;
-	try {
-	    mmis = new MimeMessageInputStreamSource("test", new SharedByteArrayInputStream((content + sep + body).
-		    getBytes()));
-	} catch (MessagingException e) {
-	}
-	mimeMessage = new MimeMessageCopyOnWriteProxy(mmis);
-	Collection<MailAddress> recipients = new ArrayList<MailAddress>();
-	recipients.add(new MailAddress("rec1", "domain.com"));
-	recipients.add(new MailAddress("rec2", "domain.com"));
-	mail = new MailImpl("mail1", new MailAddress("sender", "domain.com"), recipients, mimeMessage);
-	mail.setAttribute("testAttribute", "testValue");
+        mailRepository = getMailRepository();
+        MimeMessageInputStreamSource mmis = null;
+        try {
+            mmis = new MimeMessageInputStreamSource("test", new SharedByteArrayInputStream((content + sep + body).
+                    getBytes()));
+        } catch (MessagingException e) {
+        }
+        mimeMessage = new MimeMessageCopyOnWriteProxy(mmis);
+        Collection<MailAddress> recipients = new ArrayList<MailAddress>();
+        recipients.add(new MailAddress("rec1", "domain.com"));
+        recipients.add(new MailAddress("rec2", "domain.com"));
+        mail = new MailImpl("mail1", new MailAddress("sender", "domain.com"), recipients, mimeMessage);
+        mail.setAttribute("testAttribute", "testValue");
     }
 
     protected abstract MailRepository getMailRepository() throws Exception;
 
     @After
     public void tearDown() throws Exception {
-	for (Iterator<String> i = mailRepository.list(); i.hasNext();) {
-	    mailRepository.remove(i.next());
-	}
-	LifecycleUtil.dispose(mail);
-	LifecycleUtil.dispose(mimeMessage);
-	LifecycleUtil.dispose(mailRepository);
+        for (Iterator<String> i = mailRepository.list(); i.hasNext();) {
+            mailRepository.remove(i.next());
+        }
+        LifecycleUtil.dispose(mail);
+        LifecycleUtil.dispose(mimeMessage);
+        LifecycleUtil.dispose(mailRepository);
     }
 
     @Test
     public void testStoreAndRetrieveMail() throws MessagingException, IOException {
-	try {
-	    mailRepository.store(mail);
-	} catch (Exception e) {
-	    fail("Failed to store mail");
-	}
-	Mail m2 = mailRepository.retrieve((String) mailRepository.list().next());
+        try {
+            mailRepository.store(mail);
+        } catch (Exception e) {
+            fail("Failed to store mail");
+        }
+        Mail m2 = mailRepository.retrieve((String) mailRepository.list().next());
 
-	assertEquals("stored and retrieved messages do not match", mail.getMessage().getContent().toString(), m2.
-		getMessage().getContent().toString());
-	assertEquals("stored and retrieved message sizes do not match", mail.getMessageSize(), m2.getMessageSize());
-	assertEquals("stored and retrieved keys do not match", mail.getName(), m2.getName());
-	assertEquals("stored and retrieved states do not match", mail.getState(), m2.getState());
-	assertEquals("stored and retrieved attributes do not match", mail.getAttribute("testAttribute"),
-		m2.getAttribute("testAttribute"));
-	LifecycleUtil.dispose(m2);
+        assertEquals("stored and retrieved messages do not match", mail.getMessage().getContent().toString(), m2.
+                getMessage().getContent().toString());
+        assertEquals("stored and retrieved message sizes do not match", mail.getMessageSize(), m2.getMessageSize());
+        assertEquals("stored and retrieved keys do not match", mail.getName(), m2.getName());
+        assertEquals("stored and retrieved states do not match", mail.getState(), m2.getState());
+        assertEquals("stored and retrieved attributes do not match", mail.getAttribute("testAttribute"),
+                m2.getAttribute("testAttribute"));
+        LifecycleUtil.dispose(m2);
     }
 
     @Test
     public void testEmptyRepository() throws MessagingException {
-	assertFalse(mailRepository.list().hasNext());
-	// locking does not check for the existence of the file
-	// assertFalse(mailRepository.lock("random"));
-	assertNull(mailRepository.retrieve("random"));
-	// removing an unexisting message does not throw/return errors
-	mailRepository.remove("random");
+        assertFalse(mailRepository.list().hasNext());
+        // locking does not check for the existence of the file
+        // assertFalse(mailRepository.lock("random"));
+        assertNull(mailRepository.retrieve("random"));
+        // removing an unexisting message does not throw/return errors
+        mailRepository.remove("random");
     }
 
     @Test
     public void testListMail() throws MessagingException {
-	mailRepository.store(mail);
-	mailRepository.store(mail);
-	Iterator<String> i = mailRepository.list();
-	assertTrue(i.hasNext());
-	assertEquals(mail.getName(), i.next());
-	assertFalse("Found more than one message after storing 2 times the SAME message: it MUST update the previous",
-		i.hasNext());
+        mailRepository.store(mail);
+        mailRepository.store(mail);
+        Iterator<String> i = mailRepository.list();
+        assertTrue(i.hasNext());
+        assertEquals(mail.getName(), i.next());
+        assertFalse("Found more than one message after storing 2 times the SAME message: it MUST update the previous",
+                i.hasNext());
     }
 
     /**
@@ -126,24 +126,24 @@ public abstract class AbstractMailRepositoryTest {
      */
     @Test
     public void testJames559() throws Exception {
-	mailRepository.store(mail);
+        mailRepository.store(mail);
 
-	Mail m2 = mailRepository.retrieve("mail1");
-	m2.getMessage().setHeader("X-Header", "foobar");
-	m2.getMessage().saveChanges();
+        Mail m2 = mailRepository.retrieve("mail1");
+        m2.getMessage().setHeader("X-Header", "foobar");
+        m2.getMessage().saveChanges();
 
-	mailRepository.store(m2);
-	// ALWAYS remember to dispose mails!
-	LifecycleUtil.dispose(m2);
+        mailRepository.store(m2);
+        // ALWAYS remember to dispose mails!
+        LifecycleUtil.dispose(m2);
 
-	m2 = mailRepository.retrieve("mail1");
-	assertEquals(mail.getMessage().getContent().toString(), m2.getMessage().getContent().toString());
+        m2 = mailRepository.retrieve("mail1");
+        assertEquals(mail.getMessage().getContent().toString(), m2.getMessage().getContent().toString());
 
-	LifecycleUtil.dispose(mail);
-	mail = null;
-	LifecycleUtil.dispose(m2);
+        LifecycleUtil.dispose(mail);
+        mail = null;
+        LifecycleUtil.dispose(m2);
 
-	mailRepository.remove("mail1");
+        mailRepository.remove("mail1");
     }
 
     /**
@@ -152,23 +152,23 @@ public abstract class AbstractMailRepositoryTest {
      */
     @Test
     public void testJames559WithoutSaveChanges() throws Exception {
-	mailRepository.store(mail);
+        mailRepository.store(mail);
 
-	Mail m2 = mailRepository.retrieve("mail1");
-	m2.getMessage().setHeader("X-Header", "foobar");
+        Mail m2 = mailRepository.retrieve("mail1");
+        m2.getMessage().setHeader("X-Header", "foobar");
 
-	mailRepository.store(m2);
-	// ALWAYS remember to dispose mails!
-	LifecycleUtil.dispose(m2);
+        mailRepository.store(m2);
+        // ALWAYS remember to dispose mails!
+        LifecycleUtil.dispose(m2);
 
-	m2 = mailRepository.retrieve("mail1");
-	assertEquals(mail.getMessage().getContent().toString(), m2.getMessage().getContent().toString());
+        m2 = mailRepository.retrieve("mail1");
+        assertEquals(mail.getMessage().getContent().toString(), m2.getMessage().getContent().toString());
 
-	LifecycleUtil.dispose(mail);
-	mail = null;
+        LifecycleUtil.dispose(mail);
+        mail = null;
 
-	LifecycleUtil.dispose(m2);
+        LifecycleUtil.dispose(m2);
 
-	mailRepository.remove("mail1");
+        mailRepository.remove("mail1");
     }
 }

@@ -48,8 +48,8 @@ public abstract class AbstractDomainListTest {
 
     @Before
     public void setUp() throws Exception {
-	domainList = createDomainList();
-	deleteAll();
+        domainList = createDomainList();
+        deleteAll();
     }
 
     /**
@@ -59,10 +59,10 @@ public abstract class AbstractDomainListTest {
      */
     @Test
     public void createListDomains() throws DomainListException {
-	domainList.addDomain(DOMAIN_3);
-	domainList.addDomain(DOMAIN_4);
-	domainList.addDomain(DOMAIN_5);
-	assertEquals(3, domainList.getDomains().length);
+        domainList.addDomain(DOMAIN_3);
+        domainList.addDomain(DOMAIN_4);
+        domainList.addDomain(DOMAIN_5);
+        assertEquals(3, domainList.getDomains().length);
     }
 
     /**
@@ -72,8 +72,8 @@ public abstract class AbstractDomainListTest {
      */
     @Test
     public void testAddContainsDomain() throws DomainListException {
-	domainList.addDomain(DOMAIN_2);
-	domainList.containsDomain(DOMAIN_2);
+        domainList.addDomain(DOMAIN_2);
+        domainList.containsDomain(DOMAIN_2);
     }
 
     /**
@@ -83,9 +83,9 @@ public abstract class AbstractDomainListTest {
      */
     @Test
     public void testAddRemoveContainsSameDomain() throws DomainListException {
-	domainList.addDomain(DOMAIN_1);
-	domainList.removeDomain(DOMAIN_1);
-	assertThat(domainList.getDomains(), nullValue());
+        domainList.addDomain(DOMAIN_1);
+        domainList.removeDomain(DOMAIN_1);
+        assertThat(domainList.getDomains(), nullValue());
     }
 
     /**
@@ -95,14 +95,14 @@ public abstract class AbstractDomainListTest {
      */
     @Test
     public void testUpperCaseSameDomain() throws DomainListException {
-	domainList.addDomain(DOMAIN_1);
-	assertEquals(1, domainList.getDomains().length);
-	try {
-	    domainList.addDomain(DOMAIN_1_UPPER_CASE);
-	    fail("We should not be able to insert same domains, even with different cases");
-	} catch (DomainListException domainListException) {
-	    assertTrue(domainListException.getMessage().contains(DOMAIN_1));
-	}
+        domainList.addDomain(DOMAIN_1);
+        assertEquals(1, domainList.getDomains().length);
+        try {
+            domainList.addDomain(DOMAIN_1_UPPER_CASE);
+            fail("We should not be able to insert same domains, even with different cases");
+        } catch (DomainListException domainListException) {
+            assertTrue(domainListException.getMessage().contains(DOMAIN_1));
+        }
     }
 
     /**
@@ -113,10 +113,10 @@ public abstract class AbstractDomainListTest {
      */
     @Test
     public void testAddRemoveContainsDifferentDomain() throws DomainListException {
-	domainList.addDomain(DOMAIN_1);
-	domainList.removeDomain(DOMAIN_2);
-	assertEquals(1, domainList.getDomains().length);
-	assertEquals(true, domainList.containsDomain(DOMAIN_1));
+        domainList.addDomain(DOMAIN_1);
+        domainList.removeDomain(DOMAIN_2);
+        assertEquals(1, domainList.getDomains().length);
+        assertEquals(true, domainList.containsDomain(DOMAIN_1));
     }
 
     /**
@@ -125,11 +125,11 @@ public abstract class AbstractDomainListTest {
      * @throws DomainListException
      */
     private void deleteAll() throws DomainListException {
-	domainList.removeDomain(DOMAIN_1);
-	domainList.removeDomain(DOMAIN_2);
-	domainList.removeDomain(DOMAIN_3);
-	domainList.removeDomain(DOMAIN_4);
-	domainList.removeDomain(DOMAIN_5);
+        domainList.removeDomain(DOMAIN_1);
+        domainList.removeDomain(DOMAIN_2);
+        domainList.removeDomain(DOMAIN_3);
+        domainList.removeDomain(DOMAIN_4);
+        domainList.removeDomain(DOMAIN_5);
     }
 
     /**
@@ -139,24 +139,24 @@ public abstract class AbstractDomainListTest {
      * @return
      */
     protected DNSService getDNSServer(final String hostName) {
-	DNSService dns = new MockDNSService() {
+        DNSService dns = new MockDNSService() {
 
-	    @Override
-	    public String getHostName(InetAddress inet) {
-		return hostName;
-	    }
+            @Override
+            public String getHostName(InetAddress inet) {
+                return hostName;
+            }
 
-	    @Override
-	    public InetAddress[] getAllByName(String name) throws UnknownHostException {
-		return new InetAddress[]{InetAddress.getByName("127.0.0.1")};
-	    }
+            @Override
+            public InetAddress[] getAllByName(String name) throws UnknownHostException {
+                return new InetAddress[]{InetAddress.getByName("127.0.0.1")};
+            }
 
-	    @Override
-	    public InetAddress getLocalHost() throws UnknownHostException {
-		return InetAddress.getLocalHost();
-	    }
-	};
-	return dns;
+            @Override
+            public InetAddress getLocalHost() throws UnknownHostException {
+                return InetAddress.getLocalHost();
+            }
+        };
+        return dns;
     }
 
     /**

@@ -39,33 +39,33 @@ public class MockMatcher implements Matcher {
 
     @Override
     public MatcherConfig getMatcherConfig() {
-	return config;
+        return config;
     }
 
     @Override
     public String getMatcherInfo() {
-	return getClass().getName();
+        return getClass().getName();
     }
 
     @Override
     public void init(MatcherConfig config) throws MessagingException {
-	this.config = config;
-	matchCount = Integer.parseInt(config.getCondition());
+        this.config = config;
+        matchCount = Integer.parseInt(config.getCondition());
     }
 
     @Override
     public Collection match(Mail mail) throws MessagingException {
-	List<MailAddress> match = new ArrayList<MailAddress>();
+        List<MailAddress> match = new ArrayList<MailAddress>();
 
-	Iterator<MailAddress> rcpts = mail.getRecipients().iterator();
-	while (rcpts.hasNext() && match.size() < matchCount) {
-	    MailAddress addr = rcpts.next();
-	    match.add(addr);
+        Iterator<MailAddress> rcpts = mail.getRecipients().iterator();
+        while (rcpts.hasNext() && match.size() < matchCount) {
+            MailAddress addr = rcpts.next();
+            match.add(addr);
 
-	}
-	if (match.isEmpty()) {
-	    return null;
-	}
-	return match;
+        }
+        if (match.isEmpty()) {
+            return null;
+        }
+        return match;
     }
 }

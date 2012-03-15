@@ -41,53 +41,53 @@ public class InSpammerBlacklistTest {
     private final static StringBuffer LISTED_HOST = new StringBuffer("111.222.111.222");
 
     private DNSService setUpDNSServer() {
-	DNSService dns = new MockDNSService() {
+        DNSService dns = new MockDNSService() {
 
-	    @Override
-	    public InetAddress getByName(String name) throws UnknownHostException {
-		if (name.equals(LISTED_HOST.reverse() + "." + BLACKLIST)) {
-		    return null;
-		} else {
-		    throw new UnknownHostException("Not listed");
-		}
-	    }
-	};
-	return dns;
+            @Override
+            public InetAddress getByName(String name) throws UnknownHostException {
+                if (name.equals(LISTED_HOST.reverse() + "." + BLACKLIST)) {
+                    return null;
+                } else {
+                    throw new UnknownHostException("Not listed");
+                }
+            }
+        };
+        return dns;
     }
 
     private void setupMockedMail(String remoteAddr) throws ParseException {
-	mockedMail = new FakeMail();
-	mockedMail.setRemoteAddr(remoteAddr);
-	mockedMail.setRecipients(Arrays.asList(new MailAddress[]{new MailAddress("test@email")}));
+        mockedMail = new FakeMail();
+        mockedMail.setRemoteAddr(remoteAddr);
+        mockedMail.setRecipients(Arrays.asList(new MailAddress[]{new MailAddress("test@email")}));
 
     }
 
     private void setupMatcher(String blacklist) throws MessagingException {
-	matcher = new InSpammerBlacklist();
-	matcher.setDNSService(setUpDNSServer());
-	FakeMailContext context = new FakeMailContext();
-	FakeMatcherConfig mci = new FakeMatcherConfig("InSpammerBlacklist=" + blacklist, context);
-	matcher.init(mci);
+        matcher = new InSpammerBlacklist();
+        matcher.setDNSService(setUpDNSServer());
+        FakeMailContext context = new FakeMailContext();
+        FakeMatcherConfig mci = new FakeMatcherConfig("InSpammerBlacklist=" + blacklist, context);
+        matcher.init(mci);
     }
 
     @Test
     public void testInBlackList() throws MessagingException {
-	setupMockedMail(LISTED_HOST.toString());
-	setupMatcher(BLACKLIST);
+        setupMockedMail(LISTED_HOST.toString());
+        setupMatcher(BLACKLIST);
 
-	Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
+        Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
 
-	assertNotNull(matchedRecipients);
-	assertEquals(matchedRecipients.size(), mockedMail.getRecipients().size());
+        assertNotNull(matchedRecipients);
+        assertEquals(matchedRecipients.size(), mockedMail.getRecipients().size());
     }
 
     @Test
     public void testNotInBlackList() throws MessagingException {
-	setupMockedMail("212.12.14.1");
-	setupMatcher(BLACKLIST);
+        setupMockedMail("212.12.14.1");
+        setupMatcher(BLACKLIST);
 
-	Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
+        Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
 
-	assertNull(matchedRecipients);
+        assertNull(matchedRecipients);
     }
 }

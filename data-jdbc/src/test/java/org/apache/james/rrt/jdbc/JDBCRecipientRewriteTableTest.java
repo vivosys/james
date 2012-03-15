@@ -37,25 +37,25 @@ public class JDBCRecipientRewriteTableTest extends AbstractRecipientRewriteTable
      */
     @Override
     protected AbstractRecipientRewriteTable getRecipientRewriteTable() throws Exception {
-	JDBCRecipientRewriteTable localVirtualUserTable = new JDBCRecipientRewriteTable();
-	localVirtualUserTable.setLog(LoggerFactory.getLogger("MockLog"));
-	localVirtualUserTable.setDataSource(getDataSource());
-	localVirtualUserTable.setFileSystem(new MockFileSystem());
-	DefaultConfigurationBuilder defaultConfiguration = new DefaultConfigurationBuilder();
-	defaultConfiguration.addProperty("[@destinationURL]", "db://maildb/RecipientRewriteTable");
-	defaultConfiguration.addProperty("sqlFile", "file://conf/sqlResources.xml");
-	localVirtualUserTable.configure(defaultConfiguration);
-	localVirtualUserTable.init();
-	return localVirtualUserTable;
+        JDBCRecipientRewriteTable localVirtualUserTable = new JDBCRecipientRewriteTable();
+        localVirtualUserTable.setLog(LoggerFactory.getLogger("MockLog"));
+        localVirtualUserTable.setDataSource(getDataSource());
+        localVirtualUserTable.setFileSystem(new MockFileSystem());
+        DefaultConfigurationBuilder defaultConfiguration = new DefaultConfigurationBuilder();
+        defaultConfiguration.addProperty("[@destinationURL]", "db://maildb/RecipientRewriteTable");
+        defaultConfiguration.addProperty("sqlFile", "file://conf/sqlResources.xml");
+        localVirtualUserTable.configure(defaultConfiguration);
+        localVirtualUserTable.init();
+        return localVirtualUserTable;
     }
 
     private BasicDataSource getDataSource() {
-	BasicDataSource ds = new BasicDataSource();
-	ds.setDriverClassName(EmbeddedDriver.class.getName());
-	ds.setUrl("jdbc:derby:target/testdb;create=true");
-	ds.setUsername("james");
-	ds.setPassword("james");
-	return ds;
+        BasicDataSource ds = new BasicDataSource();
+        ds.setDriverClassName(EmbeddedDriver.class.getName());
+        ds.setUrl("jdbc:derby:target/testdb;create=true");
+        ds.setUsername("james");
+        ds.setPassword("james");
+        return ds;
     }
 
     /**
@@ -64,23 +64,23 @@ public class JDBCRecipientRewriteTableTest extends AbstractRecipientRewriteTable
      */
     @Override
     protected boolean addMapping(String user, String domain, String mapping, int type) throws
-	    RecipientRewriteTableException {
-	try {
-	    if (type == ERROR_TYPE) {
-		virtualUserTable.addErrorMapping(user, domain, mapping);
-	    } else if (type == REGEX_TYPE) {
-		virtualUserTable.addRegexMapping(user, domain, mapping);
-	    } else if (type == ADDRESS_TYPE) {
-		virtualUserTable.addAddressMapping(user, domain, mapping);
-	    } else if (type == ALIASDOMAIN_TYPE) {
-		virtualUserTable.addAliasDomainMapping(domain, mapping);
-	    } else {
-		return false;
-	    }
-	} catch (RecipientRewriteTableException ex) {
-	    return false;
-	}
-	return true;
+            RecipientRewriteTableException {
+        try {
+            if (type == ERROR_TYPE) {
+                virtualUserTable.addErrorMapping(user, domain, mapping);
+            } else if (type == REGEX_TYPE) {
+                virtualUserTable.addRegexMapping(user, domain, mapping);
+            } else if (type == ADDRESS_TYPE) {
+                virtualUserTable.addAddressMapping(user, domain, mapping);
+            } else if (type == ALIASDOMAIN_TYPE) {
+                virtualUserTable.addAliasDomainMapping(domain, mapping);
+            } else {
+                return false;
+            }
+        } catch (RecipientRewriteTableException ex) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -89,23 +89,23 @@ public class JDBCRecipientRewriteTableTest extends AbstractRecipientRewriteTable
      */
     @Override
     protected boolean removeMapping(String user, String domain, String mapping, int type) throws
-	    RecipientRewriteTableException {
-	try {
+            RecipientRewriteTableException {
+        try {
 
-	    if (type == ERROR_TYPE) {
-		virtualUserTable.removeErrorMapping(user, domain, mapping);
-	    } else if (type == REGEX_TYPE) {
-		virtualUserTable.removeRegexMapping(user, domain, mapping);
-	    } else if (type == ADDRESS_TYPE) {
-		virtualUserTable.removeAddressMapping(user, domain, mapping);
-	    } else if (type == ALIASDOMAIN_TYPE) {
-		virtualUserTable.removeAliasDomainMapping(domain, mapping);
-	    } else {
-		return false;
-	    }
-	} catch (RecipientRewriteTableException ex) {
-	    return false;
-	}
-	return true;
+            if (type == ERROR_TYPE) {
+                virtualUserTable.removeErrorMapping(user, domain, mapping);
+            } else if (type == REGEX_TYPE) {
+                virtualUserTable.removeRegexMapping(user, domain, mapping);
+            } else if (type == ADDRESS_TYPE) {
+                virtualUserTable.removeAddressMapping(user, domain, mapping);
+            } else if (type == ALIASDOMAIN_TYPE) {
+                virtualUserTable.removeAliasDomainMapping(domain, mapping);
+            } else {
+                return false;
+            }
+        } catch (RecipientRewriteTableException ex) {
+            return false;
+        }
+        return true;
     }
 }

@@ -32,120 +32,120 @@ public class MockRecipientRewriteTableManagementImpl implements RecipientRewrite
 
     @Override
     public void addAddressMapping(String user, String domain, String address) throws RecipientRewriteTableException {
-	addRawMapping(user, domain, address);
+        addRawMapping(user, domain, address);
     }
 
     @Override
     public void addErrorMapping(String user, String domain, String error) throws RecipientRewriteTableException {
-	addRawMapping(user, domain, RecipientRewriteTable.ERROR_PREFIX + error);
+        addRawMapping(user, domain, RecipientRewriteTable.ERROR_PREFIX + error);
     }
 
     @Override
     public void addMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
-	if (mapping.startsWith(RecipientRewriteTable.ERROR_PREFIX)) {
-	    addErrorMapping(user, domain, mapping.substring(RecipientRewriteTable.ERROR_PREFIX.length()));
-	} else if (mapping.startsWith(RecipientRewriteTable.REGEX_PREFIX)) {
-	    addErrorMapping(user, domain, mapping.substring(RecipientRewriteTable.REGEX_PREFIX.length()));
-	} else {
-	    addAddressMapping(user, domain, mapping);
-	}
+        if (mapping.startsWith(RecipientRewriteTable.ERROR_PREFIX)) {
+            addErrorMapping(user, domain, mapping.substring(RecipientRewriteTable.ERROR_PREFIX.length()));
+        } else if (mapping.startsWith(RecipientRewriteTable.REGEX_PREFIX)) {
+            addErrorMapping(user, domain, mapping.substring(RecipientRewriteTable.REGEX_PREFIX.length()));
+        } else {
+            addAddressMapping(user, domain, mapping);
+        }
     }
 
     @Override
     public void addRegexMapping(String user, String domain, String regex) throws RecipientRewriteTableException {
-	addRawMapping(user, domain, RecipientRewriteTable.REGEX_PREFIX + regex);
+        addRawMapping(user, domain, RecipientRewriteTable.REGEX_PREFIX + regex);
     }
 
     @Override
     public Map getAllMappings() throws RecipientRewriteTableException {
-	if (store.size() > 0) {
-	    return store;
-	} else {
-	    return null;
-	}
+        if (store.size() > 0) {
+            return store;
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Collection getUserDomainMappings(String user, String domain) throws RecipientRewriteTableException {
-	String mapping = (String) store.get(user + "@" + domain);
-	if (mapping != null) {
-	    return RecipientRewriteTableUtil.mappingToCollection(mapping);
-	} else {
-	    return null;
-	}
+        String mapping = (String) store.get(user + "@" + domain);
+        if (mapping != null) {
+            return RecipientRewriteTableUtil.mappingToCollection(mapping);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void removeAddressMapping(String user, String domain, String address) throws RecipientRewriteTableException {
-	removeRawMapping(user, domain, address);
+        removeRawMapping(user, domain, address);
     }
 
     @Override
     public void removeErrorMapping(String user, String domain, String error) throws RecipientRewriteTableException {
-	removeRawMapping(user, domain, RecipientRewriteTable.ERROR_PREFIX + error);
+        removeRawMapping(user, domain, RecipientRewriteTable.ERROR_PREFIX + error);
     }
 
     @Override
     public void removeMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
-	if (mapping.startsWith(RecipientRewriteTable.ERROR_PREFIX)) {
-	    removeErrorMapping(user, domain, mapping.substring(RecipientRewriteTable.ERROR_PREFIX.length()));
-	} else if (mapping.startsWith(RecipientRewriteTable.REGEX_PREFIX)) {
-	    removeErrorMapping(user, domain, mapping.substring(RecipientRewriteTable.REGEX_PREFIX.length()));
-	} else {
-	    removeAddressMapping(user, domain, mapping);
-	}
+        if (mapping.startsWith(RecipientRewriteTable.ERROR_PREFIX)) {
+            removeErrorMapping(user, domain, mapping.substring(RecipientRewriteTable.ERROR_PREFIX.length()));
+        } else if (mapping.startsWith(RecipientRewriteTable.REGEX_PREFIX)) {
+            removeErrorMapping(user, domain, mapping.substring(RecipientRewriteTable.REGEX_PREFIX.length()));
+        } else {
+            removeAddressMapping(user, domain, mapping);
+        }
     }
 
     @Override
     public void removeRegexMapping(String user, String domain, String regex) throws RecipientRewriteTableException {
-	removeRawMapping(user, domain, RecipientRewriteTable.REGEX_PREFIX + regex);
+        removeRawMapping(user, domain, RecipientRewriteTable.REGEX_PREFIX + regex);
     }
 
     @Override
     public Collection<String> getMappings(String user, String domain) throws ErrorMappingException,
-	    RecipientRewriteTableException {
-	throw new UnsupportedOperationException("Not implemented yet");
+            RecipientRewriteTableException {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     private void addRawMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
-	Collection map;
-	String key = user + "@" + domain;
-	String mappings = (String) store.get(key);
+        Collection map;
+        String key = user + "@" + domain;
+        String mappings = (String) store.get(key);
 
-	if (mappings != null) {
-	    map = RecipientRewriteTableUtil.mappingToCollection(mappings);
+        if (mappings != null) {
+            map = RecipientRewriteTableUtil.mappingToCollection(mappings);
 
-	    if (map.contains(mapping)) {
-		throw new RecipientRewriteTableException("Mapping " + mapping + " already exist!");
-	    } else {
-		map.add(mapping);
-		store.put(key, RecipientRewriteTableUtil.CollectionToMapping(map));
-	    }
-	} else {
-	    store.put(key, mapping);
-	}
+            if (map.contains(mapping)) {
+                throw new RecipientRewriteTableException("Mapping " + mapping + " already exist!");
+            } else {
+                map.add(mapping);
+                store.put(key, RecipientRewriteTableUtil.CollectionToMapping(map));
+            }
+        } else {
+            store.put(key, mapping);
+        }
     }
 
     private void removeRawMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
-	Collection map;
-	String key = user + "@" + domain;
-	String mappings = (String) store.get(key);
-	if (mappings != null) {
-	    map = RecipientRewriteTableUtil.mappingToCollection(mappings);
-	    if (map.remove(mapping)) {
-		store.put(key, RecipientRewriteTableUtil.CollectionToMapping(map));
-	    }
-	}
-	throw new RecipientRewriteTableException("Mapping does not exist");
+        Collection map;
+        String key = user + "@" + domain;
+        String mappings = (String) store.get(key);
+        if (mappings != null) {
+            map = RecipientRewriteTableUtil.mappingToCollection(mappings);
+            if (map.remove(mapping)) {
+                store.put(key, RecipientRewriteTableUtil.CollectionToMapping(map));
+            }
+        }
+        throw new RecipientRewriteTableException("Mapping does not exist");
     }
 
     @Override
     public void addAliasDomainMapping(String aliasDomain, String realDomain) throws RecipientRewriteTableException {
-	addRawMapping(null, aliasDomain, RecipientRewriteTable.ALIASDOMAIN_PREFIX + realDomain);
+        addRawMapping(null, aliasDomain, RecipientRewriteTable.ALIASDOMAIN_PREFIX + realDomain);
     }
 
     @Override
     public void removeAliasDomainMapping(String aliasDomain, String realDomain) throws RecipientRewriteTableException {
-	removeRawMapping(null, aliasDomain, RecipientRewriteTable.ALIASDOMAIN_PREFIX + realDomain);
+        removeRawMapping(null, aliasDomain, RecipientRewriteTable.ALIASDOMAIN_PREFIX + realDomain);
     }
 }

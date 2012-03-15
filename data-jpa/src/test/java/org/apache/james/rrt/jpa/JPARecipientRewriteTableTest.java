@@ -47,18 +47,18 @@ public class JPARecipientRewriteTableTest extends AbstractRecipientRewriteTableT
     @Override
     public void setUp() throws Exception {
 
-	// Use a memory database.
-	properties = new HashMap<String, String>();
-	properties.put("openjpa.ConnectionDriverName", "org.h2.Driver");
-	properties.put("openjpa.ConnectionURL", "jdbc:h2:target/users/db");
-	properties.put("openjpa.Log", "JDBC=WARN, SQL=WARN, Runtime=WARN");
-	properties.put("openjpa.ConnectionFactoryProperties", "PrettyPrint=true, PrettyPrintLineLength=72");
-	properties.put("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
-	properties.put("openjpa.MetaDataFactory", "jpa(Types=" + JPARecipientRewrite.class.getName() + ")");
+        // Use a memory database.
+        properties = new HashMap<String, String>();
+        properties.put("openjpa.ConnectionDriverName", "org.h2.Driver");
+        properties.put("openjpa.ConnectionURL", "jdbc:h2:target/users/db");
+        properties.put("openjpa.Log", "JDBC=WARN, SQL=WARN, Runtime=WARN");
+        properties.put("openjpa.ConnectionFactoryProperties", "PrettyPrint=true, PrettyPrintLineLength=72");
+        properties.put("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
+        properties.put("openjpa.MetaDataFactory", "jpa(Types=" + JPARecipientRewrite.class.getName() + ")");
 
-	factory = OpenJPAPersistence.getEntityManagerFactory(properties);
+        factory = OpenJPAPersistence.getEntityManagerFactory(properties);
 
-	super.setUp();
+        super.setUp();
     }
 
     /**
@@ -66,12 +66,12 @@ public class JPARecipientRewriteTableTest extends AbstractRecipientRewriteTableT
      */
     @Override
     protected AbstractRecipientRewriteTable getRecipientRewriteTable() throws Exception {
-	JPARecipientRewriteTable localVirtualUserTable = new JPARecipientRewriteTable();
-	localVirtualUserTable.setLog(LoggerFactory.getLogger("MockLog"));
-	localVirtualUserTable.setEntityManagerFactory(factory);
-	DefaultConfigurationBuilder defaultConfiguration = new DefaultConfigurationBuilder();
-	localVirtualUserTable.configure(defaultConfiguration);
-	return localVirtualUserTable;
+        JPARecipientRewriteTable localVirtualUserTable = new JPARecipientRewriteTable();
+        localVirtualUserTable.setLog(LoggerFactory.getLogger("MockLog"));
+        localVirtualUserTable.setEntityManagerFactory(factory);
+        DefaultConfigurationBuilder defaultConfiguration = new DefaultConfigurationBuilder();
+        localVirtualUserTable.configure(defaultConfiguration);
+        return localVirtualUserTable;
     }
 
     /**
@@ -80,23 +80,23 @@ public class JPARecipientRewriteTableTest extends AbstractRecipientRewriteTableT
      */
     @Override
     protected boolean addMapping(String user, String domain, String mapping, int type) throws
-	    RecipientRewriteTableException {
-	try {
-	    if (type == ERROR_TYPE) {
-		virtualUserTable.addErrorMapping(user, domain, mapping);
-	    } else if (type == REGEX_TYPE) {
-		virtualUserTable.addRegexMapping(user, domain, mapping);
-	    } else if (type == ADDRESS_TYPE) {
-		virtualUserTable.addAddressMapping(user, domain, mapping);
-	    } else if (type == ALIASDOMAIN_TYPE) {
-		virtualUserTable.addAliasDomainMapping(domain, mapping);
-	    } else {
-		return false;
-	    }
-	    return true;
-	} catch (RecipientRewriteTableException e) {
-	    return false;
-	}
+            RecipientRewriteTableException {
+        try {
+            if (type == ERROR_TYPE) {
+                virtualUserTable.addErrorMapping(user, domain, mapping);
+            } else if (type == REGEX_TYPE) {
+                virtualUserTable.addRegexMapping(user, domain, mapping);
+            } else if (type == ADDRESS_TYPE) {
+                virtualUserTable.addAddressMapping(user, domain, mapping);
+            } else if (type == ALIASDOMAIN_TYPE) {
+                virtualUserTable.addAliasDomainMapping(domain, mapping);
+            } else {
+                return false;
+            }
+            return true;
+        } catch (RecipientRewriteTableException e) {
+            return false;
+        }
     }
 
     /**
@@ -105,22 +105,22 @@ public class JPARecipientRewriteTableTest extends AbstractRecipientRewriteTableT
      */
     @Override
     protected boolean removeMapping(String user, String domain, String mapping, int type) throws
-	    RecipientRewriteTableException {
-	try {
-	    if (type == ERROR_TYPE) {
-		virtualUserTable.removeErrorMapping(user, domain, mapping);
-	    } else if (type == REGEX_TYPE) {
-		virtualUserTable.removeRegexMapping(user, domain, mapping);
-	    } else if (type == ADDRESS_TYPE) {
-		virtualUserTable.removeAddressMapping(user, domain, mapping);
-	    } else if (type == ALIASDOMAIN_TYPE) {
-		virtualUserTable.removeAliasDomainMapping(domain, mapping);
-	    } else {
-		return false;
-	    }
-	    return true;
-	} catch (RecipientRewriteTableException e) {
-	    return false;
-	}
+            RecipientRewriteTableException {
+        try {
+            if (type == ERROR_TYPE) {
+                virtualUserTable.removeErrorMapping(user, domain, mapping);
+            } else if (type == REGEX_TYPE) {
+                virtualUserTable.removeRegexMapping(user, domain, mapping);
+            } else if (type == ADDRESS_TYPE) {
+                virtualUserTable.removeAddressMapping(user, domain, mapping);
+            } else if (type == ALIASDOMAIN_TYPE) {
+                virtualUserTable.removeAliasDomainMapping(domain, mapping);
+            } else {
+                return false;
+            }
+            return true;
+        } catch (RecipientRewriteTableException e) {
+            return false;
+        }
     }
 }

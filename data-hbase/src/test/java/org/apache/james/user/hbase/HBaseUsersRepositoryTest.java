@@ -41,7 +41,7 @@ public class HBaseUsersRepositoryTest extends AbstractUsersRepositoryTest {
     @Before
     @Override
     public void setUp() throws Exception {
-	deleteAll();
+        deleteAll();
     }
 
     /**
@@ -50,7 +50,7 @@ public class HBaseUsersRepositoryTest extends AbstractUsersRepositoryTest {
     @After
     @Override
     public void tearDown() throws Exception {
-	super.tearDown();
+        super.tearDown();
     }
 
     /**
@@ -60,10 +60,10 @@ public class HBaseUsersRepositoryTest extends AbstractUsersRepositoryTest {
      * @throws Exception
      */
     private void deleteAll() throws UsersRepositoryException, Exception {
-	Iterator<String> it = getUsersRepository().list();
-	while (it.hasNext()) {
-	    getUsersRepository().removeUser(it.next());
-	}
+        Iterator<String> it = getUsersRepository().list();
+        while (it.hasNext()) {
+            getUsersRepository().removeUser(it.next());
+        }
     }
 
     /**
@@ -71,9 +71,9 @@ public class HBaseUsersRepositoryTest extends AbstractUsersRepositoryTest {
      */
     @Override
     protected UsersRepository getUsersRepository() throws Exception {
-	HBaseUsersRepository userRepository = new HBaseUsersRepository();
-	userRepository.setLog(LoggerFactory.getLogger("MockLog"));
-	userRepository.configure(new DefaultConfigurationBuilder());
-	return userRepository;
+        HBaseUsersRepository userRepository = new HBaseUsersRepository();
+        userRepository.setLog(LoggerFactory.getLogger("MockLog"));
+        userRepository.configure(new DefaultConfigurationBuilder());
+        return userRepository;
     }
 }

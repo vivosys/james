@@ -28,19 +28,19 @@ public class MockMailProcessor implements MailProcessor {
     private String newState = null;
 
     public MockMailProcessor(boolean shouldThrow) {
-	this.shouldThrow = shouldThrow;
+        this.shouldThrow = shouldThrow;
     }
 
     public MockMailProcessor(String newState) {
-	this.newState = newState;
+        this.newState = newState;
     }
 
     @Override
     public void service(Mail mail) throws MessagingException {
-	if (shouldThrow) {
-	    throw new MessagingException();
-	} else {
-	    mail.setState(newState);
-	}
+        if (shouldThrow) {
+            throw new MessagingException();
+        } else {
+            mail.setState(newState);
+        }
     }
 }

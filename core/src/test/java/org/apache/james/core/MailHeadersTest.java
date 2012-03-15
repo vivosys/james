@@ -29,14 +29,14 @@ public class MailHeadersTest {
 
     @Test
     public void testHeadersOrder() throws MessagingException {
-	MailHeaders header = new MailHeaders(new ByteArrayInputStream((RFC2822Headers.SUBJECT + ": testsubject\r\n").
-		getBytes()));
-	header.setHeader(RFC2822Headers.RETURN_PATH, "<test@test>");
-	header.setHeader(RFC2822Headers.FROM, "<test2@test.de>");
-	Enumeration h = header.getAllHeaderLines();
+        MailHeaders header = new MailHeaders(new ByteArrayInputStream((RFC2822Headers.SUBJECT + ": testsubject\r\n").
+                getBytes()));
+        header.setHeader(RFC2822Headers.RETURN_PATH, "<test@test>");
+        header.setHeader(RFC2822Headers.FROM, "<test2@test.de>");
+        Enumeration h = header.getAllHeaderLines();
 
-	assertEquals(h.nextElement(), "Return-Path: <test@test>");
-	assertEquals(h.nextElement(), "From: <test2@test.de>");
-	assertEquals(h.nextElement(), "Subject: testsubject");
+        assertEquals(h.nextElement(), "Return-Path: <test@test>");
+        assertEquals(h.nextElement(), "From: <test2@test.de>");
+        assertEquals(h.nextElement(), "Subject: testsubject");
     }
 }

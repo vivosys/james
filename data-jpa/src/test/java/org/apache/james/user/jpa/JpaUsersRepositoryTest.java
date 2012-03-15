@@ -39,49 +39,49 @@ public class JpaUsersRepositoryTest extends AbstractUsersRepositoryTest {
     @Before
     @Override
     public void setUp() throws Exception {
-	properties = new HashMap<String, String>();
-	properties.put("openjpa.ConnectionDriverName", "org.h2.Driver");
-	properties.put("openjpa.ConnectionURL", "jdbc:h2:target/users/db");
-	properties.put("openjpa.Log", "JDBC=WARN, SQL=WARN, Runtime=WARN");
-	properties.put("openjpa.ConnectionFactoryProperties", "PrettyPrint=true, PrettyPrintLineLength=72");
-	properties.put("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
-	properties.put("openjpa.MetaDataFactory", "jpa(Types=" + JPAUser.class.getName() + ")");
-	super.setUp();
-	deleteAll();
+        properties = new HashMap<String, String>();
+        properties.put("openjpa.ConnectionDriverName", "org.h2.Driver");
+        properties.put("openjpa.ConnectionURL", "jdbc:h2:target/users/db");
+        properties.put("openjpa.Log", "JDBC=WARN, SQL=WARN, Runtime=WARN");
+        properties.put("openjpa.ConnectionFactoryProperties", "PrettyPrint=true, PrettyPrintLineLength=72");
+        properties.put("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
+        properties.put("openjpa.MetaDataFactory", "jpa(Types=" + JPAUser.class.getName() + ")");
+        super.setUp();
+        deleteAll();
     }
 
     @After
     @Override
     public void tearDown() throws Exception {
-	deleteAll();
-	super.tearDown();
+        deleteAll();
+        super.tearDown();
 
     }
 
     private void deleteAll() {
-	OpenJPAEntityManager manager = factory.createEntityManager();
-	final OpenJPAEntityTransaction transaction = manager.getTransaction();
-	try {
-	    transaction.begin();
-	    manager.createQuery("DELETE FROM JamesUser user").executeUpdate();
-	    transaction.commit();
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    if (transaction.isActive()) {
-		transaction.rollback();
-	    }
-	} finally {
-	    manager.close();
-	}
+        OpenJPAEntityManager manager = factory.createEntityManager();
+        final OpenJPAEntityTransaction transaction = manager.getTransaction();
+        try {
+            transaction.begin();
+            manager.createQuery("DELETE FROM JamesUser user").executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        } finally {
+            manager.close();
+        }
     }
 
     @Override
     protected UsersRepository getUsersRepository() throws Exception {
-	factory = OpenJPAPersistence.getEntityManagerFactory(properties);
-	JPAUsersRepository repos = new JPAUsersRepository();
-	repos.setLog(LoggerFactory.getLogger("JPA"));
-	repos.setEntityManagerFactory(factory);
-	repos.configure(new DefaultConfigurationBuilder());
-	return repos;
+        factory = OpenJPAPersistence.getEntityManagerFactory(properties);
+        JPAUsersRepository repos = new JPAUsersRepository();
+        repos.setLog(LoggerFactory.getLogger("JPA"));
+        repos.setEntityManagerFactory(factory);
+        repos.configure(new DefaultConfigurationBuilder());
+        return repos;
     }
 }

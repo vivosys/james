@@ -40,10 +40,10 @@ public class XorTest {
     private CompositeMatcher matcher;
 
     private void setupMockedMail() throws ParseException {
-	mockedMail = new FakeMail();
-	mockedMail.setRecipients(Arrays.asList(new MailAddress[]{
-		    new MailAddress("test@james.apache.org"),
-		    new MailAddress("test2@james.apache.org")}));
+    mockedMail = new FakeMail();
+    mockedMail.setRecipients(Arrays.asList(new MailAddress[]{
+            new MailAddress("test@james.apache.org"),
+            new MailAddress("test2@james.apache.org")}));
 
     }
 
@@ -52,55 +52,55 @@ public class XorTest {
      * @throws MessagingException
      */
     private void setupMatcher() throws MessagingException {
-	context = new FakeMailContext();
-	matcher = new Xor();
-	FakeMatcherConfig mci = new FakeMatcherConfig("Xor", context);
-	matcher.init(mci);
+    context = new FakeMailContext();
+    matcher = new Xor();
+    FakeMatcherConfig mci = new FakeMatcherConfig("Xor", context);
+    matcher.init(mci);
     }
 
     private void setupChild(String match) throws MessagingException {
-	Matcher child = null;
-	if (match.equals("All")) {
-	    child = new All();
-	} else {
-	    child = new RecipientIs();
-	}
-	FakeMatcherConfig sub = new FakeMatcherConfig(match, context);
-	child.init(sub);
-	matcher.add(child);
+    Matcher child = null;
+    if (match.equals("All")) {
+        child = new All();
+    } else {
+        child = new RecipientIs();
+    }
+    FakeMatcherConfig sub = new FakeMatcherConfig(match, context);
+    child.init(sub);
+    matcher.add(child);
 
     }
 
     // test if all recipients was returned
     @Test
     public void testIntersectSame() throws MessagingException {
-	setupMockedMail();
-	setupMatcher();
-	setupChild("RecipientIsRegex=test@james.apache.org");
-	setupChild("RecipientIsRegex=test@james.apache.org");
+    setupMockedMail();
+    setupMatcher();
+    setupChild("RecipientIsRegex=test@james.apache.org");
+    setupChild("RecipientIsRegex=test@james.apache.org");
 
-	Collection matchedRecipients = matcher.match(mockedMail);
+    Collection matchedRecipients = matcher.match(mockedMail);
 
-	assertNotNull(matchedRecipients);
-	assertEquals(0, matchedRecipients.size());
+    assertNotNull(matchedRecipients);
+    assertEquals(0, matchedRecipients.size());
     }
 
     @Test
     public void testNoIntersect() throws MessagingException {
-	setupMockedMail();
-	setupMatcher();
-	setupChild("RecipientIsRegex=test@james.apache.org");
-	setupChild("RecipientIsRegex=test2@james.apache.org");
+    setupMockedMail();
+    setupMatcher();
+    setupChild("RecipientIsRegex=test@james.apache.org");
+    setupChild("RecipientIsRegex=test2@james.apache.org");
 
-	Collection matchedRecipients = matcher.match(mockedMail);
+    Collection matchedRecipients = matcher.match(mockedMail);
 
-	assertNotNull(matchedRecipients);
-	assertEquals(2, matchedRecipients.size());
+    assertNotNull(matchedRecipients);
+    assertEquals(2, matchedRecipients.size());
 
-	Iterator iterator = matchedRecipients.iterator();
-	MailAddress address = (MailAddress) iterator.next();
-	assertEquals(address, "test@james.apache.org");
-	address = (MailAddress) iterator.next();
-	assertEquals(address, "test2@james.apache.org");
+    Iterator iterator = matchedRecipients.iterator();
+    MailAddress address = (MailAddress) iterator.next();
+    assertEquals(address, "test@james.apache.org");
+    address = (MailAddress) iterator.next();
+    assertEquals(address, "test2@james.apache.org");
     }
 }

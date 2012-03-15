@@ -39,10 +39,10 @@ public class AndTest {
     private CompositeMatcher matcher;
 
     private void setupMockedMail() throws ParseException {
-	mockedMail = new FakeMail();
-	mockedMail.setRecipients(Arrays.asList(new MailAddress[]{
-		    new MailAddress("test@james.apache.org"),
-		    new MailAddress("test2@james.apache.org")}));
+    mockedMail = new FakeMail();
+    mockedMail.setRecipients(Arrays.asList(new MailAddress[]{
+            new MailAddress("test@james.apache.org"),
+            new MailAddress("test2@james.apache.org")}));
 
     }
 
@@ -51,52 +51,52 @@ public class AndTest {
      * @throws MessagingException
      */
     private void setupMatcher() throws MessagingException {
-	context = new FakeMailContext();
-	matcher = new And();
-	FakeMatcherConfig mci = new FakeMatcherConfig("And", context);
-	matcher.init(mci);
+    context = new FakeMailContext();
+    matcher = new And();
+    FakeMatcherConfig mci = new FakeMatcherConfig("And", context);
+    matcher.init(mci);
     }
 
     private void setupChild(String match) throws MessagingException {
-	Matcher child = null;
-	if (match.equals("All")) {
-	    child = new All();
-	} else {
-	    child = new RecipientIs();
-	}
-	FakeMatcherConfig sub = new FakeMatcherConfig(match, context);
-	child.init(sub);
-	matcher.add(child);
+    Matcher child = null;
+    if (match.equals("All")) {
+        child = new All();
+    } else {
+        child = new RecipientIs();
+    }
+    FakeMatcherConfig sub = new FakeMatcherConfig(match, context);
+    child.init(sub);
+    matcher.add(child);
 
     }
 
     // test if all recipients was returned
     @Test
     public void testAndIntersectSameTwice() throws MessagingException {
-	setupMockedMail();
-	setupMatcher();
-	setupChild("RecipientIs=test@james.apache.org");
-	setupChild("RecipientIs=test@james.apache.org");
-	setupChild("All");
+    setupMockedMail();
+    setupMatcher();
+    setupChild("RecipientIs=test@james.apache.org");
+    setupChild("RecipientIs=test@james.apache.org");
+    setupChild("All");
 
-	Collection matchedRecipients = matcher.match(mockedMail);
+    Collection matchedRecipients = matcher.match(mockedMail);
 
-	assertNotNull(matchedRecipients);
-	assertEquals(1, matchedRecipients.size());
-	MailAddress address = (MailAddress) matchedRecipients.iterator().next();
-	assertEquals(address, "test@james.apache.org");
+    assertNotNull(matchedRecipients);
+    assertEquals(1, matchedRecipients.size());
+    MailAddress address = (MailAddress) matchedRecipients.iterator().next();
+    assertEquals(address, "test@james.apache.org");
     }
 
     @Test
     public void testAndNoIntersect() throws MessagingException {
-	setupMockedMail();
-	setupMatcher();
-	setupChild("RecipientIs=test@james.apache.org");
-	setupChild("RecipientIs=test2@james.apache.org");
+    setupMockedMail();
+    setupMatcher();
+    setupChild("RecipientIs=test@james.apache.org");
+    setupChild("RecipientIs=test2@james.apache.org");
 
-	Collection matchedRecipients = matcher.match(mockedMail);
+    Collection matchedRecipients = matcher.match(mockedMail);
 
-	assertNotNull(matchedRecipients);
-	assertEquals(0, matchedRecipients.size());
+    assertNotNull(matchedRecipients);
+    assertEquals(0, matchedRecipients.size());
     }
 }

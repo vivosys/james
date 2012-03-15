@@ -33,22 +33,22 @@ public class MockMailet implements Mailet {
 
     @Override
     public MailetConfig getMailetConfig() {
-	return config;
+        return config;
     }
 
     @Override
     public String getMailetInfo() {
-	return "";
+        return "";
     }
 
     @Override
     public void init(MailetConfig config) throws MessagingException {
-	this.config = config;
+        this.config = config;
     }
 
     @Override
     public void service(Mail mail) throws MessagingException {
-	String state = config.getInitParameter("state");
-	mail.setState(state);
+        String state = config.getInitParameter("state");
+        mail.setState(state);
     }
 }

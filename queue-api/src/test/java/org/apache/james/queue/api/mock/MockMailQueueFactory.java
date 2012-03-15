@@ -30,16 +30,16 @@ public class MockMailQueueFactory implements MailQueueFactory {
 
     @Override
     public synchronized MailQueue getQueue(String name) {
-	MailQueue queue = queues.get(name);
-	if (queue == null) {
-	    queue = new MockMailQueue();
-	    queues.put(name, queue);
-	}
+        MailQueue queue = queues.get(name);
+        if (queue == null) {
+            queue = new MockMailQueue();
+            queues.put(name, queue);
+        }
 
-	return queue;
+        return queue;
     }
 
     public void clear() {
-	queues.clear();
+        queues.clear();
     }
 }

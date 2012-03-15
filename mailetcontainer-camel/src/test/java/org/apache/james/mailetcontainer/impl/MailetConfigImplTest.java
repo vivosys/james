@@ -31,63 +31,63 @@ public class MailetConfigImplTest {
 
     @Test
     public void testDotParamsFromXML() throws ConfigurationException {
-	DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-	builder.load(new ByteArrayInputStream("<mailet><mail.debug>true</mail.debug></mailet>".getBytes()));
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        builder.load(new ByteArrayInputStream("<mailet><mail.debug>true</mail.debug></mailet>".getBytes()));
 
-	MailetConfigImpl config = new MailetConfigImpl();
-	config.setConfiguration(builder);
+        MailetConfigImpl config = new MailetConfigImpl();
+        config.setConfiguration(builder);
 
-	String param = config.getInitParameterNames().next();
-	assertEquals("mail.debug", param);
-	assertEquals("true", config.getInitParameter(param));
+        String param = config.getInitParameterNames().next();
+        assertEquals("mail.debug", param);
+        assertEquals("true", config.getInitParameter(param));
     }
 
     @Test
     public void testDotParamsFromConfig() throws ConfigurationException {
-	DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-	builder.addProperty("mail.debug", "true");
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        builder.addProperty("mail.debug", "true");
 
-	MailetConfigImpl config = new MailetConfigImpl();
-	config.setConfiguration(builder);
+        MailetConfigImpl config = new MailetConfigImpl();
+        config.setConfiguration(builder);
 
-	String param = config.getInitParameterNames().next();
-	assertEquals("mail.debug", param);
-	assertEquals("true", config.getInitParameter(param));
+        String param = config.getInitParameterNames().next();
+        assertEquals("mail.debug", param);
+        assertEquals("true", config.getInitParameter(param));
     }
 
     // See JAMES-1232
     @Test
     public void testParamWithComma() throws ConfigurationException {
-	DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-	builder.load(new ByteArrayInputStream("<mailet><whatever>value1,value2</whatever></mailet>".getBytes()));
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        builder.load(new ByteArrayInputStream("<mailet><whatever>value1,value2</whatever></mailet>".getBytes()));
 
-	MailetConfigImpl config = new MailetConfigImpl();
-	config.setConfiguration(builder);
+        MailetConfigImpl config = new MailetConfigImpl();
+        config.setConfiguration(builder);
 
-	String param = config.getInitParameterNames().next();
-	assertEquals("whatever", param);
-	assertEquals("value1,value2", config.getInitParameter(param));
+        String param = config.getInitParameterNames().next();
+        assertEquals("whatever", param);
+        assertEquals("value1,value2", config.getInitParameter(param));
     }
 
     @Test
     public void testParamWithXmlSpace() throws ConfigurationException {
-	DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-	builder.setDelimiterParsingDisabled(true);
-	builder.load(new ByteArrayInputStream("<mailet><whatever xml:space=\"preserve\"> some text </whatever></mailet>".
-		getBytes()));
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        builder.setDelimiterParsingDisabled(true);
+        builder.load(new ByteArrayInputStream("<mailet><whatever xml:space=\"preserve\"> some text </whatever></mailet>".
+                getBytes()));
 
-	MailetConfigImpl config = new MailetConfigImpl();
-	config.setConfiguration(builder);
+        MailetConfigImpl config = new MailetConfigImpl();
+        config.setConfiguration(builder);
 
-	String param = config.getInitParameterNames().next();
-	assertEquals("whatever", param);
-	assertEquals(" some text ", config.getInitParameter(param));
+        String param = config.getInitParameterNames().next();
+        assertEquals("whatever", param);
+        assertEquals(" some text ", config.getInitParameter(param));
 
-	List<String> parms = new ArrayList<String>();
-	Iterator<String> iter = config.getInitParameterNames();
-	while (iter.hasNext()) {
-	    parms.add(iter.next());
-	}
-	assertEquals(parms.size(), 1);
+        List<String> parms = new ArrayList<String>();
+        Iterator<String> iter = config.getInitParameterNames();
+        while (iter.hasNext()) {
+            parms.add(iter.next());
+        }
+        assertEquals(parms.size(), 1);
     }
 }

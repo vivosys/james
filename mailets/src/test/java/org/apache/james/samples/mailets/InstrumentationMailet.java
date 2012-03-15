@@ -47,106 +47,106 @@ public class InstrumentationMailet implements Mailet {
 
     @Override
     public String getMailetInfo() {
-	return "Example mailet";
+        return "Example mailet";
     }
 
     @Override
     public MailetConfig getMailetConfig() {
-	return config;
+        return config;
     }
 
     @Override
     public void init(MailetConfig config) throws MessagingException {
-	this.config = config;
+        this.config = config;
     }
 
     @Override
     public void service(Mail mail) throws MessagingException {
-	MailetContext context = config.getMailetContext();
-	context.log("######## MAIL STARTS");
-	context.log("");
+        MailetContext context = config.getMailetContext();
+        context.log("######## MAIL STARTS");
+        context.log("");
 
-	MimeMessage message = mail.getMessage();
+        MimeMessage message = mail.getMessage();
 
-	context.log("Mail named: " + mail.getName());
+        context.log("Mail named: " + mail.getName());
 
-	for (Iterator it = mail.getAttributeNames(); it.hasNext();) {
-	    String attributeName = (String) it.next();
-	    context.log("Attribute " + attributeName);
-	}
-	context.log("Message size: " + mail.getMessageSize());
-	context.log("Last updated: " + mail.getLastUpdated());
-	context.log("Remote Address: " + mail.getRemoteAddr());
-	context.log("Remote Host: " + mail.getRemoteHost());
-	context.log("State: " + mail.getState());
-	context.log("Sender host: " + mail.getSender().getDomain());
-	context.log("Sender user: " + mail.getSender().getLocalPart());
-	Collection<MailAddress> recipients = mail.getRecipients();
-	for (Iterator<MailAddress> it = recipients.iterator(); it.hasNext();) {
-	    MailAddress address = it.next();
-	    context.log("Recipient: " + address.getLocalPart() + "@" + address.getDomain());
-	}
+        for (Iterator it = mail.getAttributeNames(); it.hasNext();) {
+            String attributeName = (String) it.next();
+            context.log("Attribute " + attributeName);
+        }
+        context.log("Message size: " + mail.getMessageSize());
+        context.log("Last updated: " + mail.getLastUpdated());
+        context.log("Remote Address: " + mail.getRemoteAddr());
+        context.log("Remote Host: " + mail.getRemoteHost());
+        context.log("State: " + mail.getState());
+        context.log("Sender host: " + mail.getSender().getDomain());
+        context.log("Sender user: " + mail.getSender().getLocalPart());
+        Collection<MailAddress> recipients = mail.getRecipients();
+        for (Iterator<MailAddress> it = recipients.iterator(); it.hasNext();) {
+            MailAddress address = it.next();
+            context.log("Recipient: " + address.getLocalPart() + "@" + address.getDomain());
+        }
 
-	context.log("Subject: " + message.getSubject());
-	context.log("MessageID: " + message.getMessageID());
-	context.log("Received: " + message.getReceivedDate());
-	context.log("Sent: " + message.getSentDate());
+        context.log("Subject: " + message.getSubject());
+        context.log("MessageID: " + message.getMessageID());
+        context.log("Received: " + message.getReceivedDate());
+        context.log("Sent: " + message.getSentDate());
 
-	Enumeration allHeadersLines = message.getAllHeaderLines();
-	while (allHeadersLines.hasMoreElements()) {
-	    String header = (String) allHeadersLines.nextElement();
-	    context.log("Header Line:= " + header);
-	}
+        Enumeration allHeadersLines = message.getAllHeaderLines();
+        while (allHeadersLines.hasMoreElements()) {
+            String header = (String) allHeadersLines.nextElement();
+            context.log("Header Line:= " + header);
+        }
 
-	Enumeration allHeadersEnumeration = message.getAllHeaders();
-	while (allHeadersEnumeration.hasMoreElements()) {
-	    Header header = (Header) allHeadersEnumeration.nextElement();
-	    context.log("Header: " + header.getName() + "=" + header.getValue());
-	}
+        Enumeration allHeadersEnumeration = message.getAllHeaders();
+        while (allHeadersEnumeration.hasMoreElements()) {
+            Header header = (Header) allHeadersEnumeration.nextElement();
+            context.log("Header: " + header.getName() + "=" + header.getValue());
+        }
 
-	Address[] to = message.getRecipients(RecipientType.TO);
-	printAddresses(to, "TO: ");
-	Address[] cc = message.getRecipients(RecipientType.CC);
-	printAddresses(cc, "CC: ");
-	Address[] bcc = message.getRecipients(RecipientType.BCC);
-	printAddresses(bcc, "BCC: ");
+        Address[] to = message.getRecipients(RecipientType.TO);
+        printAddresses(to, "TO: ");
+        Address[] cc = message.getRecipients(RecipientType.CC);
+        printAddresses(cc, "CC: ");
+        Address[] bcc = message.getRecipients(RecipientType.BCC);
+        printAddresses(bcc, "BCC: ");
 
-	Flags flags = message.getFlags();
-	Flag[] systemFlags = flags.getSystemFlags();
-	for (int i = 0; i < systemFlags.length; i++) {
-	    context.log("System Flag:" + systemFlags[i]);
-	}
-	String[] userFlags = flags.getUserFlags();
-	for (int i = 0; i < userFlags.length; i++) {
-	    context.log("User flag: " + userFlags[i]);
-	}
+        Flags flags = message.getFlags();
+        Flag[] systemFlags = flags.getSystemFlags();
+        for (int i = 0; i < systemFlags.length; i++) {
+            context.log("System Flag:" + systemFlags[i]);
+        }
+        String[] userFlags = flags.getUserFlags();
+        for (int i = 0; i < userFlags.length; i++) {
+            context.log("User flag: " + userFlags[i]);
+        }
 
-	String mimeType = message.getContentType();
-	context.log("Mime type: " + mimeType);
-	if ("text/plain".equals(mimeType)) {
-	    try {
-		Object content = message.getContent();
-		context.log("Content: " + content);
-	    } catch (IOException e) {
-		e.printStackTrace();
-	    }
+        String mimeType = message.getContentType();
+        context.log("Mime type: " + mimeType);
+        if ("text/plain".equals(mimeType)) {
+            try {
+                Object content = message.getContent();
+                context.log("Content: " + content);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-	}
+        }
 
-	context.log("");
-	context.log("######## MAIL ENDS");
+        context.log("");
+        context.log("######## MAIL ENDS");
     }
 
     private void printAddresses(Address[] addresses, String prefix) {
-	MailetContext context = config.getMailetContext();
-	for (int i = 0; i < addresses.length; i++) {
-	    if (addresses[i] instanceof InternetAddress) {
-		InternetAddress address = (InternetAddress) addresses[i];
-		context.log(prefix + address.getPersonal() + "@" + address.getAddress());
-	    } else if (addresses[i] instanceof NewsAddress) {
-		NewsAddress address = (NewsAddress) addresses[i];
-		context.log(prefix + address.getNewsgroup() + "@" + address.getHost());
-	    }
-	}
+        MailetContext context = config.getMailetContext();
+        for (int i = 0; i < addresses.length; i++) {
+            if (addresses[i] instanceof InternetAddress) {
+                InternetAddress address = (InternetAddress) addresses[i];
+                context.log(prefix + address.getPersonal() + "@" + address.getAddress());
+            } else if (addresses[i] instanceof NewsAddress) {
+                NewsAddress address = (NewsAddress) addresses[i];
+                context.log(prefix + address.getNewsgroup() + "@" + address.getHost());
+            }
+        }
     }
 }

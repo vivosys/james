@@ -67,17 +67,17 @@ public class UsersFileRepositoryTest extends AbstractUsersRepositoryTest {
     protected UsersRepository getUsersRepository() throws Exception {
         FileSystem fs = new FileSystem() {
 
-	    @Override
+            @Override
             public File getBasedir() throws FileNotFoundException {
                 return new File(".");
             }
 
-	    @Override
+            @Override
             public InputStream getResource(String url) throws IOException {
                 return new FileInputStream(getFile(url));
             }
 
-	    @Override
+            @Override
             public File getFile(String fileURL) throws FileNotFoundException {
                 return new File(fileURL.substring(FileSystem.FILE_PROTOCOL.length()));
             }

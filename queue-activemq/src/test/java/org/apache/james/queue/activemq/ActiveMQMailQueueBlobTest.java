@@ -32,61 +32,61 @@ public class ActiveMQMailQueueBlobTest extends ActiveMQMailQueueTest {
 
     @Override
     protected ActiveMQConnectionFactory createConnectionFactory() {
-	ActiveMQConnectionFactory factory = super.createConnectionFactory();
+        ActiveMQConnectionFactory factory = super.createConnectionFactory();
 
-	FileSystemBlobTransferPolicy policy = new FileSystemBlobTransferPolicy();
-	policy.setFileSystem(fs);
-	policy.setDefaultUploadUrl(BASE_DIR);
-	factory.setBlobTransferPolicy(policy);
+        FileSystemBlobTransferPolicy policy = new FileSystemBlobTransferPolicy();
+        policy.setFileSystem(fs);
+        policy.setDefaultUploadUrl(BASE_DIR);
+        factory.setBlobTransferPolicy(policy);
 
-	return factory;
+        return factory;
     }
 
     @Override
     public void setUp() throws Exception {
-	fs = new MyFileSystem();
-	super.setUp();
+        fs = new MyFileSystem();
+        super.setUp();
     }
 
     @Override
     public void tearDown() throws Exception {
-	super.tearDown();
-	if (fs != null) {
-	    fs.destroy();
-	}
+        super.tearDown();
+        if (fs != null) {
+            fs.destroy();
+        }
     }
 
     @Override
     protected boolean useBlobMessages() {
-	return true;
+        return true;
     }
 
     private final class MyFileSystem implements FileSystem {
 
-	@Override
-	public InputStream getResource(String url) throws IOException {
-	    return null;
-	}
+        @Override
+        public InputStream getResource(String url) throws IOException {
+            return null;
+        }
 
-	@Override
-	public File getFile(String fileURL) throws FileNotFoundException {
-	    if (fileURL.startsWith("file://")) {
-		return new File(fileURL.substring("file://".length()));
+        @Override
+        public File getFile(String fileURL) throws FileNotFoundException {
+            if (fileURL.startsWith("file://")) {
+                return new File(fileURL.substring("file://".length()));
 
-	    } else if (fileURL.startsWith("file:/")) {
-		return new File(fileURL.substring("file:".length()));
+            } else if (fileURL.startsWith("file:/")) {
+                return new File(fileURL.substring("file:".length()));
 
-	    }
-	    throw new FileNotFoundException();
-	}
+            }
+            throw new FileNotFoundException();
+        }
 
-	@Override
-	public File getBasedir() throws FileNotFoundException {
-	    throw new FileNotFoundException();
-	}
+        @Override
+        public File getBasedir() throws FileNotFoundException {
+            throw new FileNotFoundException();
+        }
 
-	public void destroy() throws FileNotFoundException {
-	    getFile(BASE_DIR).delete();
-	}
+        public void destroy() throws FileNotFoundException {
+            getFile(BASE_DIR).delete();
+        }
     }
 }

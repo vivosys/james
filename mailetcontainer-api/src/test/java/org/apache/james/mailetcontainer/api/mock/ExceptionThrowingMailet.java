@@ -33,21 +33,21 @@ public class ExceptionThrowingMailet implements Mailet {
 
     @Override
     public MailetConfig getMailetConfig() {
-	return config;
+        return config;
     }
 
     @Override
     public String getMailetInfo() {
-	return getClass().getName();
+        return getClass().getName();
     }
 
     @Override
     public void init(MailetConfig config) throws MessagingException {
-	this.config = config;
+        this.config = config;
     }
 
     @Override
     public void service(Mail arg0) throws MessagingException {
-	throw new MessagingException();
+        throw new MessagingException();
     }
 }

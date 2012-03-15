@@ -43,10 +43,10 @@ public class HBaseRecipientRewriteTableTest extends AbstractRecipientRewriteTabl
      */
     @Override
     protected AbstractRecipientRewriteTable getRecipientRewriteTable() throws Exception {
-	HBaseRecipientRewriteTable rrt = new HBaseRecipientRewriteTable();
-	rrt.setLog(LoggerFactory.getLogger("MockLog"));
-	rrt.configure(new DefaultConfigurationBuilder());
-	return rrt;
+        HBaseRecipientRewriteTable rrt = new HBaseRecipientRewriteTable();
+        rrt.setLog(LoggerFactory.getLogger("MockLog"));
+        rrt.configure(new DefaultConfigurationBuilder());
+        return rrt;
     }
 
     /**
@@ -54,23 +54,23 @@ public class HBaseRecipientRewriteTableTest extends AbstractRecipientRewriteTabl
      */
     @Override
     protected boolean addMapping(String user, String domain, String mapping, int type) throws
-	    RecipientRewriteTableException {
-	try {
-	    if (type == ERROR_TYPE) {
-		virtualUserTable.addErrorMapping(user, domain, mapping);
-	    } else if (type == REGEX_TYPE) {
-		virtualUserTable.addRegexMapping(user, domain, mapping);
-	    } else if (type == ADDRESS_TYPE) {
-		virtualUserTable.addAddressMapping(user, domain, mapping);
-	    } else if (type == ALIASDOMAIN_TYPE) {
-		virtualUserTable.addAliasDomainMapping(domain, mapping);
-	    } else {
-		return false;
-	    }
-	    return true;
-	} catch (RecipientRewriteTableException e) {
-	    return false;
-	}
+            RecipientRewriteTableException {
+        try {
+            if (type == ERROR_TYPE) {
+                virtualUserTable.addErrorMapping(user, domain, mapping);
+            } else if (type == REGEX_TYPE) {
+                virtualUserTable.addRegexMapping(user, domain, mapping);
+            } else if (type == ADDRESS_TYPE) {
+                virtualUserTable.addAddressMapping(user, domain, mapping);
+            } else if (type == ALIASDOMAIN_TYPE) {
+                virtualUserTable.addAliasDomainMapping(domain, mapping);
+            } else {
+                return false;
+            }
+            return true;
+        } catch (RecipientRewriteTableException e) {
+            return false;
+        }
     }
 
     /**
@@ -78,22 +78,22 @@ public class HBaseRecipientRewriteTableTest extends AbstractRecipientRewriteTabl
      */
     @Override
     protected boolean removeMapping(String user, String domain, String mapping, int type) throws
-	    RecipientRewriteTableException {
-	try {
-	    if (type == ERROR_TYPE) {
-		virtualUserTable.removeErrorMapping(user, domain, mapping);
-	    } else if (type == REGEX_TYPE) {
-		virtualUserTable.removeRegexMapping(user, domain, mapping);
-	    } else if (type == ADDRESS_TYPE) {
-		virtualUserTable.removeAddressMapping(user, domain, mapping);
-	    } else if (type == ALIASDOMAIN_TYPE) {
-		virtualUserTable.removeAliasDomainMapping(domain, mapping);
-	    } else {
-		return false;
-	    }
-	    return true;
-	} catch (RecipientRewriteTableException e) {
-	    return false;
-	}
+            RecipientRewriteTableException {
+        try {
+            if (type == ERROR_TYPE) {
+                virtualUserTable.removeErrorMapping(user, domain, mapping);
+            } else if (type == REGEX_TYPE) {
+                virtualUserTable.removeRegexMapping(user, domain, mapping);
+            } else if (type == ADDRESS_TYPE) {
+                virtualUserTable.removeAddressMapping(user, domain, mapping);
+            } else if (type == ALIASDOMAIN_TYPE) {
+                virtualUserTable.removeAliasDomainMapping(domain, mapping);
+            } else {
+                return false;
+            }
+            return true;
+        } catch (RecipientRewriteTableException e) {
+            return false;
+        }
     }
 }

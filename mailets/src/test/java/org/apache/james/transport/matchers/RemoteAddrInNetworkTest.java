@@ -31,40 +31,40 @@ public class RemoteAddrInNetworkTest extends AbstractRemoteAddrInNetworkTest {
     // test if the recipients get returned as matched
     @Test
     public void testRemoteAddrInNetworkMatched() throws MessagingException {
-	setRemoteAddr("192.168.200.1");
+        setRemoteAddr("192.168.200.1");
 
-	setupAll();
+        setupAll();
 
-	Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
+        Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
 
-	assertNotNull(matchedRecipients);
-	assertEquals(matchedRecipients.size(), mockedMail.getRecipients().size());
+        assertNotNull(matchedRecipients);
+        assertEquals(matchedRecipients.size(), mockedMail.getRecipients().size());
     }
 
     // test if no recipient get returned cause it not match
     @Test
     public void testRemoteAddrInNetworkNotMatch() throws MessagingException {
-	setRemoteAddr("192.168.1.1");
+        setRemoteAddr("192.168.1.1");
 
-	setupAll();
+        setupAll();
 
-	Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
+        Collection<MailAddress> matchedRecipients = matcher.match(mockedMail);
 
-	assertNull(matchedRecipients);
+        assertNull(matchedRecipients);
     }
 
     @Override
     protected AbstractNetworkMatcher createMatcher() {
-	return new RemoteAddrInNetwork();
+        return new RemoteAddrInNetwork();
     }
 
     @Override
     protected String getConfigOption() {
-	return "AllowedNetworkIs=";
+        return "AllowedNetworkIs=";
     }
 
     @Override
     protected String getAllowedNetworks() {
-	return ALLOWED_NETWORK;
+        return ALLOWED_NETWORK;
     }
 }

@@ -51,251 +51,251 @@ public class ValidRcptHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-	users = new MockUsersRepository();
-	users.addUser(VALID_USER, "xxx");
-	handler = new ValidRcptHandler();
-	handler.setUsers(users);
-	handler.setRecipientRewriteTable(setUpRecipientRewriteTable());
+        users = new MockUsersRepository();
+        users.addUser(VALID_USER, "xxx");
+        handler = new ValidRcptHandler();
+        handler.setUsers(users);
+        handler.setRecipientRewriteTable(setUpRecipientRewriteTable());
 
-	handler.setDomainList(new SimpleDomainList() {
+        handler.setDomainList(new SimpleDomainList() {
 
-	    @Override
-	    public boolean containsDomain(String domain) {
-		return domain.equals(VALID_DOMAIN);
-	    }
-	});
+            @Override
+            public boolean containsDomain(String domain) {
+                return domain.equals(VALID_DOMAIN);
+            }
+        });
     }
 
     private SMTPSession setupMockedSMTPSession(final SMTPConfiguration conf, final MailAddress rcpt,
-					       final boolean relayingAllowed) {
-	SMTPSession session = new BaseFakeSMTPSession() {
+                                               final boolean relayingAllowed) {
+        SMTPSession session = new BaseFakeSMTPSession() {
 
-	    @Override
-	    public boolean isRelayingAllowed() {
-		return relayingAllowed;
-	    }
-	    private HashMap<String, Object> sstate = new HashMap<String, Object>();
-	    private HashMap<String, Object> connectionState = new HashMap<String, Object>();
+            @Override
+            public boolean isRelayingAllowed() {
+                return relayingAllowed;
+            }
+            private HashMap<String, Object> sstate = new HashMap<String, Object>();
+            private HashMap<String, Object> connectionState = new HashMap<String, Object>();
 
-	    @Override
-	    public Object setAttachment(String key, Object value, State state) {
-		if (state == State.Connection) {
-		    if (value == null) {
-			return connectionState.remove(key);
-		    }
-		    return connectionState.put(key, value);
-		} else {
-		    if (value == null) {
-			return sstate.remove(key);
-		    }
-		    return sstate.put(key, value);
-		}
-	    }
+            @Override
+            public Object setAttachment(String key, Object value, State state) {
+                if (state == State.Connection) {
+                    if (value == null) {
+                        return connectionState.remove(key);
+                    }
+                    return connectionState.put(key, value);
+                } else {
+                    if (value == null) {
+                        return sstate.remove(key);
+                    }
+                    return sstate.put(key, value);
+                }
+            }
 
-	    @Override
-	    public Object getAttachment(String key, State state) {
-		if (state == State.Connection) {
-		    return connectionState.get(key);
-		} else {
-		    return sstate.get(key);
-		}
-	    }
-	};
+            @Override
+            public Object getAttachment(String key, State state) {
+                if (state == State.Connection) {
+                    return connectionState.get(key);
+                } else {
+                    return sstate.get(key);
+                }
+            }
+        };
 
-	return session;
+        return session;
     }
 
     private RecipientRewriteTable setUpRecipientRewriteTable() {
-	final RecipientRewriteTable table = new RecipientRewriteTable() {
+        final RecipientRewriteTable table = new RecipientRewriteTable() {
 
-	    @Override
-	    public Collection<String> getMappings(String user, String domain) throws ErrorMappingException,
-		    RecipientRewriteTableException {
-		Collection<String> mappings = new ArrayList<String>();
-		if (user.equals(USER1)) {
-		    mappings.add("address@localhost");
-		} else if (user.equals(USER2)) {
-		    throw new ErrorMappingException("554 BOUNCE");
-		}
-		return mappings;
-	    }
+            @Override
+            public Collection<String> getMappings(String user, String domain) throws ErrorMappingException,
+                    RecipientRewriteTableException {
+                Collection<String> mappings = new ArrayList<String>();
+                if (user.equals(USER1)) {
+                    mappings.add("address@localhost");
+                } else if (user.equals(USER2)) {
+                    throw new ErrorMappingException("554 BOUNCE");
+                }
+                return mappings;
+            }
 
-	    @Override
-	    public void addRegexMapping(String user, String domain, String regex) throws RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
-	    }
+            @Override
+            public void addRegexMapping(String user, String domain, String regex) throws RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
+            }
 
-	    @Override
-	    public void removeRegexMapping(String user, String domain, String regex) throws
-		    RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
+            @Override
+            public void removeRegexMapping(String user, String domain, String regex) throws
+                    RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
 
-	    }
+            }
 
-	    @Override
-	    public void addAddressMapping(String user, String domain, String address) throws
-		    RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
+            @Override
+            public void addAddressMapping(String user, String domain, String address) throws
+                    RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
 
-	    }
+            }
 
-	    @Override
-	    public void removeAddressMapping(String user, String domain, String address) throws
-		    RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
+            @Override
+            public void removeAddressMapping(String user, String domain, String address) throws
+                    RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
 
-	    }
+            }
 
-	    @Override
-	    public void addErrorMapping(String user, String domain, String error) throws RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
+            @Override
+            public void addErrorMapping(String user, String domain, String error) throws RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
 
-	    }
+            }
 
-	    @Override
-	    public void removeErrorMapping(String user, String domain, String error) throws
-		    RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
+            @Override
+            public void removeErrorMapping(String user, String domain, String error) throws
+                    RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
 
-	    }
+            }
 
-	    @Override
-	    public Collection<String> getUserDomainMappings(String user, String domain) throws
-		    RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
-	    }
+            @Override
+            public Collection<String> getUserDomainMappings(String user, String domain) throws
+                    RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
+            }
 
-	    @Override
-	    public void addMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
+            @Override
+            public void addMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
 
-	    }
+            }
 
-	    @Override
-	    public void removeMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
+            @Override
+            public void removeMapping(String user, String domain, String mapping) throws RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
 
-	    }
+            }
 
-	    @Override
-	    public Map<String, Collection<String>> getAllMappings() throws RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
-	    }
+            @Override
+            public Map<String, Collection<String>> getAllMappings() throws RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
+            }
 
-	    @Override
-	    public void addAliasDomainMapping(String aliasDomain, String realDomain) throws
-		    RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
+            @Override
+            public void addAliasDomainMapping(String aliasDomain, String realDomain) throws
+                    RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
 
-	    }
+            }
 
-	    @Override
-	    public void removeAliasDomainMapping(String aliasDomain, String realDomain) throws
-		    RecipientRewriteTableException {
-		throw new UnsupportedOperationException("Not implemented");
+            @Override
+            public void removeAliasDomainMapping(String aliasDomain, String realDomain) throws
+                    RecipientRewriteTableException {
+                throw new UnsupportedOperationException("Not implemented");
 
-	    }
-	};
-	return table;
+            }
+        };
+        return table;
     }
 
     private SMTPConfiguration setupMockedSMTPConfiguration() {
-	SMTPConfiguration conf = new SMTPConfiguration() {
+        SMTPConfiguration conf = new SMTPConfiguration() {
 
-	    @Override
-	    public String getHelloName() {
-		throw new UnsupportedOperationException("Unimplemented Stub Method");
-	    }
+            @Override
+            public String getHelloName() {
+                throw new UnsupportedOperationException("Unimplemented Stub Method");
+            }
 
-	    @Override
-	    public long getMaxMessageSize() {
-		throw new UnsupportedOperationException("Unimplemented Stub Method");
-	    }
+            @Override
+            public long getMaxMessageSize() {
+                throw new UnsupportedOperationException("Unimplemented Stub Method");
+            }
 
-	    @Override
-	    public boolean isRelayingAllowed(String remoteIP) {
-		throw new UnsupportedOperationException("Unimplemented Stub Method");
-	    }
+            @Override
+            public boolean isRelayingAllowed(String remoteIP) {
+                throw new UnsupportedOperationException("Unimplemented Stub Method");
+            }
 
-	    @Override
-	    public boolean useHeloEhloEnforcement() {
-		throw new UnsupportedOperationException("Unimplemented Stub Method");
-	    }
+            @Override
+            public boolean useHeloEhloEnforcement() {
+                throw new UnsupportedOperationException("Unimplemented Stub Method");
+            }
 
-	    @Override
-	    public boolean useAddressBracketsEnforcement() {
-		return true;
-	    }
+            @Override
+            public boolean useAddressBracketsEnforcement() {
+                return true;
+            }
 
-	    @Override
-	    public boolean isAuthRequired(String remoteIP) {
-		throw new UnsupportedOperationException("Unimplemented Stub Method");
-	    }
+            @Override
+            public boolean isAuthRequired(String remoteIP) {
+                throw new UnsupportedOperationException("Unimplemented Stub Method");
+            }
 
-	    @Override
-	    public String getGreeting() {
-		// TODO Auto-generated method stub
-		return null;
-	    }
+            @Override
+            public String getGreeting() {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-	    @Override
-	    public String getSoftwareName() {
-		// TODO Auto-generated method stub
-		return null;
-	    }
-	};
+            @Override
+            public String getSoftwareName() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+        };
 
-	return conf;
+        return conf;
     }
 
     @Test
     public void testRejectInvalidUser() throws Exception {
-	MailAddress mailAddress = new MailAddress(INVALID_USER + "@localhost");
-	SMTPSession session = setupMockedSMTPSession(setupMockedSMTPConfiguration(), mailAddress, false);
+        MailAddress mailAddress = new MailAddress(INVALID_USER + "@localhost");
+        SMTPSession session = setupMockedSMTPSession(setupMockedSMTPConfiguration(), mailAddress, false);
 
-	int rCode = handler.doRcpt(session, null, mailAddress).getResult();
+        int rCode = handler.doRcpt(session, null, mailAddress).getResult();
 
-	assertEquals("Rejected", rCode, HookReturnCode.DENY);
+        assertEquals("Rejected", rCode, HookReturnCode.DENY);
     }
 
     @Test
     public void testRejectInvalidUserRelay() throws Exception {
-	MailAddress mailAddress = new MailAddress(INVALID_USER + "@localhost");
-	SMTPSession session = setupMockedSMTPSession(setupMockedSMTPConfiguration(), mailAddress, true);
+        MailAddress mailAddress = new MailAddress(INVALID_USER + "@localhost");
+        SMTPSession session = setupMockedSMTPSession(setupMockedSMTPConfiguration(), mailAddress, true);
 
-	int rCode = handler.doRcpt(session, null, mailAddress).getResult();
+        int rCode = handler.doRcpt(session, null, mailAddress).getResult();
 
-	assertEquals("Rejected", rCode, HookReturnCode.DENY);
+        assertEquals("Rejected", rCode, HookReturnCode.DENY);
     }
 
     @Test
     public void testNotRejectValidUser() throws Exception {
-	MailAddress mailAddress = new MailAddress(VALID_USER + "@localhost");
-	SMTPSession session = setupMockedSMTPSession(setupMockedSMTPConfiguration(), mailAddress, false);
+        MailAddress mailAddress = new MailAddress(VALID_USER + "@localhost");
+        SMTPSession session = setupMockedSMTPSession(setupMockedSMTPConfiguration(), mailAddress, false);
 
-	int rCode = handler.doRcpt(session, null, mailAddress).getResult();
+        int rCode = handler.doRcpt(session, null, mailAddress).getResult();
 
-	assertEquals("Not rejected", rCode, HookReturnCode.DECLINED);
+        assertEquals("Not rejected", rCode, HookReturnCode.DECLINED);
     }
 
     @Test
     public void testHasAddressMapping() throws Exception {
-	MailAddress mailAddress = new MailAddress(USER1 + "@localhost");
-	SMTPSession session = setupMockedSMTPSession(setupMockedSMTPConfiguration(), mailAddress, false);
+        MailAddress mailAddress = new MailAddress(USER1 + "@localhost");
+        SMTPSession session = setupMockedSMTPSession(setupMockedSMTPConfiguration(), mailAddress, false);
 
-	int rCode = handler.doRcpt(session, null, mailAddress).getResult();
+        int rCode = handler.doRcpt(session, null, mailAddress).getResult();
 
-	assertEquals("Not rejected", rCode, HookReturnCode.DECLINED);
+        assertEquals("Not rejected", rCode, HookReturnCode.DECLINED);
     }
 
     @Test
     public void testHasErrorMapping() throws Exception {
-	MailAddress mailAddress = new MailAddress(USER2 + "@localhost");
-	SMTPSession session = setupMockedSMTPSession(setupMockedSMTPConfiguration(), mailAddress, false);
+        MailAddress mailAddress = new MailAddress(USER2 + "@localhost");
+        SMTPSession session = setupMockedSMTPSession(setupMockedSMTPConfiguration(), mailAddress, false);
 
-	int rCode = handler.doRcpt(session, null, mailAddress).getResult();
+        int rCode = handler.doRcpt(session, null, mailAddress).getResult();
 
-	assertNull("Valid Error mapping", session.getAttachment("VALID_USER", State.Transaction));
-	assertEquals("Error mapping", rCode, HookReturnCode.DENY);
+        assertNull("Valid Error mapping", session.getAttachment("VALID_USER", State.Transaction));
+        assertEquals("Error mapping", rCode, HookReturnCode.DENY);
     }
 }

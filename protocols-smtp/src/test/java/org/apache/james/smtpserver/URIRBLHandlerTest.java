@@ -54,93 +54,93 @@ public class URIRBLHandlerTest {
     private Mail mockedMail;
 
     private SMTPSession setupMockedSMTPSession(final Mail mail) {
-	mockedMail = mail;
-	mockedSMTPSession = new BaseFakeSMTPSession() {
+        mockedMail = mail;
+        mockedSMTPSession = new BaseFakeSMTPSession() {
 
-	    private String ipAddress = "192.168.0.1";
-	    private String host = "localhost";
-	    private boolean relayingAllowed;
+            private String ipAddress = "192.168.0.1";
+            private String host = "localhost";
+            private boolean relayingAllowed;
 
-	    public String getRemoteHost() {
-		return host;
-	    }
+            public String getRemoteHost() {
+                return host;
+            }
 
-	    public String getRemoteIPAddress() {
-		return ipAddress;
-	    }
-	    private HashMap<String, Object> sstate = new HashMap<String, Object>();
-	    private HashMap<String, Object> connectionState = new HashMap<String, Object>();
+            public String getRemoteIPAddress() {
+                return ipAddress;
+            }
+            private HashMap<String, Object> sstate = new HashMap<String, Object>();
+            private HashMap<String, Object> connectionState = new HashMap<String, Object>();
 
-	    @Override
-	    public Object setAttachment(String key, Object value, State state) {
-		if (state == State.Connection) {
-		    if (value == null) {
-			return connectionState.remove(key);
-		    }
-		    return connectionState.put(key, value);
-		} else {
-		    if (value == null) {
-			return sstate.remove(key);
-		    }
-		    return sstate.put(key, value);
-		}
-	    }
+            @Override
+            public Object setAttachment(String key, Object value, State state) {
+                if (state == State.Connection) {
+                    if (value == null) {
+                        return connectionState.remove(key);
+                    }
+                    return connectionState.put(key, value);
+                } else {
+                    if (value == null) {
+                        return sstate.remove(key);
+                    }
+                    return sstate.put(key, value);
+                }
+            }
 
-	    @Override
-	    public Object getAttachment(String key, State state) {
-		sstate.put(SMTPSession.SENDER, "sender@james.apache.org");
+            @Override
+            public Object getAttachment(String key, State state) {
+                sstate.put(SMTPSession.SENDER, "sender@james.apache.org");
 
-		if (state == State.Connection) {
-		    return connectionState.get(key);
-		} else {
-		    return sstate.get(key);
-		}
-	    }
+                if (state == State.Connection) {
+                    return connectionState.get(key);
+                } else {
+                    return sstate.get(key);
+                }
+            }
 
-	    @Override
-	    public boolean isRelayingAllowed() {
-		return relayingAllowed;
-	    }
+            @Override
+            public boolean isRelayingAllowed() {
+                return relayingAllowed;
+            }
 
-	    @Override
-	    public void setRelayingAllowed(boolean relayingAllowed) {
-		this.relayingAllowed = relayingAllowed;
-	    }
-	};
+            @Override
+            public void setRelayingAllowed(boolean relayingAllowed) {
+                this.relayingAllowed = relayingAllowed;
+            }
+        };
 
-	return mockedSMTPSession;
+        return mockedSMTPSession;
 
     }
 
     private Mail setupMockedMail(MimeMessage message) {
-	MockMail mail = new MockMail();
-	mail.setMessage(message);
-	return mail;
+        MockMail mail = new MockMail();
+        mail.setMessage(message);
+        return mail;
     }
 
     public MimeMessage setupMockedMimeMessage(String text) throws MessagingException {
-	MimeMessage message = new MimeMessage(new MockMimeMessage());
-	message.setText(text);
-	message.saveChanges();
+        MimeMessage message = new MimeMessage(new MockMimeMessage());
+        message.setText(text);
+        message.saveChanges();
 
-	return message;
+        return message;
     }
 
     public MimeMessage setupMockedMimeMessageMP(String text) throws MessagingException {
-	MimeMessage message = new MimeMessage(new MockMimeMessage());
+        MimeMessage message = new MimeMessage(new MockMimeMessage());
 
-	// Create the message part
-	BodyPart messageBodyPart = new MimeBodyPart();
+        // Create the message part
+        BodyPart messageBodyPart = new MimeBodyPart();
 
-	// Fill the message
-	messageBodyPart.setText(text);
+        // Fill the message
+        messageBodyPart.setText(text);
 
-	Multipart multipart = new MimeMultipart();
-	multipart.addBodyPart(messageBodyPart);
-	message.setContent(multipart);
-	message.saveChanges();
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(messageBodyPart);
+        message.setContent(multipart);
+        message.saveChanges();
 
-	return message;
+        return message;
     }
 
     /**
@@ -148,89 +148,89 @@ public class URIRBLHandlerTest {
      * 
      */
     private DNSService setupMockedDnsServer() {
-	DNSService mockedDnsServer = new MockDNSService() {
+        DNSService mockedDnsServer = new MockDNSService() {
 
-	    @Override
-	    public Collection findTXTRecords(String hostname) {
-		List res = new ArrayList();
-		if (hostname == null) {
-		    return res;
-		}
+            @Override
+            public Collection findTXTRecords(String hostname) {
+                List res = new ArrayList();
+                if (hostname == null) {
+                    return res;
+                }
 
-		if ((BAD_DOMAIN1.substring(4)).equals(hostname)) {
-		    res.add("Blocked - see http://www.surbl.org");
-		}
-		return res;
-	    }
+                if ((BAD_DOMAIN1.substring(4)).equals(hostname)) {
+                    res.add("Blocked - see http://www.surbl.org");
+                }
+                return res;
+            }
 
-	    @Override
-	    public InetAddress getByName(String host) throws UnknownHostException {
-		if ((BAD_DOMAIN1.substring(4) + "." + URISERVER).equals(host)) {
-		    return InetAddress.getByName("127.0.0.1");
-		} else if ((BAD_DOMAIN2.substring(4) + "." + URISERVER).equals(host)) {
-		    return InetAddress.getByName("127.0.0.1");
-		} else if ((GOOD_DOMAIN.substring(5) + "." + URISERVER).equals(host)) {
-		    throw new UnknownHostException();
-		}
-		throw new UnsupportedOperationException("getByName(" + host + ") not implemented by this mock");
-	    }
-	};
+            @Override
+            public InetAddress getByName(String host) throws UnknownHostException {
+                if ((BAD_DOMAIN1.substring(4) + "." + URISERVER).equals(host)) {
+                    return InetAddress.getByName("127.0.0.1");
+                } else if ((BAD_DOMAIN2.substring(4) + "." + URISERVER).equals(host)) {
+                    return InetAddress.getByName("127.0.0.1");
+                } else if ((GOOD_DOMAIN.substring(5) + "." + URISERVER).equals(host)) {
+                    throw new UnknownHostException();
+                }
+                throw new UnsupportedOperationException("getByName(" + host + ") not implemented by this mock");
+            }
+        };
 
-	return mockedDnsServer;
+        return mockedDnsServer;
     }
 
     @Test
     public void testNotBlocked() throws IOException, MessagingException {
 
-	ArrayList servers = new ArrayList();
-	servers.add(URISERVER);
+        ArrayList servers = new ArrayList();
+        servers.add(URISERVER);
 
-	SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessage(
-		"http://" + GOOD_DOMAIN + "/")));
+        SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessage(
+                "http://" + GOOD_DOMAIN + "/")));
 
-	URIRBLHandler handler = new URIRBLHandler();
+        URIRBLHandler handler = new URIRBLHandler();
 
-	handler.setDNSService(setupMockedDnsServer());
-	handler.setUriRblServer(servers);
-	HookResult response = handler.onMessage(session, mockedMail);
+        handler.setDNSService(setupMockedDnsServer());
+        handler.setUriRblServer(servers);
+        HookResult response = handler.onMessage(session, mockedMail);
 
-	assertEquals("Email was not rejected", response.getResult(), HookReturnCode.DECLINED);
+        assertEquals("Email was not rejected", response.getResult(), HookReturnCode.DECLINED);
     }
 
     @Test
     public void testBlocked() throws IOException, MessagingException {
 
-	ArrayList servers = new ArrayList();
-	servers.add(URISERVER);
+        ArrayList servers = new ArrayList();
+        servers.add(URISERVER);
 
-	SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessage(
-		"http://" + BAD_DOMAIN1 + "/")));
+        SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessage(
+                "http://" + BAD_DOMAIN1 + "/")));
 
-	URIRBLHandler handler = new URIRBLHandler();
+        URIRBLHandler handler = new URIRBLHandler();
 
-	handler.setDNSService(setupMockedDnsServer());
-	handler.setUriRblServer(servers);
-	HookResult response = handler.onMessage(session, mockedMail);
+        handler.setDNSService(setupMockedDnsServer());
+        handler.setUriRblServer(servers);
+        HookResult response = handler.onMessage(session, mockedMail);
 
-	assertEquals("Email was rejected", response.getResult(), HookReturnCode.DENY);
+        assertEquals("Email was rejected", response.getResult(), HookReturnCode.DENY);
     }
 
     @Test
     public void testBlockedMultiPart() throws IOException, MessagingException {
 
-	ArrayList servers = new ArrayList();
-	servers.add(URISERVER);
+        ArrayList servers = new ArrayList();
+        servers.add(URISERVER);
 
-	SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessageMP(
-		"http://" + BAD_DOMAIN1 + "/" + " " + "http://" + GOOD_DOMAIN + "/")));
+        SMTPSession session = setupMockedSMTPSession(setupMockedMail(setupMockedMimeMessageMP(
+                "http://" + BAD_DOMAIN1 + "/" + " " + "http://" + GOOD_DOMAIN + "/")));
 
-	URIRBLHandler handler = new URIRBLHandler();
+        URIRBLHandler handler = new URIRBLHandler();
 
-	handler.setDNSService(setupMockedDnsServer());
-	handler.setUriRblServer(servers);
-	HookResult response = handler.onMessage(session, mockedMail);
+        handler.setDNSService(setupMockedDnsServer());
+        handler.setUriRblServer(servers);
+        HookResult response = handler.onMessage(session, mockedMail);
 
-	assertEquals("Email was rejected", response.getResult(), HookReturnCode.DENY);
+        assertEquals("Email was rejected", response.getResult(), HookReturnCode.DENY);
     }
 
     /*

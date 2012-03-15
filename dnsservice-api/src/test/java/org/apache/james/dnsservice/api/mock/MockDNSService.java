@@ -34,7 +34,7 @@ public class MockDNSService implements DNSService {
      */
     @Override
     public Collection<String> findMXRecords(String hostname) {
-	throw new UnsupportedOperationException("Unimplemented Stub Method");
+        throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 
     /**
@@ -42,7 +42,7 @@ public class MockDNSService implements DNSService {
      */
     @Override
     public Collection<String> findTXTRecords(String hostname) {
-	throw new UnsupportedOperationException("Unimplemented Stub Method");
+        throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 
     /**
@@ -50,7 +50,7 @@ public class MockDNSService implements DNSService {
      */
     @Override
     public InetAddress[] getAllByName(String host) throws UnknownHostException {
-	throw new UnsupportedOperationException("Unimplemented Stub Method");
+        throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 
     /**
@@ -58,7 +58,7 @@ public class MockDNSService implements DNSService {
      */
     @Override
     public InetAddress getByName(String host) throws UnknownHostException {
-	throw new UnsupportedOperationException("Unimplemented Stub Method");
+        throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 
     /**
@@ -66,7 +66,7 @@ public class MockDNSService implements DNSService {
      */
     @Override
     public String getHostName(InetAddress addr) {
-	throw new UnsupportedOperationException("Unimplemented Stub Method");
+        throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 
     /**
@@ -74,6 +74,6 @@ public class MockDNSService implements DNSService {
      */
     @Override
     public InetAddress getLocalHost() throws UnknownHostException {
-	throw new UnsupportedOperationException("Unimplemented Stub Method");
+        throw new UnsupportedOperationException("Unimplemented Stub Method");
     }
 }

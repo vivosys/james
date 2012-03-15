@@ -57,7 +57,7 @@ public class HBaseDomainList extends AbstractDomainList {
             table = TablePool.getInstance().getDomainlistTable();
             Get get = new Get(Bytes.toBytes(domain));
             Result result = table.get(get);
-            if (! result.isEmpty()) {
+            if (!result.isEmpty()) {
                 return true;
             }
         } catch (IOException e) {
@@ -162,5 +162,4 @@ public class HBaseDomainList extends AbstractDomainList {
         }
         return list;
     }
-
 }

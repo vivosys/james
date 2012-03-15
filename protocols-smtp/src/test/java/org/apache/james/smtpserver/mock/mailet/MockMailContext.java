@@ -33,113 +33,113 @@ public class MockMailContext implements MailetContext {
 
     @Override
     public void bounce(Mail mail, String message) throws MessagingException {
-	// trivial implementation
+        // trivial implementation
     }
 
     @Override
     public void bounce(Mail mail, String message, MailAddress bouncer) throws MessagingException {
-	// trivial implementation
+        // trivial implementation
     }
 
     @Override
     public Collection getMailServers(String host) {
-	return null; // trivial implementation
+        return null; // trivial implementation
     }
 
     @Override
     public MailAddress getPostmaster() {
-	return null; // trivial implementation
+        return null; // trivial implementation
     }
 
     @Override
     public Object getAttribute(String name) {
-	return attributes.get(name);
+        return attributes.get(name);
     }
 
     @Override
     public Iterator getAttributeNames() {
-	return attributes.keySet().iterator();
+        return attributes.keySet().iterator();
     }
 
     @Override
     public int getMajorVersion() {
-	return 0; // trivial implementation
+        return 0; // trivial implementation
     }
 
     @Override
     public int getMinorVersion() {
-	return 0; // trivial implementation
+        return 0; // trivial implementation
     }
 
     @Override
     public String getServerInfo() {
-	return "Mock Server";
+        return "Mock Server";
     }
 
     @Override
     public boolean isLocalServer(String serverName) {
-	return false; // trivial implementation
+        return false; // trivial implementation
     }
 
     @Override
     public boolean isLocalUser(String userAccount) {
-	return false; // trivial implementation
+        return false; // trivial implementation
     }
 
     @Override
     public boolean isLocalEmail(MailAddress mailAddress) {
-	return false; // trivial implementation
+        return false; // trivial implementation
     }
 
     @Override
     public void log(String message) {
-	System.out.println(message);
+        System.out.println(message);
     }
 
     @Override
     public void log(String message, Throwable t) {
-	System.out.println(message);
-	t.printStackTrace(System.out);
+        System.out.println(message);
+        t.printStackTrace(System.out);
     }
 
     @Override
     public void removeAttribute(String name) {
-	// trivial implementation
+        // trivial implementation
     }
 
     @Override
     public void sendMail(MimeMessage msg) throws MessagingException {
-	throw new UnsupportedOperationException("MOCKed method");
+        throw new UnsupportedOperationException("MOCKed method");
     }
 
     @Override
     public void sendMail(MailAddress sender, Collection recipients, MimeMessage msg) throws MessagingException {
-	throw new UnsupportedOperationException("MOCKed method");
+        throw new UnsupportedOperationException("MOCKed method");
     }
 
     @Override
     public void sendMail(MailAddress sender, Collection recipients, MimeMessage msg, String state) throws
-	    MessagingException {
-	throw new UnsupportedOperationException("MOCKed method");
+            MessagingException {
+        throw new UnsupportedOperationException("MOCKed method");
     }
 
     @Override
     public void sendMail(Mail mail) throws MessagingException {
-	throw new UnsupportedOperationException("MOCKed method");
+        throw new UnsupportedOperationException("MOCKed method");
     }
 
     @Override
     public void setAttribute(String name, Object object) {
-	attributes.put(name, object);
+        attributes.put(name, object);
     }
 
     @Override
     public void storeMail(MailAddress sender, MailAddress recipient, MimeMessage msg) throws MessagingException {
-	// trivial implementation
+        // trivial implementation
     }
 
     @Override
     public Iterator getSMTPHostAddresses(String domainName) {
-	return null; // trivial implementation
+        return null; // trivial implementation
     }
 }

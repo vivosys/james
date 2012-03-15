@@ -34,21 +34,21 @@ public class ExceptionThrowingMatcher implements Matcher {
 
     @Override
     public MatcherConfig getMatcherConfig() {
-	return config;
+        return config;
     }
 
     @Override
     public String getMatcherInfo() {
-	return getClass().getName();
+        return getClass().getName();
     }
 
     @Override
     public void init(MatcherConfig config) throws MessagingException {
-	this.config = config;
+        this.config = config;
     }
 
     @Override
     public Collection match(Mail arg0) throws MessagingException {
-	throw new MessagingException();
+        throw new MessagingException();
     }
 }
