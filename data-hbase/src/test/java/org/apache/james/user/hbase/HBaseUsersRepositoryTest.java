@@ -18,22 +18,33 @@
  ****************************************************************/
 package org.apache.james.user.hbase;
 
+import java.io.IOException;
 import java.util.Iterator;
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
+import org.apache.james.mailbox.hbase.HBaseClusterSingleton;
+import org.apache.james.system.hbase.TablePool;
 import org.apache.james.user.api.UsersRepository;
 import org.apache.james.user.api.UsersRepositoryException;
 import org.apache.james.user.lib.AbstractUsersRepositoryTest;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.slf4j.LoggerFactory;
 
 /**
  * Tests for the HBase UsersRepository implementation.
- * 
+ *
  * Simply create the needed HBaseUsersRepository instance, and let the
  * AbstractUsersRepositoryTest run the tests
  */
 public class HBaseUsersRepositoryTest extends AbstractUsersRepositoryTest {
+
+    private static HBaseClusterSingleton cluster = HBaseClusterSingleton.build();
+
+    @BeforeClass
+    public static void setMeUp() throws IOException {
+        TablePool.getInstance(cluster.getConf());
+    }
 
     /**
      * @see org.apache.james.user.lib.AbstractUsersRepositoryTest#setUp()
@@ -41,6 +52,7 @@ public class HBaseUsersRepositoryTest extends AbstractUsersRepositoryTest {
     @Before
     @Override
     public void setUp() throws Exception {
+        super.setUp();
         deleteAll();
     }
 
@@ -55,7 +67,7 @@ public class HBaseUsersRepositoryTest extends AbstractUsersRepositoryTest {
 
     /**
      * Delete all users in the repository. Used between each tests.
-     * 
+     *
      * @throws UsersRepositoryException
      * @throws Exception
      */

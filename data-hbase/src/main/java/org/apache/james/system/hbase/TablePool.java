@@ -19,7 +19,6 @@
 package org.apache.james.system.hbase;
 
 import java.io.IOException;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
@@ -35,24 +34,24 @@ import org.apache.james.user.hbase.def.HUsersRepository;
 
 /**
  * Table Pool singleton to get the DomainList, RecipientRewriteTable and UserRepository HBase tables.
- * 
+ *
  * TODO Two getInstance methods are public, one for the impl, one for the tests. This is not good.
  */
-public class TablePool {    
-    
+public class TablePool {
+
     private static Configuration configuration;
     private static TablePool hbaseSchema;
     private static HTablePool htablePool;
-    
+
     /**
      * Use getInstance to get an instance of the {@link HTablePool}.
-     * 
+     *
      * Don't give any configuration, the default one will be used
      * via {@link HBaseConfiguration#create(Configuration)}.
-     * 
+     *
      * If you want to create the instance with a specific {@link HBaseConfiguration},
      * use {@link #getInstance(Configuration)}
-     * 
+     *
      * @return An instance using a default configuration
      * @throws IOException
      */
@@ -62,9 +61,9 @@ public class TablePool {
 
     /**
      * Use getInstance to get an instance of the {@link HTablePool}.
-     * 
+     *
      * You can give at first call a specific {@link HBaseConfiguration} to suit your needs.
-     * 
+     *
      * @param configuration
      * @return An instance of {@link HTablePool}
      * @throws IOException
@@ -80,10 +79,10 @@ public class TablePool {
         }
         return hbaseSchema;
     }
-    
+
     /**
      * Get an instance of the {@link HDomainList} table.
-     * 
+     *
      * @return An instance of {@link HDomainList}
      */
     public HTable getDomainlistTable() {
@@ -92,7 +91,7 @@ public class TablePool {
 
     /**
      * Get an instance of the RecipientRewriteTable table.
-     * 
+     *
      * @return An instance of {@link RecipientRewriteTable}
      */
     public HTable getRecipientRewriteTable() {
@@ -101,7 +100,7 @@ public class TablePool {
 
     /**
      * Get an instance of the UsersRepository table.
-     * 
+     *
      * @return An instance of {@link UsersRepository}
      */
     public HTable getUsersRepositoryTable() {
@@ -110,20 +109,19 @@ public class TablePool {
 
     /**
      * Create a table if needed.
-     * 
+     *
      * @param tableName
      * @param columnFamilyName
      * @throws IOException
      */
     private static void ensureTable(byte[] tableName, byte[] columnFamilyName) throws IOException {
         HBaseAdmin hbaseAdmin = new HBaseAdmin(configuration);
-        if (! hbaseAdmin.tableExists(tableName)) {
-          HTableDescriptor desc = new HTableDescriptor(tableName);
-          HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(columnFamilyName);
-          hColumnDescriptor.setMaxVersions(1);
-          desc.addFamily(hColumnDescriptor);
-          hbaseAdmin.createTable(desc);
+        if (!hbaseAdmin.tableExists(tableName)) {
+            HTableDescriptor desc = new HTableDescriptor(tableName);
+            HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(columnFamilyName);
+            hColumnDescriptor.setMaxVersions(1);
+            desc.addFamily(hColumnDescriptor);
+            hbaseAdmin.createTable(desc);
         }
     }
-
 }

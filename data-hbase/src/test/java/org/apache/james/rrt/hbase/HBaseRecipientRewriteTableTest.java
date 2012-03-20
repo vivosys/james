@@ -18,16 +18,20 @@
  ****************************************************************/
 package org.apache.james.rrt.hbase;
 
+import java.io.IOException;
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
+import org.apache.james.mailbox.hbase.HBaseClusterSingleton;
 import org.apache.james.rrt.api.RecipientRewriteTableException;
 import org.apache.james.rrt.lib.AbstractRecipientRewriteTable;
 import org.apache.james.rrt.lib.AbstractRecipientRewriteTableTest;
+import org.apache.james.system.hbase.TablePool;
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.slf4j.LoggerFactory;
 
 /**
  * Tests for the HBase RecipientRewriteTable implementation.
- * 
+ *
  * Simply create the needed HBaseRecipientRewriteTable instance, and let the
  * AbstractRecipientRewriteTableTest run the tests.
  */
@@ -37,6 +41,12 @@ public class HBaseRecipientRewriteTableTest extends AbstractRecipientRewriteTabl
      * The Logger.
      */
     private static Logger logger = Logger.getLogger(HBaseRecipientRewriteTableTest.class);
+    private static HBaseClusterSingleton cluster = HBaseClusterSingleton.build();
+
+    @Before
+    public void setMeUp() throws IOException {
+        TablePool.getInstance(cluster.getConf());
+    }
 
     /**
      * @see org.apache.james.rrt.lib.AbstractRecipientRewriteTableTest#getRecipientRewriteTable()

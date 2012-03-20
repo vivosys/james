@@ -168,9 +168,6 @@
                     <argLine>-Xms256m -Xmx512m</argLine>
                     <testFailureIgnore>false</testFailureIgnore>
                     <skip>false</skip>
-                    <includes>
-                        <include>**/*SuiteTest.java</include>
-                    </includes>
                 </configuration>
             </plugin>
         </plugins>

@@ -18,17 +18,29 @@
  ****************************************************************/
 package org.apache.james.domainlist.hbase;
 
+import java.io.IOException;
 import org.apache.james.domainlist.api.DomainList;
 import org.apache.james.domainlist.lib.AbstractDomainListTest;
+import org.apache.james.mailbox.hbase.HBaseClusterSingleton;
+import org.apache.james.system.hbase.TablePool;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.slf4j.LoggerFactory;
 
 /**
  * Tests for the HBase DomainList implementation.
- * 
+ *
  * Simply create the needed HBaseDomainList instance, and let the
  * AbstractDomainListTest run the tests
  */
 public class HBaseDomainListTest extends AbstractDomainListTest {
+
+    private static HBaseClusterSingleton cluster = HBaseClusterSingleton.build();
+
+    @BeforeClass
+    public static void setMeUp() throws IOException {
+        TablePool.getInstance(cluster.getConf());
+    }
 
     /**
      * @see org.apache.james.domainlist.lib.AbstractDomainListTest#createDomainList()
@@ -42,5 +54,4 @@ public class HBaseDomainListTest extends AbstractDomainListTest {
         domainList.setAutoDetectIP(false);
         return domainList;
     }
-
 }

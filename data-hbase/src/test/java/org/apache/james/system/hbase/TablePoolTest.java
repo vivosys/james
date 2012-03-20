@@ -19,9 +19,10 @@
 package org.apache.james.system.hbase;
 
 import java.io.IOException;
-
 import junit.framework.Assert;
-
+import org.apache.james.mailbox.hbase.HBaseClusterSingleton;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -29,12 +30,19 @@ import org.junit.Test;
  * Check that the returned singleton and table instances and not null.
  */
 public class TablePoolTest {
-    
+
+    private static HBaseClusterSingleton cluster = HBaseClusterSingleton.build();
+
+    @BeforeClass
+    public static void setMeUp() throws IOException {
+        TablePool.getInstance(cluster.getConf());
+    }
+
     @Test
     public void testGetInstance() throws IOException {
         Assert.assertNotNull(TablePool.getInstance());
     }
-    
+
     @Test
     public void testGetDomainlistTable() throws IOException {
         Assert.assertNotNull(TablePool.getInstance().getDomainlistTable());
@@ -49,5 +57,4 @@ public class TablePoolTest {
     public void testGetUsersRepositoryTable() throws IOException {
         Assert.assertNotNull(TablePool.getInstance().getUsersRepositoryTable());
     }
-
 }
