@@ -74,7 +74,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
     public static final String HELLO_NAME = "helloName";
 
     public static final int DEFAULT_MAX_EXECUTOR_COUNT = 16;
-    
+
     // By default, use the Sun X509 algorithm that comes with the Sun JCE
     // provider for SSL
     // certificates
@@ -116,8 +116,8 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
     private MBeanServer mbeanServer;
 
-    
-    
+
+
     @Resource(name = "filesystem")
     public final void setFileSystem(FileSystem filesystem) {
         this.fileSystem = filesystem;
@@ -149,11 +149,11 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
         }
 
     }
-    
+
     private String getMBeanName() {
         return  "org.apache.james:type=server,name=" + jmxName;
     }
-    
+
     /**
      * @see
      * org.apache.james.lifecycle.api.Configurable
@@ -199,7 +199,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
         maxExecutorThreads = config.getInt("maxExecutorCount", DEFAULT_MAX_EXECUTOR_COUNT);
 
-        
+
         configureHelloName(config);
 
         setTimeout(config.getInt(TIMEOUT_NAME, DEFAULT_TIMEOUT));
@@ -275,7 +275,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
             mbeanServer = ManagementFactory.getPlatformMBeanServer();
             registerMBean();
-            
+
             getLogger().info("Init " + getServiceType() + " done");
 
         }
@@ -301,12 +301,12 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
     protected void postDestroy() {
         // override me
     }
-    
-    
+
+
     /**
      * This method is called on init of the Server. Subclasses should override
      * this method to init stuff
-     * 
+     *
      * @throws Exception
      */
     protected void preInit() throws Exception {
@@ -317,10 +317,10 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
         // override me
     }
 
-  
+
     /**
      * Return the FileSystem
-     * 
+     *
      * @return fileSystem
      */
     protected FileSystem getFileSystem() {
@@ -329,7 +329,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
     /**
      * Configure the helloName for the given Configuration
-     * 
+     *
      * @param handlerConfiguration
      * @throws ConfigurationException
      */
@@ -361,7 +361,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
     /**
      * Return the logger
-     * 
+     *
      * @return logger
      */
     protected Logger getLogger() {
@@ -370,7 +370,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
     /**
      * Return if the server is enabled by the configuration
-     * 
+     *
      * @return enabled
      */
     public boolean isEnabled() {
@@ -379,7 +379,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
     /**
      * Return helloName for this server
-     * 
+     *
      * @return helloName
      */
     public String getHelloName() {
@@ -392,7 +392,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
     /**
      * Build the SSLEngine
-     * 
+     *
      * @throws Exception
      */
 
@@ -427,7 +427,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
     /**
      * Return the default port which will get used for this server if non is
      * specify in the configuration
-     * 
+     *
      * @return port
      */
     protected abstract int getDefaultPort();
@@ -435,7 +435,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
     /**
      * Return the socket type. The Socket type can be secure or plain
-     * 
+     *
      * @return the socket type ('plain' or 'secure')
      */
     public String getSocketType() {
@@ -463,7 +463,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
     protected String getThreadPoolJMXPath() {
         return "org.apache.james:type=server,name=" + jmxName + ",sub-type=threadpool";
     }
-    
+
     @Override
     protected Executor createBossExecutor() {
         return JMXEnabledThreadPoolExecutor.newCachedThreadPool(getThreadPoolJMXPath(), "boss");
@@ -477,7 +477,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
     /**
      * Return the default name of the the server in JMX if none is configured
      * via "jmxname" in the configuration
-     * 
+     *
      * @return defaultJmxName
      */
     protected abstract String getDefaultJMXName();
@@ -500,7 +500,7 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
         try {
             bind();
         } catch (Exception e) {
-            logger.error("Unable to start server");
+            logger.error("Unable to start server", e);
             return false;
         }
         return true;
@@ -550,14 +550,14 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
     @Override
     protected void configureBootstrap(ServerBootstrap bootstrap) {
         super.configureBootstrap(bootstrap);
-        
+
         // enable tcp keep-alives
         bootstrap.setOption("child.keepAlive", true);
     }
-    
+
     /**
      * Create a new {@link ExecutionHandler} which is used to execute IO-Bound handlers
-     * 
+     *
      * @return ehandler
      */
     protected ExecutionHandler createExecutionHander() {
@@ -566,16 +566,16 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
     /**
      * Return the {@link ExecutionHandler} or null if non should be used. Be sure you call {@link #createExecutionHander()} before
-     * 
+     *
      * @return ehandler
      */
     protected ExecutionHandler getExecutionHandler() {
         return executionHandler;
     }
-    
+
 
     protected abstract ChannelUpstreamHandler createCoreHandler();
-    
+
     @Override
     protected ChannelPipelineFactory createPipelineFactory(ChannelGroup group) {
         return new AbstractExecutorAwareChannelPipelineFactory(getTimeout(), connectionLimit, connPerIP, group, enabledCipherSuites, getExecutionHandler()) {
@@ -607,6 +607,6 @@ public abstract class AbstractConfigurableAsyncServer extends AbstractAsyncServe
 
         };
     }
-    
-    
+
+
 }
